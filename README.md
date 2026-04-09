@@ -3,145 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IYSO | Admin ERP</title>
+    <title>IYSO | Official Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        #wrapper { display: flex; align-items: stretch; }
-        
-        /* Sidebar Styling */
-        #sidebar { min-width: 250px; max-width: 250px; background: #212529; color: #fff; min-height: 100vh; transition: all 0.3s; }
-        #sidebar .sidebar-header { padding: 25px 20px; background: #1a1d20; text-align: center; }
-        
-        /* Sidebar Logo (PNG) */
-        #sidebar .sidebar-header img { 
-            max-width: 130px; 
-            height: auto; 
-            /* Optional: subtle drop shadow to help logo pop on dark background */
-            filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.5));
+        :root {
+            --iyso-green: #006837; /* From your logo */
+            --iyso-gold: #c6a34f;  /* From the star/crescent */
+            --dark-bg: #0b0f13;
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
-        #sidebar ul.components { padding: 20px 0; }
-        #sidebar ul li a { padding: 12px 20px; display: block; color: #adb5bd; text-decoration: none; font-weight: 500; }
-        #sidebar ul li a:hover { color: #fff; background: #343a40; border-left: 4px solid #198754; }
-        
-        /* Navbar Styling */
-        .navbar { box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .navbar-brand img { max-height: 45px; width: auto; margin-right: 12px; }
+        body {
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
 
-        /* User Profile Image from Unsplash */
-        .user-profile-img {
-            width: 42px;
-            height: 42px;
-            object-fit: cover;
+        /* Premium Navbar */
+        .navbar {
+            background: rgba(11, 15, 19, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .navbar-brand img { height: 50px; }
+
+        /* Sidebar Navigation */
+        .nav-link {
+            color: #adb5bd;
+            font-weight: 500;
+            transition: 0.3s;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #fff;
+            background: var(--iyso-green);
+        }
+
+        /* Glass Cards */
+        .premium-card {
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            transition: 0.4s ease;
+        }
+
+        .premium-card:hover {
+            border-color: var(--iyso-gold);
+            transform: translateY(-5px);
+        }
+
+        /* Member Profile Styles */
+        .profile-img {
+            width: 80px; height: 80px;
             border-radius: 50%;
-            border: 2px solid #e9ecef;
+            border: 3px solid var(--iyso-gold);
+            object-fit: cover;
         }
 
-        /* Card Styling */
-        .card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-        .stat-icon { font-size: 2.2rem; opacity: 0.2; }
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 5px 12px;
+            border-radius: 50px;
+            background: rgba(0, 104, 55, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
+        .finance-up { color: #00ff88; }
+        .finance-down { color: #ff4d4d; }
+
     </style>
 </head>
 <body>
 
-<div id="wrapper">
-    <nav id="sidebar">
-        <div class="sidebar-header border-bottom border-secondary">
-            <img src="image_0.png" alt="IYSO Logo">
-            <h6 class="mt-3 text-uppercase tracking-wider">Control Center</h6>
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="image_0.png" alt="Logo">
+            <div class="ms-3">
+                <span class="d-block fw-bold mb-0" style="letter-spacing: 2px;">IYSO</span>
+                <small class="text-muted" style="font-size: 0.6rem;">IDEAL YOUTH SERVICE ORGANIZATION</small>
+            </div>
+        </a>
+        <div class="ms-auto d-flex align-items-center">
+            <span class="me-3 d-none d-md-block small text-muted">Welcome, <b>Nahid Khan</b></span>
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100" class="rounded-circle border border-secondary" height="40" width="40">
         </div>
-        <ul class="list-unstyled components">
-            <li><a href="#"><i class="fas fa-th-large me-2"></i> Dashboard</a></li>
-            <li><a href="#"><i class="fas fa-users me-2"></i> Member Directory</a></li>
-            <li><a href="#"><i class="fas fa-clock me-2"></i> Schedules</a></li>
-            <li><a href="#"><i class="fas fa-box-open me-2"></i> Inventory</a></li>
-            <li><a href="#"><i class="fas fa-file-invoice-dollar me-2"></i> Finance</a></li>
-            <li class="mt-4 px-3 text-muted small text-uppercase">Admin</li>
-            <li><a href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
-        </ul>
-    </nav>
+    </div>
+</nav>
 
-    <div id="content" class="w-100">
-        <nav class="navbar navbar-expand-lg navbar-light bg-white p-3">
-            <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center fw-bold" href="#">
-                    <img src="image_0.png" alt="IYSO Logo">
-                    <span>IYSO <span class="text-success">ERP</span></span>
-                </a>
-                <div class="ms-auto d-flex align-items-center">
-                    <div class="me-3 text-end d-none d-md-block">
-                        <div class="fw-bold small">Nahid Khan</div>
-                        <div class="text-muted" style="font-size: 0.75rem;">Super Admin</div>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100&auto=format&fit=crop" 
-                         class="user-profile-img" alt="Profile">
-                </div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <div class="premium-card sticky-top" style="top: 100px;">
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="#"><i class="fas fa-chart-pie me-2"></i> Overview</a>
+                    <a class="nav-link" href="#"><i class="fas fa-user-group me-2"></i> Member Directory</a>
+                    <a class="nav-link" href="#"><i class="fas fa-file-invoice-dollar me-2"></i> Finance Section</a>
+                    <a class="nav-link" href="#"><i class="fas fa-calendar-days me-2"></i> Schedules</a>
+                    <a class="nav-link" href="#"><i class="fas fa-trophy me-2"></i> Events</a>
+                    <hr class="text-secondary">
+                    <a class="nav-link" href="#"><i class="fas fa-gear me-2"></i> Admin Settings</a>
+                </nav>
             </div>
-        </nav>
+        </div>
 
-        <div class="container-fluid p-4">
-            <div class="row g-4 mb-4">
+        <div class="col-lg-9">
+            
+            <div class="row g-4 mb-5">
                 <div class="col-md-4">
-                    <div class="card p-4 border-start border-primary border-5">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div><p class="text-muted mb-0">Total Members</p><h2 class="fw-bold">1,240</h2></div>
-                            <i class="fas fa-users stat-icon text-primary"></i>
-                        </div>
+                    <div class="premium-card text-center">
+                        <h6 class="text-muted">Current Balance</h6>
+                        <h2 class="fw-bold finance-up">$4,250.00</h2>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card p-4 border-start border-success border-5">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div><p class="text-muted mb-0">Active Events</p><h2 class="fw-bold">12</h2></div>
-                            <i class="fas fa-calendar-check stat-icon text-success"></i>
-                        </div>
+                    <div class="premium-card text-center">
+                        <h6 class="text-muted">Active Members</h6>
+                        <h2 class="fw-bold" style="color: var(--iyso-gold);">128</h2>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card p-4 border-start border-warning border-5">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div><p class="text-muted mb-0">New Requests</p><h2 class="fw-bold">45</h2></div>
-                            <i class="fas fa-bell stat-icon text-warning"></i>
-                        </div>
+                    <div class="premium-card text-center">
+                        <h6 class="text-muted">Next Event</h6>
+                        <h2 class="fw-bold">14 Days</h2>
                     </div>
                 </div>
             </div>
 
-            <div class="card border-0 shadow-sm p-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="fw-bold">Organization Logs</h5>
-                    <button class="btn btn-sm btn-outline-primary">View All</button>
+            <h4 class="mb-4 fw-bold"><i class="fas fa-user-circle me-2 text-success"></i> Leadership Profiles</h4>
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="premium-card d-flex align-items-center">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" class="profile-img me-3">
+                        <div>
+                            <span class="status-badge">Super Admin</span>
+                            <h5 class="mb-0 mt-2">Nahid Khan</h5>
+                            <small class="text-muted">Organization Lead</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="premium-card d-flex align-items-center">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" class="profile-img me-3">
+                        <div>
+                            <span class="status-badge" style="border-color: #00d2ff; color: #00d2ff;">Secretary</span>
+                            <h5 class="mb-0 mt-2">Sarah Ahmed</h5>
+                            <small class="text-muted">Operations Manager</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="premium-card">
+                <div class="d-flex justify-content-between mb-4">
+                    <h5 class="fw-bold">Recent Finance Activity</h5>
+                    <button class="btn btn-sm btn-outline-success">Export PDF</button>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="bg-light">
-                            <tr>
-                                <th class="border-0">User</th>
-                                <th class="border-0">Activity</th>
-                                <th class="border-0">Status</th>
-                                <th class="border-0">Time</th>
+                    <table class="table table-dark table-hover border-0">
+                        <thead>
+                            <tr class="text-muted">
+                                <th>Transaction</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Nahid Khan</strong></td>
-                                <td>Published Monthly Schedule</td>
-                                <td><span class="badge rounded-pill bg-success-subtle text-success border border-success">Live</span></td>
-                                <td class="text-muted">2 mins ago</td>
+                                <td>Jersey Production</td>
+                                <td>Inventory</td>
+                                <td class="finance-down">-$500.00</td>
+                                <td><span class="badge bg-secondary">Paid</span></td>
                             </tr>
                             <tr>
-                                <td><strong>System</strong></td>
-                                <td>Database Backup</td>
-                                <td><span class="badge rounded-pill bg-info-subtle text-info border border-info">Auto</span></td>
-                                <td class="text-muted">1 hour ago</td>
+                                <td>Monthly Donation</td>
+                                <td>Revenue</td>
+                                <td class="finance-up">+$1,200.00</td>
+                                <td><span class="badge bg-success">Received</span></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
