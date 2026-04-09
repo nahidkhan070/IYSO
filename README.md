@@ -43,7 +43,7 @@
 <div id="wrapper">
     <nav id="sidebar">
         <div class="sidebar-header">
-            <img src="image.png" alt="IYSO Logo">
+            <img src="image.jpg" alt="IYSO Logo">
             <h5 class="mt-2 text-white">IYSO ERP</h5>
         </div>
         <ul class="list-unstyled components">
