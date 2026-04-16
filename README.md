@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IYSO | Management Portal</title>
+    <title>IYSO | Executive Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -19,130 +19,112 @@
         body {
             background: radial-gradient(circle at top right, #003d21, var(--dark-bg) 70%);
             color: #e9ecef;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif;
             min-height: 100vh;
-            margin: 0;
         }
 
+        /* Subtle Logo Watermark */
         body::before {
-            content: "";
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80vw; height: 80vw;
-            max-width: 600px;
-            background: url('image_0.png') no-repeat center;
-            background-size: contain;
-            opacity: 0.04;
-            z-index: -1;
-            pointer-events: none;
+            content: ""; position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); width: 70vw; height: 70vw;
+            background: url('0-02-03-d309263e56130046c80157bf1f139cae99883115fd22a5526673d00fb3c476e4_52a78bf800e32839.jpg') no-repeat center;
+            background-size: contain; opacity: 0.03; z-index: -1; pointer-events: none;
         }
 
-        /* --- RESPONSIVE SIDEBAR --- */
         #sidebar {
             width: 260px; height: 100vh; position: fixed;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(25px);
-            border-right: 1px solid rgba(198, 163, 79, 0.15);
-            padding: 40px 20px; z-index: 1000;
-            transition: transform 0.3s ease;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(198, 163, 79, 0.1); padding: 30px 20px;
         }
 
-        .main-content { margin-left: 260px; padding: 30px; transition: 0.3s; }
-
-        @media (max-width: 992px) {
-            #sidebar { transform: translateX(-100%); width: 240px; }
-            #sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 20px; padding-top: 80px; }
-            .mobile-toggle { display: block !important; }
-        }
-
-        .mobile-toggle {
-            display: none; position: fixed; top: 20px; left: 20px;
-            z-index: 1100; background: var(--iyso-green);
-            color: white; border: none; border-radius: 8px; padding: 10px 15px;
-        }
-
-        /* --- ANIMATED ELEMENTS --- */
-        .nav-link {
-            color: #8a949d; padding: 12px 15px; border-radius: 12px;
-            margin-bottom: 8px; transition: 0.3s; cursor: pointer;
-            text-decoration: none; display: flex; align-items: center;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: var(--iyso-green); color: #fff;
-            transform: translateX(5px);
-        }
+        .main-content { margin-left: 260px; padding: 40px; }
 
         .glass-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px; padding: 25px;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            transition: 0.3s;
+            background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px; padding: 25px; transition: 0.3s;
         }
 
-        .glass-card:hover { transform: translateY(-5px); border-color: var(--iyso-gold); }
-
-        .btn-action {
-            background: rgba(255,255,255,0.05); border: none;
-            color: #8a949d; border-radius: 8px; width: 35px; height: 35px;
-            transition: 0.3s;
-        }
-
-        .btn-action:hover { background: var(--iyso-gold); color: #000; }
+        .method-icon { width: 30px; height: 30px; object-fit: contain; margin-right: 10px; }
+        
+        .nav-link { color: #8a949d; cursor: pointer; padding: 12px; border-radius: 10px; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { background: var(--iyso-green); color: #fff; }
 
         .page-section { display: none; }
-        .page-section.active { display: block; animation: fadeIn 0.5s ease; }
+        .page-section.active { display: block; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 992px) {
+            #sidebar { display: none; }
+            .main-content { margin-left: 0; }
+        }
     </style>
 </head>
 <body>
 
-<button class="mobile-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-
 <div id="sidebar">
-    <div class="text-center mb-5">
-        <img src="image_0.png" alt="Logo" height="70">
-        <h5 class="mt-3 fw-bold text-white">IYSO PORTAL</h5>
+    <div class="text-center mb-4">
+        <img src="0-02-03-d309263e56130046c80157bf1f139cae99883115fd22a5526673d00fb3c476e4_52a78bf800e32839.jpg" height="60">
+        <h6 class="mt-2 fw-bold text-white">IYSO PORTAL</h6>
     </div>
     <div class="nav flex-column">
-        <div class="nav-link active" data-section="overview"><i class="fas fa-chart-pie me-3"></i> Dashboard</div>
-        <div class="nav-link" data-section="members"><i class="fas fa-user-friends me-3"></i> Members</div>
-        <div class="nav-link" data-section="events"><i class="fas fa-calendar-alt me-3"></i> Events</div>
+        <div class="nav-link active" onclick="showSection('overview')"><i class="fas fa-home me-2"></i> Dashboard</div>
+        <div class="nav-link" onclick="showSection('members')"><i class="fas fa-users me-2"></i> Members</div>
+        <div class="nav-link" onclick="showSection('events')"><i class="fas fa-calendar-star me-2"></i> Events</div>
+        <div class="nav-link" onclick="showSection('settings')"><i class="fas fa-cog me-2"></i> Settings</div>
     </div>
 </div>
 
 <div class="main-content">
+    
     <div id="overview" class="page-section active">
-        <h2 class="mb-4">Dashboard</h2>
-        <div class="row g-3">
-            <div class="col-md-6"><div class="glass-card"><h6>Monthly Collections</h6><h2 id="monthly-stat">৳0</h2></div></div>
-            <div class="col-md-6"><div class="glass-card"><h6>Total Yearly</h6><h2 id="yearly-stat">৳0</h2></div></div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">Executive Overview / নির্বাহী সংক্ষিপ্ত বিবরণ</h2>
+            <button class="btn btn-outline-warning btn-sm" onclick="addDonation()">+ Record Donation / অনুদান যোগ করুন</button>
         </div>
-        <div class="glass-card mt-4 p-0 overflow-hidden">
-            <div class="table-responsive">
-                <table class="table table-dark m-0">
-                    <thead><tr><th>Date</th><th>Name</th><th>Amount</th></tr></thead>
-                    <tbody id="report-table"></tbody>
-                </table>
+        
+        <div class="row g-4 mb-5">
+            <div class="col-md-4"><div class="glass-card"><h6>Monthly / মাসিক</h6><h2 id="m-stat">৳0</h2></div></div>
+            <div class="col-md-4"><div class="glass-card"><h6>Yearly / বার্ষিক</h6><h2 id="y-stat">৳0</h2></div></div>
+            <div class="col-md-4">
+                <div class="glass-card py-2">
+                    <div class="small text-muted">Payment Channels</div>
+                    <div id="channel-stats" style="font-size: 0.8rem;"></div>
+                </div>
             </div>
+        </div>
+
+        <div class="glass-card p-0 overflow-hidden">
+            <table class="table table-dark m-0">
+                <thead><tr><th>Date</th><th>Name</th><th>Method</th><th>Amount</th></tr></thead>
+                <tbody id="donation-table"></tbody>
+            </table>
         </div>
     </div>
 
-    <div id="members" class="page-section">
+    <div id="events" class="page-section">
         <div class="d-flex justify-content-between mb-4">
-            <h3>Directory</h3>
-            <button class="btn btn-success" onclick="manageMember()">+ Add New</button>
+            <h2>Events / ইভেন্টসমূহ</h2>
+            <button class="btn btn-success" onclick="addEvent()">+ Add Event / ইভেন্ট যোগ করুন</button>
         </div>
-        <div id="member-grid" class="row g-3"></div>
+        <div id="event-grid" class="row g-3"></div>
     </div>
+
+    <div id="settings" class="page-section">
+        <h2 class="mb-4">Portal Settings</h2>
+        <div class="glass-card col-md-6">
+            <label class="form-label">bKash Number</label>
+            <input type="text" id="bkash-num" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="017xxxxxxxx">
+            <label class="form-label">Nagad Number</label>
+            <input type="text" id="nagad-num" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="018xxxxxxxx">
+            <button class="btn btn-gold w-100" onclick="saveSettings()">Update Numbers</button>
+        </div>
+    </div>
+
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCDs8tMQt14l4TNlTXPloQZk0LmL_Z4oNY",
@@ -156,70 +138,99 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Responsive Toggle
-    window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('active');
+    // Nav Logic
+    window.showSection = (id) => {
+        document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+    };
 
-    // Navigation Logic
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.onclick = () => {
-            document.querySelectorAll('.page-section, .nav-link').forEach(el => el.classList.remove('active'));
-            document.getElementById(link.dataset.section).classList.add('active');
-            link.classList.add('active');
-            if(window.innerWidth < 992) toggleSidebar();
-        };
-    });
-
-    // --- MEMBER CRUD ---
-    window.manageMember = async (id = null, currentData = {}) => {
-        const name = prompt("Name:", currentData.name || "");
-        const mid = prompt("Member ID:", currentData.memberId || "");
-        if(!name || !mid) return;
-
-        if(id) {
-            await updateDoc(doc(db, "members", id), { name, memberId: mid });
-        } else {
-            await addDoc(collection(db, "members"), { name, memberId: mid, date: new Date() });
+    // --- DONATION LOGIC ---
+    window.addDonation = async () => {
+        const name = prompt("Donor Name:");
+        const amt = prompt("Amount (৳):");
+        const method = prompt("Method (bkash / nagad / cash):").toLowerCase();
+        
+        if(name && amt) {
+            await addDoc(collection(db, "donations"), {
+                name, 
+                amount: parseFloat(amt), 
+                method, 
+                date: new Date(),
+                month: new Date().getMonth(),
+                year: new Date().getFullYear()
+            });
         }
     };
 
-    window.removeMember = async (id) => {
-        if(confirm("Permanently delete this member?")) await deleteDoc(doc(db, "members", id));
+    onSnapshot(collection(db, "donations"), (snap) => {
+        let html = ''; let mTotal = 0; let yTotal = 0;
+        let methods = { bkash: 0, nagad: 0, cash: 0 };
+        const now = new Date();
+
+        snap.forEach(doc => {
+            const d = doc.data();
+            yTotal += d.amount;
+            if(d.month === now.getMonth()) {
+                mTotal += d.amount;
+                if(methods[d.method] !== undefined) methods[d.method] += d.amount;
+            }
+            html += `<tr>
+                <td>${d.date.toDate().toLocaleDateString()}</td>
+                <td>${d.name}</td>
+                <td><span class="badge bg-secondary">${d.method.toUpperCase()}</span></td>
+                <td class="text-success">৳${d.amount}</td>
+            </tr>`;
+        });
+
+        document.getElementById('donation-table').innerHTML = html;
+        document.getElementById('m-stat').innerText = `৳${mTotal}`;
+        document.getElementById('y-stat').innerText = `৳${yTotal}`;
+        document.getElementById('channel-stats').innerHTML = `
+            bKash: ৳${methods.bkash} | Nagad: ৳${methods.nagad} | Cash: ৳${methods.cash}
+        `;
+    });
+
+    // --- EVENT LOGIC ---
+    window.addEvent = async () => {
+        const title = prompt("Event Name / ইভেন্টের নাম:");
+        const budget = prompt("Budget / বাজেট:");
+        if(title) {
+            await addDoc(collection(db, "events"), { title, budget, date: new Date() });
+        }
     };
 
-    onSnapshot(collection(db, "members"), (snap) => {
+    onSnapshot(collection(db, "events"), (snap) => {
         let html = '';
         snap.forEach(d => {
-            const m = d.data();
-            html += `
-            <div class="col-sm-6 col-xl-4">
-                <div class="glass-card">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div><h6 class="mb-0 text-white">${m.name}</h6><small>${m.memberId}</small></div>
-                        <div class="d-flex gap-2">
-                            <button class="btn-action" onclick="manageMember('${d.id}', {name:'${m.name}', memberId:'${m.memberId}'})"><i class="fas fa-edit"></i></button>
-                            <button class="btn-action" onclick="removeMember('${d.id}')"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
+            const e = d.data();
+            html += `<div class="col-md-6"><div class="glass-card">
+                <h5 class="text-success">${e.title}</h5>
+                <p class="mb-0 small">Budget: ৳${e.budget}</p>
+            </div></div>`;
         });
-        document.getElementById('member-grid').innerHTML = html;
+        document.getElementById('event-grid').innerHTML = html;
     });
 
-    // --- FINANCE STATS ---
-    onSnapshot(collection(db, "donations"), (snap) => {
-        let mTotal = 0; let yTotal = 0; let rows = '';
-        const now = new Date();
-        snap.forEach(d => {
-            const data = d.data();
-            yTotal += data.amount;
-            if(data.month === now.getMonth()) mTotal += data.amount;
-            rows += `<tr><td>${data.date.toDate().toLocaleDateString()}</td><td>${data.name}</td><td>৳${data.amount}</td></tr>`;
-        });
-        document.getElementById('report-table').innerHTML = rows;
-        document.getElementById('monthly-stat').innerText = `৳${mTotal}`;
-        document.getElementById('yearly-stat').innerText = `৳${yTotal}`;
-    });
+    // --- SETTINGS LOGIC ---
+    window.saveSettings = async () => {
+        const bkash = document.getElementById('bkash-num').value;
+        const nagad = document.getElementById('nagad-num').value;
+        await setDoc(doc(db, "config", "numbers"), { bkash, nagad });
+        alert("Numbers Updated!");
+    };
+
+    // Load Settings
+    const loadSettings = async () => {
+        const res = await getDoc(doc(db, "config", "numbers"));
+        if(res.exists()) {
+            document.getElementById('bkash-num').value = res.data().bkash;
+            document.getElementById('nagad-num').value = res.data().nagad;
+        }
+    };
+    loadSettings();
+
 </script>
 </body>
 </html>
