@@ -1,3 +1,4 @@
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -92,10 +93,10 @@
 
 <div class="sidebar">
     <h2 class="fw-800 mb-4 text-center" style="color: var(--gold);">IYSO</h2>
-    <div class="nav-link active" data-page="dash">Dashboard-ড্যাশবোর্ড</div>
-    <div class="nav-link" data-page="members">Members-সদস্যবৃন্দ</div>
-    <div class="nav-link" data-page="donations">Donations-অনুদান</div>
-    <div class="nav-link" data-page="events">Events-ইভেন্ট</div>
+    <div class="nav-link active" data-page="dash">Dashboard</div>
+    <div class="nav-link" data-page="members">Members</div>
+    <div class="nav-link" data-page="donations">Donations</div>
+    <div class="nav-link" data-page="events">Events</div>
 </div>
 
 <div class="main">
@@ -104,19 +105,19 @@
         <div class="row g-3">
             <div class="col-md-4">
                 <div class="glass">
-                    <h6>Total Fund Collected-মোট তহবিল</h6>
+                    <h6>Total Fund Collected</h6>
                     <div class="stat" id="totalFund">0</div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="glass">
-                    <h6>Monthly Subscription Total-মাসিক চাঁদা</h6>
+                    <h6>Monthly Subscription Total</h6>
                     <div class="stat" id="monthlyFund">0</div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="glass">
-                    <h6>Net Event Balance-বর্তমান ব্যালেন্স</h6>
+                    <h6>Net Event Balance</h6>
                     <div class="stat" id="balanceFund">0</div>
                 </div>
             </div>
@@ -216,35 +217,18 @@
         const body = document.getElementById('modalBody');
         const saveBtn = document.getElementById('saveBtn');
         const title = document.getElementById('modalTitle');
-       let data = { uid:'', name:'', desig:'', phone:'', email:'' };
 
-        if(id) {
-            const docSnap = await getDoc(doc(db, "members", id));
-            data = docSnap.data();
-            title.innerText = dict[currentLang].edit;
-        } else {
-            title.innerText = dict[currentLang].addMember;
-        }
-
-        body.innerHTML = `
-            <input type="text" id="mUid" class="form-control" placeholder="${dict[currentLang].id}" value="${data.uid}">
-            <input type="text" id="mName" class="form-control" placeholder="${dict[currentLang].name}" value="${data.name}">
-            <input type="text" id="mDesig" class="form-control" placeholder="${dict[currentLang].desig}" value="${data.desig}">
-            <input type="text" id="mPhone" class="form-control" placeholder="${dict[currentLang].phone}" value="${data.phone}">
-            <input type="email" id="mEmail" class="form-control" placeholder="${dict[currentLang].email}" value="${data.email}">
-        `;
-
-        saveBtn.onclick = async () => {
-            const payload = {
-                uid: document.getElementById('mUid').value,
-                name: document.getElementById('mName').value,
-                desig: document.getElementById('mDesig').value,
-                phone: document.getElementById('mPhone').value,
-                email: document.getElementById('mEmail').value
-            };
-            if(id) await updateDoc(doc(db, "members", id), payload);
-            else await addDoc(collection(db, "members"), payload);
-            bsModal.hide();
+        if (type === 'members') {
+            title.innerText = "Add Member";
+            body.innerHTML = `
+                <input type="text" id="mName" class="form-control mb-3" placeholder="Full Name">
+                <input type="email" id="mEmail" class="form-control" placeholder="Email Address">`;
+            saveBtn.onclick = async () => {
+                await addDoc(collection(db, "members"), {
+                    name: document.getElementById('mName').value,
+                    email: document.getElementById('mEmail').value
+                });
+                bsModal.hide();
             };
         } 
         
