@@ -556,17 +556,41 @@
 
     // 3. Events & Chart
     onSnapshot(collection(db, "events"), snap => {
-    let planningHtml = `<div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>Event</th><th>Exp. Date</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
-    let executeHtml = `<div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>Event</th><th>Raised/Cost</th><th>Result</th><th>Action</th></tr></thead><tbody>`;
+    // 1. Separate headers for both tables
+    let planningHtml = `
+    <div class="table-responsive">
+        <table class="table table-hover mt-2 align-middle">
+            <thead>
+                <tr>
+                    <th>Event Details</th>
+                    <th>Exp. Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+    let executeHtml = `
+    <div class="table-responsive">
+        <table class="table table-hover mt-2 align-middle">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Financials (Raised/Cost)</th>
+                    <th>Result</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>`;
     
     let totalFund = 0, totalCost = 0;
     const today = new Date().toISOString().split('T')[0];
 
     snap.forEach(d => {
         const e = d.data();
-        // Crucial: Sanitize data for the onclick function
         const safeData = JSON.stringify({id: d.id, ...e}).replace(/'/g, "&apos;").replace(/"/g, '&quot;');
 
+        // 2. LOGIC: If status is Planned (or missing), put it in Planning Tab
         if (e.status === "Planned" || !e.status) {
             const isOverdue = today > e.date;
             const statusLabel = isOverdue ? `<span class="badge bg-danger">Unsuccessful</span>` : `<span class="badge bg-warning text-dark">Pending</span>`;
@@ -581,29 +605,34 @@
                         <button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('events','${d.id}')">Delete</button>
                     </td>
                 </tr>`;
-        } else if (e.status === "Executed") {
-            totalFund += (e.fund || 0);
-            totalCost += (e.cost || 0);
+        } 
+        // 3. LOGIC: If status is Executed, put it in Execution Tab
+        else if (e.status === "Executed") {
+            totalFund += (Number(e.fund) || 0);
+            totalCost += (Number(e.cost) || 0);
             
             executeHtml += `
                 <tr>
-                    <td><b>${e.name}</b><br><small class="text-muted">Plan: $${e.budget}</small></td>
-                    <td><span class="text-success">+$${e.fund}</span> / <span class="text-danger">-$${e.cost}</span></td>
+                    <td><b>${e.name}</b><br><small class="text-muted text-gold">Plan: $${e.budget}</small></td>
+                    <td>
+                        <span class="text-success fw-bold">+$${e.fund}</span><br>
+                        <span class="text-danger">-$${e.cost}</span>
+                    </td>
                     <td><span class="badge bg-success">Successful</span></td>
                     <td><button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('events','${d.id}')">Delete</button></td>
                 </tr>`;
         }
     });
 
+    // 4. Close the tags and push to HTML
     document.getElementById('planningList').innerHTML = planningHtml + `</tbody></table></div>`;
     document.getElementById('executeList').innerHTML = executeHtml + `</tbody></table></div>`;
     
-    // Update Dashboard Balance
-    const balance = totalFund - totalCost;
-    const balanceEl = document.getElementById("balanceFund");
-    if (balanceEl) balanceEl.innerText = `$${balance}`;
+    // 5. Update the Dashboard Balance
+    const balanceFundEl = document.getElementById("balanceFund");
+    if (balanceFundEl) balanceFundEl.innerText = `$${totalFund - totalCost}`;
 
-    // Update Chart with Executed Data
+    // 6. Update Chart
     if (eventChart) eventChart.destroy();
     const ctx = document.getElementById('eventChart');
     if (ctx) {
