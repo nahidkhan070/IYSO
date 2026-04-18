@@ -626,7 +626,7 @@
 
     // 4. Close the tags and push to HTML
     document.getElementById('planningList').innerHTML = planningHtml + `</tbody></table></div>`;
-    document.getElementById('executeList').innerHTML = executeHtml + `</tbody></table></div>`;
+document.getElementById('executeList').innerHTML = executeHtml + `</tbody></table></div>`;
     
     // 5. Update the Dashboard Balance
     const balanceFundEl = document.getElementById("balanceFund");
