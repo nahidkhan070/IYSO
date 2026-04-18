@@ -436,47 +436,48 @@
         <table class="table table-hover mt-2 align-middle">
             <thead>
                 <tr>
-                    <th>Member</th>
+                    <th>Date</th> <th>Member</th>
                     <th>Amount</th>
                     <th>Method</th>
-                    <th>Type</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>`;
     
     snap.forEach(d => {
-    const x = d.data();
-    const donationData = JSON.stringify({id: d.id, ...x}).replace(/"/g, '&quot;');
-    
-    total += x.amount;
-    if (x.type === "monthly") monthly += x.amount; else event += x.amount;
+        const x = d.data();
+        const donationData = JSON.stringify({id: d.id, ...x}).replace(/"/g, '&quot;');
+        
+        total += x.amount;
+        if (x.type === "monthly") monthly += x.amount; else event += x.amount;
+        
+        // Brand colors for payment badges
+        let systemBadgeColor = "border-secondary text-light";
+        if (x.system === 'Bkash') systemBadgeColor = "bg-pink text-white"; 
+        if (x.system === 'Nagad') systemBadgeColor = "bg-orange text-white";
+        if (x.system === 'By-Cash') systemBadgeColor = "bg-success text-white";
 
-    // Define color logic for payment systems
-    let systemBadgeColor = "border-secondary text-light"; // Default
-    if (x.system === 'Bkash') systemBadgeColor = "bg-pink text-white"; 
-    if (x.system === 'Nagad') systemBadgeColor = "bg-orange text-white";
-    if (x.system === 'By-Cash') systemBadgeColor = "bg-success text-white";
-
-    html += `
-        <tr>
-            <td>
-                <span class="text-warning small fw-bold">${x.uid || 'Guest'}</span><br>
-                ${x.name || 'Anonymous'}
-            </td>
-            <td class="stat" style="font-size: 1.1rem;">$${x.amount}</td>
-            <td><span class="badge ${systemBadgeColor}" style="padding: 5px 10px;">${x.system || '-'}</span></td>
-            <td><small class="text-muted">${x.type}</small></td>
-            <td>
-                <button class="btn btn-sm btn-outline-info me-1" onclick='openForm("donations", ${donationData})'>Edit</button>
-                <button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('donations','${d.id}')">Delete</button>
-            </td>
-        </tr>`;
-});
+        html += `
+            <tr>
+                <td><small class="text-muted">${x.date || '-'}</small></td> <td>
+                    <span class="text-warning small fw-bold">${x.uid || 'Guest'}</span><br>
+                    ${x.name || 'Anonymous'}
+                </td>
+                <td class="stat" style="font-size: 1.1rem;">$${x.amount}</td>
+                <td><span class="badge ${systemBadgeColor}">${x.system || '-'}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-info me-1" onclick='openForm("donations", ${donationData})'>Edit</button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('donations','${d.id}')">Delete</button>
+                </td>
+            </tr>`;
+    });
 
     document.getElementById("totalFund").innerText = `$${total}`;
     document.getElementById("monthlyFund").innerText = `$${monthly}`;
     document.getElementById('donationList').innerHTML = html + `</tbody></table></div>`;
+
+    // Re-render Chart logic remains the same below...
+});
 
     // --- CHART UPDATE LOGIC --- (Keep your existing chart code here)
     if (donationChart) donationChart.destroy();
