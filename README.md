@@ -383,65 +383,70 @@
 }
 
         else if (type === 'events') {
-    const isExecute = existingData?.status === "Planned";
-    title.innerText = isExecute ? "Execute Event" : (existingData ? "Edit Plan" : "Plan New Event");
+        // Check if we are moving from Planning to Execution
+        const isExecuting = existingData?.status === "Planned";
+        title.innerText = isExecuting ? "Execute Event" : (existingData ? "Edit Plan" : "Plan New Event");
 
-    body.innerHTML = `
-        <div class="mb-3">
-            <label class="small text-muted">Event Title</label>
-            <input type="text" id="eName" class="form-control" value="${existingData?.name || ''}" ${isExecute ? 'readonly' : ''}>
-        </div>
-        <div class="mb-3">
-            <label class="small text-muted">Expected Date</label>
-            <input type="date" id="eDate" class="form-control" value="${existingData?.date || ''}" ${isExecute ? 'readonly' : ''}>
-        </div>
-        <div class="mb-3">
-            <label class="small text-muted">Expected Budget ($)</label>
-            <input type="number" id="eBudget" class="form-control" value="${existingData?.budget || ''}" ${isExecute ? 'readonly' : ''}>
-        </div>
-        ${isExecute ? `
-            <div class="p-3 mb-3 rounded" style="background: rgba(198, 163, 79, 0.1); border: 1px solid var(--gold);">
-                <div class="mb-3">
-                    <label class="small text-gold fw-bold">Actual Fund Raised ($)</label>
-                    <input type="number" id="eFund" class="form-control" placeholder="0.00">
-                </div>
-                <div class="mb-3">
-                    <label class="small text-gold fw-bold">Actual Expenses ($)</label>
-                    <input type="number" id="eCost" class="form-control" placeholder="0.00">
-                </div>
-            </div>
-        ` : `
+        body.innerHTML = `
             <div class="mb-3">
-                <label class="small text-muted">Event Details</label>
-                <textarea id="eDetails" class="form-control" rows="3">${existingData?.details || ''}</textarea>
+                <label class="small text-muted">Event Title</label>
+                <input type="text" id="eName" class="form-control" value="${existingData?.name || ''}" ${isExecuting ? 'readonly' : ''}>
             </div>
-        `}
-    `;
+            <div class="mb-3">
+                <label class="small text-muted">Expected Date</label>
+                <input type="date" id="eDate" class="form-control" value="${existingData?.date || ''}" ${isExecuting ? 'readonly' : ''}>
+            </div>
+            <div class="mb-3">
+                <label class="small text-muted">Expected Budget ($)</label>
+                <input type="number" id="eBudget" class="form-control" value="${existingData?.budget || ''}" ${isExecuting ? 'readonly' : ''}>
+            </div>
+            ${isExecuting ? `
+                <div class="p-3 mb-3 rounded" style="background: rgba(198, 163, 79, 0.1); border: 1px solid var(--gold);">
+                    <div class="mb-3">
+                        <label class="small text-gold fw-bold">Actual Fund Raised ($)</label>
+                        <input type="number" id="eFund" class="form-control" placeholder="0.00" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="small text-gold fw-bold">Actual Expenses ($)</label>
+                        <input type="number" id="eCost" class="form-control" placeholder="0.00" required>
+                    </div>
+                </div>
+            ` : `
+                <div class="mb-3">
+                    <label class="small text-muted">Event Details</label>
+                    <textarea id="eDetails" class="form-control" rows="3">${existingData?.details || ''}</textarea>
+                </div>
+            `}
+        `;
 
-    saveBtn.onclick = async () => {
-        const data = {
-            name: document.getElementById('eName').value,
-            date: document.getElementById('eDate').value,
-            budget: Number(document.getElementById('eBudget').value),
-            status: isExecute ? "Executed" : (existingData?.status || "Planned"),
-            details: !isExecute ? document.getElementById('eDetails').value : (existingData?.details || "")
+        saveBtn.onclick = async () => {
+            const data = {
+                name: document.getElementById('eName').value,
+                date: document.getElementById('eDate').value,
+                budget: Number(document.getElementById('eBudget').value),
+                status: isExecuting ? "Executed" : (existingData?.status || "Planned"),
+                details: !isExecuting ? document.getElementById('eDetails').value : (existingData?.details || "")
+            };
+
+            if (isExecuting) {
+                data.fund = Number(document.getElementById('eFund').value);
+                data.cost = Number(document.getElementById('eCost').value);
+            }
+
+            try {
+                if (existingData && existingData.id) {
+                    await updateDoc(doc(db, "events", existingData.id), data);
+                } else {
+                    await addDoc(collection(db, "events"), data);
+                }
+                bsModal.hide();
+            } catch (err) {
+                console.error("Save error:", err);
+            }
         };
-
-        if (isExecute) {
-            data.fund = Number(document.getElementById('eFund').value);
-            data.cost = Number(document.getElementById('eCost').value);
-        }
-
-        if (existingData && existingData.id) {
-            await updateDoc(doc(db, "events", existingData.id), data);
-        } else {
-            await addDoc(collection(db, "events"), data);
-        }
-        bsModal.hide();
-    };
-}
-        bsModal.show();
-    };
+    }
+    bsModal.show();
+};
 
     // GLOBAL DELETE
     window.deleteDocItem = async (col, id) => {
