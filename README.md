@@ -1,4 +1,3 @@
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -259,70 +258,22 @@
         } 
         
         else if (type === 'donations') {
-         else if (type === 'donations') {
-    title.innerText = existingData ? "Edit Donation Log" : "New Donation Entry";
-    body.innerHTML = `
-        <div class="row mb-3">
-            <div class="col-md-5">
-                <input type="text" id="dUID" class="form-control" placeholder="Member ID (e.g. IYSO-001)" value="${existingData?.uid || ''}">
-            </div>
-            <div class="col-md-7">
-                <input type="text" id="dName" class="form-control" placeholder="Member Name" value="${existingData?.name || ''}" readonly style="background: #0d1117; border-color: #222;">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col">
-                <input type="number" id="dAmount" class="form-control" placeholder="Amount ($)" value="${existingData?.amount || ''}">
-            </div>
-            <div class="col">
-                <select id="dSystem" class="form-select">
-                    <option value="">Payment System</option>
-                    ${['Bkash', 'Nagad', 'By-Cash'].map(sys => 
-                        `<option value="${sys}" ${existingData?.system === sys ? 'selected' : ''}>${sys}</option>`
-                    ).join('')}
-                </select>
-            </div>
-        </div>
-        <select id="dType" class="form-select mb-3">
-            <option value="monthly" ${existingData?.type === 'monthly' ? 'selected' : ''}>Monthly Subscription</option>
-            <option value="event" ${existingData?.type === 'event' ? 'selected' : ''}>Event Fund</option>
-        </select>`;
-
-    // --- AUTO-FILL LOGIC ---
-    const idInput = document.getElementById('dUID');
-    idInput.oninput = () => {
-        const val = idInput.value.trim();
-        const memberList = document.querySelectorAll('#memberList tr');
-        let found = false;
-        memberList.forEach(tr => {
-            const uid = tr.cells[0]?.innerText;
-            const name = tr.cells[1]?.innerText;
-            if(uid === val) {
-                document.getElementById('dName').value = name;
-                found = true;
-            }
-        });
-        if(!found) document.getElementById('dName').value = "";
-    };
-
-    saveBtn.onclick = async () => {
-        const data = {
-            uid: document.getElementById('dUID').value,
-            name: document.getElementById('dName').value,
-            amount: Number(document.getElementById('dAmount').value),
-            system: document.getElementById('dSystem').value,
-            type: document.getElementById('dType').value,
-            date: existingData ? existingData.date : new Date().toLocaleDateString()
-        };
-
-        if (existingData) {
-            await updateDoc(doc(db, "donations", existingData.id), data);
-        } else {
-            await addDoc(collection(db, "donations"), data);
+            title.innerText = "Add Donation";
+            body.innerHTML = `
+                <input type="number" id="dAmount" class="form-control mb-3" placeholder="Amount ($)">
+                <select id="dType" class="form-select">
+                    <option value="monthly">Monthly Subscription</option>
+                    <option value="event">Event Fund</option>
+                </select>`;
+            saveBtn.onclick = async () => {
+                await addDoc(collection(db, "donations"), {
+                    amount: Number(document.getElementById('dAmount').value),
+                    type: document.getElementById('dType').value,
+                    date: new Date().toLocaleDateString()
+                });
+                bsModal.hide();
+            };
         }
-        bsModal.hide();
-    };
-}
 
         else if (type === 'events') {
             title.innerText = "Add Event";
@@ -390,59 +341,30 @@
 
     // 2. Donations & Chart
     onSnapshot(collection(db, "donations"), snap => {
-    let total = 0, monthly = 0, event = 0;
-    let html = `
-    <div class="table-responsive">
-        <table class="table table-hover mt-2 align-middle">
-            <thead>
-                <tr>
-                    <th>Member</th>
-                    <th>Amount</th>
-                    <th>Method</th>
-                    <th>Type</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>`;
-    
-    snap.forEach(d => {
-        const x = d.data();
-        const donationData = JSON.stringify({id: d.id, ...x}).replace(/"/g, '&quot;');
+        let total = 0, monthly = 0, event = 0;
+        let html = `<table class="table table-hover mt-2"><thead><tr><th>Amount</th><th>Type</th><th>Action</th></tr></thead><tbody>`;
         
-        total += x.amount;
-        if (x.type === "monthly") monthly += x.amount; else event += x.amount;
-        
-        html += `
-            <tr>
-                <td>
-                    <span class="text-warning small fw-bold">${x.uid || 'Guest'}</span><br>
-                    ${x.name || 'Anonymous'}
-                </td>
-                <td class="stat" style="font-size: 1.1rem;">$${x.amount}</td>
-                <td><span class="badge border border-secondary text-light">${x.system || '-'}</span></td>
-                <td><small>${x.type}</small></td>
-                <td>
-                    <button class="btn btn-sm btn-outline-info me-1" onclick='openForm("donations", ${donationData})'>Edit</button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('donations','${d.id}')">Delete</button>
-                </td>
-            </tr>`;
-    });
+        snap.forEach(d => {
+            const x = d.data();
+            total += x.amount;
+            if (x.type === "monthly") monthly += x.amount; else event += x.amount;
+            html += `<tr><td>$${x.amount}</td><td>${x.type}</td><td><button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('donations','${d.id}')">Delete</button></td></tr>`;
+        });
 
-    document.getElementById("totalFund").innerText = `$${total}`;
-    document.getElementById("monthlyFund").innerText = `$${monthly}`;
-    document.getElementById('donationList').innerHTML = html + `</tbody></table></div>`;
+        document.getElementById("totalFund").innerText = `$${total}`;
+        document.getElementById("monthlyFund").innerText = `$${monthly}`;
+        document.getElementById('donationList').innerHTML = html + `</tbody></table>`;
 
-    // --- CHART UPDATE LOGIC --- (Keep your existing chart code here)
-    if (donationChart) donationChart.destroy();
-    donationChart = new Chart(document.getElementById('donationChart'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Monthly', 'Event'],
-            datasets: [{ data: [monthly, event], backgroundColor: ['#006837', '#c6a34f'], borderWidth: 0 }]
-        },
-        options: { plugins: { legend: { labels: { color: '#fff' } } } }
+        if (donationChart) donationChart.destroy();
+        donationChart = new Chart(document.getElementById('donationChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Monthly', 'Event'],
+                datasets: [{ data: [monthly, event], backgroundColor: ['#006837', '#c6a34f'], borderWidth: 0 }]
+            },
+            options: { plugins: { legend: { labels: { color: '#fff' } } } }
+        });
     });
-});
 
     // 3. Events & Chart
     onSnapshot(collection(db, "events"), snap => {
