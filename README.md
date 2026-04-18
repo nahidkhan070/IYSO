@@ -85,6 +85,21 @@
             box-shadow: none;
         }
         .table { color: white; }
+        /* Custom Payment Method Colors */
+.bg-pink {
+    background-color: #e2136e !important; /* bKash Pink */
+}
+
+.bg-orange {
+    background-color: #f7941d !important; /* Nagad Orange */
+}
+
+.badge {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+}
     </style>
 </head>
 
@@ -404,27 +419,33 @@
             <tbody>`;
     
     snap.forEach(d => {
-        const x = d.data();
-        const donationData = JSON.stringify({id: d.id, ...x}).replace(/"/g, '&quot;');
-        
-        total += x.amount;
-        if (x.type === "monthly") monthly += x.amount; else event += x.amount;
-        
-        html += `
-            <tr>
-                <td>
-                    <span class="text-warning small fw-bold">${x.uid || 'Guest'}</span><br>
-                    ${x.name || 'Anonymous'}
-                </td>
-                <td class="stat" style="font-size: 1.1rem;">$${x.amount}</td>
-                <td><span class="badge border border-secondary text-light">${x.system || '-'}</span></td>
-                <td><small>${x.type}</small></td>
-                <td>
-                    <button class="btn btn-sm btn-outline-info me-1" onclick='openForm("donations", ${donationData})'>Edit</button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('donations','${d.id}')">Delete</button>
-                </td>
-            </tr>`;
-    });
+    const x = d.data();
+    const donationData = JSON.stringify({id: d.id, ...x}).replace(/"/g, '&quot;');
+    
+    total += x.amount;
+    if (x.type === "monthly") monthly += x.amount; else event += x.amount;
+
+    // Define color logic for payment systems
+    let systemBadgeColor = "border-secondary text-light"; // Default
+    if (x.system === 'Bkash') systemBadgeColor = "bg-pink text-white"; 
+    if (x.system === 'Nagad') systemBadgeColor = "bg-orange text-white";
+    if (x.system === 'By-Cash') systemBadgeColor = "bg-success text-white";
+
+    html += `
+        <tr>
+            <td>
+                <span class="text-warning small fw-bold">${x.uid || 'Guest'}</span><br>
+                ${x.name || 'Anonymous'}
+            </td>
+            <td class="stat" style="font-size: 1.1rem;">$${x.amount}</td>
+            <td><span class="badge ${systemBadgeColor}" style="padding: 5px 10px;">${x.system || '-'}</span></td>
+            <td><small class="text-muted">${x.type}</small></td>
+            <td>
+                <button class="btn btn-sm btn-outline-info me-1" onclick='openForm("donations", ${donationData})'>Edit</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('donations','${d.id}')">Delete</button>
+            </td>
+        </tr>`;
+});
 
     document.getElementById("totalFund").innerText = `$${total}`;
     document.getElementById("monthlyFund").innerText = `$${monthly}`;
