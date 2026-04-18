@@ -51,15 +51,6 @@ body::before {
     padding: 25px;
 }
 
-/* NAVBAR */
-.topbar {
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(20px);
-    padding: 15px 20px;
-    border-radius: 15px;
-    margin-bottom: 20px;
-}
-
 /* NAV */
 .nav-link {
     color: #8a949d;
@@ -75,6 +66,14 @@ body::before {
     color: white;
 }
 
+/* TOPBAR */
+.topbar {
+    background: rgba(0,0,0,0.5);
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
 /* CARDS */
 .stat-card {
     background: var(--card-bg);
@@ -82,36 +81,16 @@ body::before {
     padding: 20px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    transition: 0.3s;
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
     border: 1px solid var(--iyso-gold);
 }
 
-.stat-icon {
-    font-size: 28px;
-    color: var(--iyso-gold);
-}
-
-/* MEMBER CARD */
 .member-card {
     background: var(--card-bg);
-    padding: 20px;
+    padding: 15px;
     border-radius: 15px;
-    transition: 0.3s;
-}
-
-.member-card:hover {
-    transform: translateY(-5px);
-}
-
-/* BUTTON */
-.btn-primary {
-    background: var(--iyso-green);
-    border: none;
 }
 
 .page-section { display: none; }
@@ -125,7 +104,7 @@ body::before {
 <div id="sidebar">
     <div class="text-center mb-4">
         <img src="image_0.png" height="60">
-        <h5 class="mt-2">IYSO PORTAL</h5>
+        <h5>IYSO PORTAL</h5>
     </div>
 
     <div class="nav flex-column">
@@ -136,10 +115,9 @@ body::before {
 
 <div class="main-content">
 
-<!-- TOPBAR -->
 <div class="topbar d-flex justify-content-between">
-    <h5>Dashboard Overview</h5>
-    <button class="btn btn-primary" onclick="openModal()">+ Add Member</button>
+    <h5>Dashboard</h5>
+    <button class="btn btn-success" onclick="openModal()">+ Add Member</button>
 </div>
 
 <!-- DASHBOARD -->
@@ -148,33 +126,21 @@ body::before {
         <div class="col-md-6">
             <div class="stat-card">
                 <div>
-                    <h6>Monthly Collection</h6>
+                    <h6>Monthly</h6>
                     <h2 id="monthly-stat">৳0</h2>
                 </div>
-                <i class="fas fa-coins stat-icon"></i>
+                <i class="fas fa-coins"></i>
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="stat-card">
                 <div>
-                    <h6>Total Yearly</h6>
+                    <h6>Yearly</h6>
                     <h2 id="yearly-stat">৳0</h2>
                 </div>
-                <i class="fas fa-chart-line stat-icon"></i>
+                <i class="fas fa-chart-line"></i>
             </div>
-        </div>
-    </div>
-
-    <div class="mt-4">
-        <h5>Recent Transactions</h5>
-        <div class="table-responsive">
-            <table class="table table-dark">
-                <thead>
-                    <tr><th>Date</th><th>Name</th><th>Amount</th></tr>
-                </thead>
-                <tbody id="report-table"></tbody>
-            </table>
         </div>
     </div>
 </div>
@@ -182,8 +148,9 @@ body::before {
 <!-- MEMBERS -->
 <div id="members" class="page-section">
     <div class="d-flex justify-content-between mb-3">
-        <h4>Members</h4>
-        <button class="btn btn-primary" onclick="openModal()">Add Member</button>
+        <h4>Members (<span id="member-count">0</span>)</h4>
+
+        <input id="searchInput" class="form-control" placeholder="Search..." style="width:200px;">
     </div>
 
     <div id="member-grid" class="row g-3"></div>
@@ -196,7 +163,7 @@ body::before {
   <div class="modal-dialog">
     <div class="modal-content bg-dark text-white">
       <div class="modal-header">
-        <h5>Add Member</h5>
+        <h5 id="modalTitle">Add Member</h5>
       </div>
       <div class="modal-body">
         <input id="name" class="form-control mb-2" placeholder="Name">
@@ -209,11 +176,24 @@ body::before {
   </div>
 </div>
 
+<!-- DELETE MODAL -->
+<div class="modal fade" id="deleteModal">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content bg-dark text-white text-center p-3">
+        <h6>Delete this member?</h6>
+        <div class="mt-3">
+            <button class="btn btn-danger" onclick="confirmDelete()">Yes</button>
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "YOUR_KEY",
@@ -224,7 +204,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// NAVIGATION
+// NAV
 document.querySelectorAll('.nav-link').forEach(link => {
     link.onclick = () => {
         document.querySelectorAll('.page-section, .nav-link').forEach(el => el.classList.remove('active'));
@@ -233,35 +213,108 @@ document.querySelectorAll('.nav-link').forEach(link => {
     };
 });
 
-// MODAL
+// MODALS
 const modal = new bootstrap.Modal(document.getElementById('memberModal'));
-window.openModal = () => modal.show();
+const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 
-// SAVE MEMBER
+let editId = null;
+let deleteId = null;
+let allMembers = [];
+
+// OPEN
+window.openModal = () => {
+    editId = null;
+    document.getElementById('name').value = '';
+    document.getElementById('mid').value = '';
+    modal.show();
+};
+
+// EDIT
+window.editMember = (id, name, mid) => {
+    editId = id;
+    document.getElementById('name').value = name;
+    document.getElementById('mid').value = mid;
+    modal.show();
+};
+
+// SAVE
 window.saveMember = async () => {
     const name = document.getElementById('name').value;
     const mid = document.getElementById('mid').value;
+
     if(!name || !mid) return alert("Fill all fields");
 
-    await addDoc(collection(db, "members"), { name, memberId: mid });
+    if(editId) {
+        await updateDoc(doc(db, "members", editId), { name, memberId: mid });
+    } else {
+        await addDoc(collection(db, "members"), { name, memberId: mid });
+    }
+
     modal.hide();
 };
 
-// LOAD MEMBERS
+// DELETE
+window.deleteMember = (id) => {
+    deleteId = id;
+    deleteModal.show();
+};
+
+window.confirmDelete = async () => {
+    await deleteDoc(doc(db, "members", deleteId));
+    deleteModal.hide();
+};
+
+// LOAD
 onSnapshot(collection(db, "members"), (snap) => {
-    let html = '';
+    allMembers = [];
     snap.forEach(d => {
-        const m = d.data();
+        allMembers.push({ id: d.id, ...d.data() });
+    });
+
+    renderMembers(allMembers);
+});
+
+// RENDER
+function renderMembers(data) {
+    let html = '';
+
+    data.forEach(m => {
         html += `
         <div class="col-md-4">
-            <div class="member-card">
-                <h6>${m.name}</h6>
-                <small>${m.memberId}</small>
+            <div class="member-card d-flex justify-content-between">
+                <div>
+                    <h6>${m.name}</h6>
+                    <small>${m.memberId}</small>
+                </div>
+
+                <div>
+                    <button class="btn btn-sm btn-warning" onclick="editMember('${m.id}','${m.name}','${m.memberId}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteMember('${m.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
         </div>`;
     });
+
     document.getElementById('member-grid').innerHTML = html;
+    document.getElementById('member-count').innerText = data.length;
+}
+
+// SEARCH
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    const val = e.target.value.toLowerCase();
+
+    const filtered = allMembers.filter(m =>
+        m.name.toLowerCase().includes(val) ||
+        m.memberId.toLowerCase().includes(val)
+    );
+
+    renderMembers(filtered);
 });
+
 </script>
 
 </body>
