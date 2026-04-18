@@ -213,22 +213,48 @@
     });
 
     // OPEN FORM LOGIC
-    window.openForm = (type) => {
-        const body = document.getElementById('modalBody');
-        const saveBtn = document.getElementById('saveBtn');
-        const title = document.getElementById('modalTitle');
+    window.openForm = (type, existingData = null) => {
+    const body = document.getElementById('modalBody');
+    const saveBtn = document.getElementById('saveBtn');
+    const title = document.getElementById('modalTitle');
 
-        if (type === 'members') {
-            title.innerText = "Add Member";
-            body.innerHTML = `
-                <input type="text" id="mName" class="form-control mb-3" placeholder="Full Name">
-                <input type="email" id="mEmail" class="form-control" placeholder="Email Address">`;
-            saveBtn.onclick = async () => {
-                await addDoc(collection(db, "members"), {
-                    name: document.getElementById('mName').value,
-                    email: document.getElementById('mEmail').value
-                });
-                bsModal.hide();
+    if (type === 'members') {
+        title.innerText = existingData ? "Edit Member Details" : "Add New Member";
+        body.innerHTML = `
+            <input type="text" id="mUID" class="form-control mb-3" placeholder="Unique ID (e.g. IYSO-001)" value="${existingData?.uid || ''}">
+            <input type="text" id="mName" class="form-control mb-3" placeholder="Full Name" value="${existingData?.name || ''}">
+            <input type="text" id="mDesig" class="form-control mb-3" placeholder="Designation" value="${existingData?.designation || ''}">
+            <div class="row mb-3">
+                <div class="col">
+                    <select id="mBlood" class="form-select">
+                        <option value="">Blood Group</option>
+                        ${['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(bg => 
+                            `<option value="${bg}" ${existingData?.blood === bg ? 'selected' : ''}>${bg}</option>`
+                        ).join('')}
+                    </select>
+                </div>
+                <div class="col">
+                    <input type="text" id="mPhone" class="form-control" placeholder="Phone No" value="${existingData?.phone || ''}">
+                </div>
+            </div>
+            <input type="email" id="mEmail" class="form-control" placeholder="Email Address" value="${existingData?.email || ''}">`;
+
+        saveBtn.onclick = async () => {
+            const data = {
+                uid: document.getElementById('mUID').value,
+                name: document.getElementById('mName').value,
+                designation: document.getElementById('mDesig').value,
+                blood: document.getElementById('mBlood').value,
+                phone: document.getElementById('mPhone').value,
+                email: document.getElementById('mEmail').value
+            };
+
+            if (existingData) {
+                await updateDoc(doc(db, "members", existingData.id), data);
+            } else {
+                await addDoc(collection(db, "members"), data);
+            }
+            bsModal.hide();
             };
         } 
         
@@ -277,14 +303,42 @@
     let donationChart, eventChart;
 
     // 1. Members
-    onSnapshot(collection(db, "members"), snap => {
-        let html = `<table class="table table-hover mt-2"><thead><tr><th>Name</th><th>Email</th><th>Action</th></tr></thead><tbody>`;
-        snap.forEach(d => {
-            const m = d.data();
-            html += `<tr><td>${m.name}</td><td>${m.email}</td><td><button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('members','${d.id}')">Remove</button></td></tr>`;
-        });
-        document.getElementById('memberList').innerHTML = html + `</tbody></table>`;
+  onSnapshot(collection(db, "members"), snap => {
+    let html = `
+    <div class="table-responsive">
+        <table class="table table-hover mt-2 align-middle" style="font-size: 0.9rem;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Designation</th>
+                    <th>Blood</th>
+                    <th>Contact</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>`;
+    
+    snap.forEach(d => {
+        const m = d.data();
+        // This converts the data into a string so the Edit button can read it
+        const memberData = JSON.stringify({id: d.id, ...m}).replace(/"/g, '&quot;');
+        
+        html += `
+            <tr>
+                <td class="text-warning fw-bold">${m.uid || '-'}</td>
+                <td>${m.name}</td>
+                <td><small>${m.designation || '-'}</small></td>
+                <td><span class="badge bg-danger">${m.blood || '-'}</span></td>
+                <td><small>${m.phone || ''}<br><span class="text-muted">${m.email}</span></small></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-info me-1" onclick='openForm("members", ${memberData})'>Edit</button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('members','${d.id}')">Delete</button>
+                </td>
+            </tr>`;
     });
+    document.getElementById('memberList').innerHTML = html + `</tbody></table></div>`;
+});
 
     // 2. Donations & Chart
     onSnapshot(collection(db, "donations"), snap => {
