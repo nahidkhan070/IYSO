@@ -551,34 +551,60 @@
 
     // 3. Events & Chart
     onSnapshot(collection(db, "events"), snap => {
-        let cost = 0, fund = 0;
-        let html = `<table class="table table-hover mt-2"><thead><tr><th>Event</th><th>Raised</th><th>Cost</th><th>Action</th></tr></thead><tbody>`;
-        
-        snap.forEach(d => {
-            const e = d.data();
-            fund += e.fund; cost += e.cost;
-            html += `<tr><td>${e.name}</td><td>$${e.fund}</td><td>$${e.cost}</td><td><button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('events','${d.id}')">Delete</button></td></tr>`;
-        });
+    let planningHtml = `<table class="table table-hover align-middle"><thead><tr><th>Event</th><th>Exp. Date</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
+    let executeHtml = `<table class="table table-hover align-middle"><thead><tr><th>Event</th><th>Raised/Cost</th><th>Result</th><th>Action</th></tr></thead><tbody>`;
+    
+    let totalFund = 0, totalCost = 0;
+    const today = new Date().toISOString().split('T')[0];
 
-        document.getElementById("balanceFund").innerText = `$${fund - cost}`;
-        document.getElementById('eventList').innerHTML = html + `</tbody></table>`;
+    snap.forEach(d => {
+        const e = d.data();
+        const eventData = JSON.stringify({id: d.id, ...e}).replace(/"/g, '&quot;');
 
-        if (eventChart) eventChart.destroy();
-        eventChart = new Chart(document.getElementById('eventChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Budget Raised', 'Expense'],
-                datasets: [{ label: 'USD', data: [fund, cost], backgroundColor: ['#006837', '#c6a34f'] }]
-            },
-            options: { 
-                scales: { 
-                    y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-                    x: { ticks: { color: '#fff' } }
-                },
-                plugins: { legend: { display: false } }
-            }
-        });
+        if (e.status === "Planned") {
+            const isOverdue = today > e.date;
+            const statusLabel = isOverdue ? `<span class="badge bg-danger">Unsuccessful</span>` : `<span class="badge bg-warning text-dark">Pending</span>`;
+            
+            planningHtml += `
+                <tr>
+                    <td><b>${e.name}</b><br><small class="text-muted">${e.details || ''}</small></td>
+                    <td>${e.date}</td>
+                    <td>${statusLabel}</td>
+                    <td>
+                        <button class="btn btn-sm btn-gold me-1" style="background:var(--gold); color:black;" onclick='openForm("events", ${eventData})'>Execute</button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('events','${d.id}')">Delete</button>
+                    </td>
+                </tr>`;
+        } else {
+            // Executed events
+            totalFund += (e.fund || 0);
+            totalCost += (e.cost || 0);
+            
+            executeHtml += `
+                <tr>
+                    <td><b>${e.name}</b><br><small class="text-muted">Plan: $${e.budget}</small></td>
+                    <td><span class="text-success">+$${e.fund}</span> / <span class="text-danger">-$${e.cost}</span></td>
+                    <td><span class="badge bg-success">Successful</span></td>
+                    <td><button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('events','${d.id}')">Delete</button></td>
+                </tr>`;
+        }
     });
+
+    document.getElementById('planningList').innerHTML = planningHtml + `</tbody></table>`;
+    document.getElementById('executeList').innerHTML = executeHtml + `</tbody></table>`;
+    document.getElementById("balanceFund").innerText = `$${totalFund - totalCost}`;
+
+    // Update Chart with Executed Data
+    if (eventChart) eventChart.destroy();
+    eventChart = new Chart(document.getElementById('eventChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Raised', 'Expense'],
+            datasets: [{ data: [totalFund, totalCost], backgroundColor: ['#006837', '#c6a34f'] }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } } }
+    });
+});
 </script>
 
 </body>
