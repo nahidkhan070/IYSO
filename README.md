@@ -274,43 +274,61 @@
         
        else if (type === 'donations') {
     title.innerText = existingData ? "Edit Donation Log" : "New Donation Entry";
+    
+    // Get current date in YYYY-MM-DD format for the input field
+    const today = new Date().toISOString().split('T')[0];
+    const displayDate = existingData?.date || today;
+
     body.innerHTML = `
         <div class="row mb-3">
             <div class="col-md-5">
-                <input type="text" id="dUID" class="form-control" placeholder="Member ID (e.g. IYSO-001)" value="${existingData?.uid || ''}">
+                <label class="small text-muted mb-1">Member ID</label>
+                <input type="text" id="dUID" class="form-control" placeholder="e.g. IYSO-001" value="${existingData?.uid || ''}">
             </div>
             <div class="col-md-7">
-                <input type="text" id="dName" class="form-control" placeholder="Member Name" value="${existingData?.name || ''}" readonly style="background: #0d1117; border-color: #222;">
+                <label class="small text-muted mb-1">Member Name</label>
+                <input type="text" id="dName" class="form-control" placeholder="Auto-filled" value="${existingData?.name || ''}" readonly style="background: #0d1117;">
             </div>
         </div>
         <div class="row mb-3">
             <div class="col">
-                <input type="number" id="dAmount" class="form-control" placeholder="Amount ($)" value="${existingData?.amount || ''}">
+                <label class="small text-muted mb-1">Amount ($)</label>
+                <input type="number" id="dAmount" class="form-control" placeholder="0.00" value="${existingData?.amount || ''}">
             </div>
             <div class="col">
+                <label class="small text-muted mb-1">Method</label>
                 <select id="dSystem" class="form-select">
-                    <option value="">Payment System</option>
+                    <option value="">Select System</option>
                     ${['Bkash', 'Nagad', 'By-Cash'].map(sys => 
                         `<option value="${sys}" ${existingData?.system === sys ? 'selected' : ''}>${sys}</option>`
                     ).join('')}
                 </select>
             </div>
         </div>
-        <select id="dType" class="form-select mb-3">
-            <option value="monthly" ${existingData?.type === 'monthly' ? 'selected' : ''}>Monthly Subscription</option>
-            <option value="event" ${existingData?.type === 'event' ? 'selected' : ''}>Event Fund</option>
-        </select>`;
+        <div class="row mb-3">
+            <div class="col">
+                <label class="small text-muted mb-1">Date</label>
+                <input type="date" id="dDate" class="form-control" value="${displayDate}">
+            </div>
+            <div class="col">
+                <label class="small text-muted mb-1">Donation Type</label>
+                <select id="dType" class="form-select">
+                    <option value="monthly" ${existingData?.type === 'monthly' ? 'selected' : ''}>Monthly</option>
+                    <option value="event" ${existingData?.type === 'event' ? 'selected' : ''}>Event</option>
+                </select>
+            </div>
+        </div>`;
 
     // --- AUTO-FILL LOGIC ---
     const idInput = document.getElementById('dUID');
     idInput.oninput = () => {
         const val = idInput.value.trim();
-        const memberList = document.querySelectorAll('#memberList tr');
+        const memberRows = document.querySelectorAll('#memberList tr');
         let found = false;
-        memberList.forEach(tr => {
+        memberRows.forEach(tr => {
             const uid = tr.cells[0]?.innerText;
             const name = tr.cells[1]?.innerText;
-            if(uid === val) {
+            if(uid === val && val !== "") {
                 document.getElementById('dName').value = name;
                 found = true;
             }
@@ -318,6 +336,7 @@
         if(!found) document.getElementById('dName').value = "";
     };
 
+    // --- SAVE / UPDATE LOGIC ---
     saveBtn.onclick = async () => {
         const data = {
             uid: document.getElementById('dUID').value,
@@ -325,15 +344,23 @@
             amount: Number(document.getElementById('dAmount').value),
             system: document.getElementById('dSystem').value,
             type: document.getElementById('dType').value,
-            date: existingData ? existingData.date : new Date().toLocaleDateString()
+            date: document.getElementById('dDate').value
         };
 
-        if (existingData) {
-            await updateDoc(doc(db, "donations", existingData.id), data);
-        } else {
-            await addDoc(collection(db, "donations"), data);
+        try {
+            if (existingData && existingData.id) {
+                // UPDATE existing record
+                const docRef = doc(db, "donations", existingData.id);
+                await updateDoc(docRef, data);
+            } else {
+                // ADD new record
+                await addDoc(collection(db, "donations"), data);
+            }
+            bsModal.hide();
+        } catch (error) {
+            console.error("Error saving donation: ", error);
+            alert("Failed to save. Check console for details.");
         }
-        bsModal.hide();
     };
 }
 
