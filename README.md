@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -24,7 +24,30 @@
             min-height: 100vh;
         }
 
-        .sidebar {
+        /* Sidebar Logo Style */
+.sidebar-logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px rgba(198, 163, 79, 0.3));
+}
+
+/* Background Watermark */
+body::before {
+    content: "";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 600px;
+    height: 600px;
+    transform: translate(-50%, -50%);
+    background: url('image_0.png') no-repeat center;
+    background-size: contain;
+    opacity: 0.03; /* Very subtle */
+    z-index: -1;
+    pointer-events: none;
+}.
+        sidebar {
             width: 250px;
             height: 100vh;
             position: fixed;
@@ -104,7 +127,10 @@
 <body>
 
 <div class="sidebar">
-    <h2 class="fw-800 mb-4 text-center" style="color: var(--gold);">IYSO</h2>
+    <div class="text-center mb-4">
+        <img src="image_0.png" alt="IYSO Logo" class="sidebar-logo">
+        <h2 class="fw-800" style="color: var(--gold); font-size: 1.5rem;">IYSO</h2>
+    </div>
     <div class="nav-link active" data-page="dash">Dashboard</div>
     <div class="nav-link" data-page="members">Members</div>
     <div class="nav-link" data-page="donations">Donations</div>
