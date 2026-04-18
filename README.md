@@ -221,19 +221,42 @@
         const saveBtn = document.getElementById('saveBtn');
         const title = document.getElementById('modalTitle');
 
-        if (type === 'members') {
-            title.innerText = "Add Member";
-            body.innerHTML = `
-                <input type="text" id="mName" class="form-control mb-3" placeholder="Full Name">
-                <input type="email" id="mEmail" class="form-control" placeholder="Email Address">`;
-            saveBtn.onclick = async () => {
-                await addDoc(collection(db, "members"), {
-                    name: document.getElementById('mName').value,
-                    email: document.getElementById('mEmail').value
-                });
-                bsModal.hide();
+        window.openMemberForm = async (id = null) => {
+        const body = document.getElementById('modalBody');
+        const saveBtn = document.getElementById('saveBtn');
+        const title = document.getElementById('modalTitle');
+        let data = { uid:'', name:'', desig:'', phone:'', email:'' };
+
+        if(id) {
+            const docSnap = await getDoc(doc(db, "members", id));
+            data = docSnap.data();
+            title.innerText = dict[currentLang].edit;
+        } else {
+            title.innerText = dict[currentLang].addMember;
+        }
+
+        body.innerHTML = `
+            <input type="text" id="mUid" class="form-control" placeholder="${dict[currentLang].id}" value="${data.uid}">
+            <input type="text" id="mName" class="form-control" placeholder="${dict[currentLang].name}" value="${data.name}">
+            <input type="text" id="mDesig" class="form-control" placeholder="${dict[currentLang].desig}" value="${data.desig}">
+            <input type="text" id="mPhone" class="form-control" placeholder="${dict[currentLang].phone}" value="${data.phone}">
+            <input type="email" id="mEmail" class="form-control" placeholder="${dict[currentLang].email}" value="${data.email}">
+        `;
+
+        saveBtn.onclick = async () => {
+            const payload = {
+                uid: document.getElementById('mUid').value,
+                name: document.getElementById('mName').value,
+                desig: document.getElementById('mDesig').value,
+                phone: document.getElementById('mPhone').value,
+                email: document.getElementById('mEmail').value
             };
-        } 
+            if(id) await updateDoc(doc(db, "members", id), payload);
+            else await addDoc(collection(db, "members"), payload);
+            bsModal.hide();
+        };
+        bsModal.show();
+    };
         
         else if (type === 'donations') {
             title.innerText = "Add Donation";
