@@ -3,318 +3,195 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IYSO | Management Portal</title>
+<title>IYSO | Full Management System</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-:root {
-    --iyso-green: #006837;
-    --iyso-gold: #c6a34f;
-    --dark-bg: #04070a;
-    --card-bg: rgba(17, 24, 32, 0.9);
-}
-
-body {
-    background: radial-gradient(circle at top right, #003d21, var(--dark-bg) 70%);
-    color: #e9ecef;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-/* WATERMARK */
-body::before {
-    content: "";
-    position: fixed;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 70vw;
-    background: url('image_0.png') no-repeat center;
-    background-size: contain;
-    opacity: 0.03;
-    z-index: -1;
-}
-
-/* SIDEBAR */
-#sidebar {
-    width: 260px;
-    height: 100vh;
-    position: fixed;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(25px);
-    padding: 30px 20px;
-}
-
-.main-content {
-    margin-left: 260px;
-    padding: 25px;
-}
-
-/* NAV */
-.nav-link {
-    color: #8a949d;
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 5px;
-    cursor: pointer;
-}
-
-.nav-link.active,
-.nav-link:hover {
-    background: var(--iyso-green);
-    color: white;
-}
-
-/* TOPBAR */
-.topbar {
-    background: rgba(0,0,0,0.5);
-    padding: 15px;
-    border-radius: 15px;
-    margin-bottom: 20px;
-}
-
-/* CARDS */
-.stat-card {
-    background: var(--card-bg);
-    border-radius: 20px;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.stat-card:hover {
-    border: 1px solid var(--iyso-gold);
-}
-
-.member-card {
-    background: var(--card-bg);
-    padding: 15px;
-    border-radius: 15px;
-}
-
-.page-section { display: none; }
-.page-section.active { display: block; }
-
+body { background:#0b0f14; color:#fff; font-family:sans-serif; }
+#sidebar { width:240px; position:fixed; height:100vh; background:#111; padding:20px; }
+.main { margin-left:240px; padding:20px; }
+.nav-link { color:#aaa; cursor:pointer; margin-bottom:10px; }
+.nav-link.active, .nav-link:hover { color:#fff; }
+.card { background:#1a1f26; border:none; }
 </style>
 </head>
 
 <body>
 
 <div id="sidebar">
-    <div class="text-center mb-4">
-        <img src="image_0.png" height="60">
-        <h5>IYSO PORTAL</h5>
-    </div>
-
-    <div class="nav flex-column">
-        <div class="nav-link active" data-section="overview">Dashboard</div>
-        <div class="nav-link" data-section="members">Members</div>
-    </div>
+    <h4>IYSO</h4>
+    <div class="nav-link active" data="dashboard">Dashboard</div>
+    <div class="nav-link" data="members">Members</div>
+    <div class="nav-link" data="donations">Donations</div>
+    <div class="nav-link" data="events">Events</div>
 </div>
 
-<div class="main-content">
-
-<div class="topbar d-flex justify-content-between">
-    <h5>Dashboard</h5>
-    <button class="btn btn-success" onclick="openModal()">+ Add Member</button>
-</div>
+<div class="main">
 
 <!-- DASHBOARD -->
-<div id="overview" class="page-section active">
-    <div class="row g-3">
-        <div class="col-md-6">
-            <div class="stat-card">
-                <div>
-                    <h6>Monthly</h6>
-                    <h2 id="monthly-stat">৳0</h2>
-                </div>
-                <i class="fas fa-coins"></i>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="stat-card">
-                <div>
-                    <h6>Yearly</h6>
-                    <h2 id="yearly-stat">৳0</h2>
-                </div>
-                <i class="fas fa-chart-line"></i>
-            </div>
-        </div>
+<div id="dashboard" class="page">
+    <h3>Dashboard</h3>
+    <div class="row">
+        <div class="col-md-4"><div class="card p-3"><h6>Total Fund</h6><h2 id="totalFund">0</h2></div></div>
+        <div class="col-md-4"><div class="card p-3"><h6>Monthly Donations</h6><h2 id="monthlyFund">0</h2></div></div>
+        <div class="col-md-4"><div class="card p-3"><h6>Event Balance Used</h6><h2 id="eventCost">0</h2></div></div>
     </div>
 </div>
 
 <!-- MEMBERS -->
-<div id="members" class="page-section">
-    <div class="d-flex justify-content-between mb-3">
-        <h4>Members (<span id="member-count">0</span>)</h4>
+<div id="members" class="page" style="display:none;">
+    <h3>Members</h3>
+    <button onclick="openMember()">Add Member</button>
+    <div id="memberList"></div>
+</div>
 
-        <input id="searchInput" class="form-control" placeholder="Search..." style="width:200px;">
-    </div>
+<!-- DONATIONS -->
+<div id="donations" class="page" style="display:none;">
+    <h3>Donations</h3>
+    <button onclick="openDonation()">Add Donation</button>
+    <div id="donationList"></div>
+</div>
 
-    <div id="member-grid" class="row g-3"></div>
+<!-- EVENTS -->
+<div id="events" class="page" style="display:none;">
+    <h3>Events</h3>
+    <button onclick="openEvent()">Add Event</button>
+    <div id="eventList"></div>
 </div>
 
 </div>
 
-<!-- MODAL -->
-<div class="modal fade" id="memberModal">
-  <div class="modal-dialog">
-    <div class="modal-content bg-dark text-white">
-      <div class="modal-header">
-        <h5 id="modalTitle">Add Member</h5>
-      </div>
-      <div class="modal-body">
-        <input id="name" class="form-control mb-2" placeholder="Name">
-        <input id="mid" class="form-control" placeholder="Member ID">
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-success" onclick="saveMember()">Save</button>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- MODALS -->
 
-<!-- DELETE MODAL -->
-<div class="modal fade" id="deleteModal">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content bg-dark text-white text-center p-3">
-        <h6>Delete this member?</h6>
-        <div class="mt-3">
-            <button class="btn btn-danger" onclick="confirmDelete()">Yes</button>
-            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        </div>
-    </div>
-  </div>
-</div>
+<!-- MEMBER -->
+<div class="modal" id="memberModal">
+<div class="modal-dialog">
+<div class="modal-content bg-dark text-white p-3">
+<input id="mName" placeholder="Name" class="form-control mb-2">
+<input id="mId" placeholder="Member ID" class="form-control mb-2">
+<input id="mContact" placeholder="Contact" class="form-control mb-2">
+<input id="mBlood" placeholder="Blood Group" class="form-control mb-2">
+<button onclick="saveMember()">Save</button>
+</div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- DONATION -->
+<div class="modal" id="donationModal">
+<div class="modal-dialog">
+<div class="modal-content bg-dark text-white p-3">
+<input id="dName" placeholder="Name" class="form-control mb-2">
+<input id="dAmount" type="number" placeholder="Amount" class="form-control mb-2">
+<select id="dType" class="form-control mb-2">
+<option value="monthly">Monthly</option>
+<option value="event">Event</option>
+</select>
+<input id="dEvent" placeholder="Event Name (if event donation)" class="form-control mb-2">
+<button onclick="saveDonation()">Save</button>
+</div></div></div>
+
+<!-- EVENT -->
+<div class="modal" id="eventModal">
+<div class="modal-dialog">
+<div class="modal-content bg-dark text-white p-3">
+<input id="eName" placeholder="Event Name" class="form-control mb-2">
+<input id="eDate" type="date" class="form-control mb-2">
+<input id="eBudget" type="number" placeholder="Budget" class="form-control mb-2">
+<input id="eFund" type="number" placeholder="Fund Raised" class="form-control mb-2">
+<input id="eCost" type="number" placeholder="Actual Cost" class="form-control mb-2">
+<button onclick="saveEvent()">Save</button>
+</div></div></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const firebaseConfig = {
-    apiKey: "YOUR_KEY",
-    authDomain: "iyso-web.firebaseapp.com",
-    projectId: "iyso-web"
-};
+const app = initializeApp({
+    apiKey:"YOUR_KEY",
+    projectId:"iyso-web"
+});
 
-const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // NAV
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.onclick = () => {
-        document.querySelectorAll('.page-section, .nav-link').forEach(el => el.classList.remove('active'));
-        document.getElementById(link.dataset.section).classList.add('active');
-        link.classList.add('active');
-    };
-});
-
-// MODALS
-const modal = new bootstrap.Modal(document.getElementById('memberModal'));
-const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-
-let editId = null;
-let deleteId = null;
-let allMembers = [];
-
-// OPEN
-window.openModal = () => {
-    editId = null;
-    document.getElementById('name').value = '';
-    document.getElementById('mid').value = '';
-    modal.show();
-};
-
-// EDIT
-window.editMember = (id, name, mid) => {
-    editId = id;
-    document.getElementById('name').value = name;
-    document.getElementById('mid').value = mid;
-    modal.show();
-};
-
-// SAVE
-window.saveMember = async () => {
-    const name = document.getElementById('name').value;
-    const mid = document.getElementById('mid').value;
-
-    if(!name || !mid) return alert("Fill all fields");
-
-    if(editId) {
-        await updateDoc(doc(db, "members", editId), { name, memberId: mid });
-    } else {
-        await addDoc(collection(db, "members"), { name, memberId: mid });
+document.querySelectorAll('.nav-link').forEach(n=>{
+    n.onclick=()=>{
+        document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+        document.getElementById(n.dataset.data).style.display='block';
     }
-
-    modal.hide();
-};
-
-// DELETE
-window.deleteMember = (id) => {
-    deleteId = id;
-    deleteModal.show();
-};
-
-window.confirmDelete = async () => {
-    await deleteDoc(doc(db, "members", deleteId));
-    deleteModal.hide();
-};
-
-// LOAD
-onSnapshot(collection(db, "members"), (snap) => {
-    allMembers = [];
-    snap.forEach(d => {
-        allMembers.push({ id: d.id, ...d.data() });
-    });
-
-    renderMembers(allMembers);
 });
 
-// RENDER
-function renderMembers(data) {
-    let html = '';
+// MEMBERS
+window.openMember=()=>memberModal.style.display='block';
 
-    data.forEach(m => {
-        html += `
-        <div class="col-md-4">
-            <div class="member-card d-flex justify-content-between">
-                <div>
-                    <h6>${m.name}</h6>
-                    <small>${m.memberId}</small>
-                </div>
+window.saveMember=async()=>{
+await addDoc(collection(db,"members"),{
+name:mName.value,
+memberId:mId.value,
+contact:mContact.value,
+blood:mBlood.value
+});
+memberModal.style.display='none';
+};
 
-                <div>
-                    <button class="btn btn-sm btn-warning" onclick="editMember('${m.id}','${m.name}','${m.memberId}')">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteMember('${m.id}')">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        </div>`;
-    });
+onSnapshot(collection(db,"members"),snap=>{
+let html="";
+snap.forEach(d=>{
+let m=d.data();
+html+=`<div>${m.name} (${m.memberId}) - ${m.contact} - ${m.blood}</div>`;
+});
+memberList.innerHTML=html;
+});
 
-    document.getElementById('member-grid').innerHTML = html;
-    document.getElementById('member-count').innerText = data.length;
+// DONATIONS
+window.openDonation=()=>donationModal.style.display='block';
+
+window.saveDonation=async()=>{
+await addDoc(collection(db,"donations"),{
+name:dName.value,
+amount:Number(dAmount.value),
+type:dType.value,
+event:dEvent.value || null
+});
+donationModal.style.display='none';
+};
+
+// EVENTS
+window.openEvent=()=>eventModal.style.display='block';
+
+window.saveEvent=async()=>{
+await addDoc(collection(db,"events"),{
+name:eName.value,
+date:eDate.value,
+budget:Number(eBudget.value),
+fund:Number(eFund.value),
+cost:Number(eCost.value)
+});
+eventModal.style.display='none';
+};
+
+// DASHBOARD CALCULATION
+onSnapshot(collection(db,"donations"),snap=>{
+let total=0, monthly=0;
+snap.forEach(d=>{
+let x=d.data();
+total+=x.amount;
+if(x.type==="monthly") monthly+=x.amount;
+});
+document.getElementById("totalFund").innerText=total;
+document.getElementById("monthlyFund").innerText=monthly;
+});
+
+onSnapshot(collection(db,"events"),snap=>{
+let cost=0;
+snap.forEach(d=>{
+let e=d.data();
+if(e.cost>e.fund){
+cost += (e.cost - e.fund);
 }
-
-// SEARCH
-document.getElementById('searchInput').addEventListener('input', (e) => {
-    const val = e.target.value.toLowerCase();
-
-    const filtered = allMembers.filter(m =>
-        m.name.toLowerCase().includes(val) ||
-        m.memberId.toLowerCase().includes(val)
-    );
-
-    renderMembers(filtered);
 });
-
+document.getElementById("eventCost").innerText=cost;
+});
 </script>
 
 </body>
