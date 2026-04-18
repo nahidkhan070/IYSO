@@ -436,7 +436,8 @@
         <table class="table table-hover mt-2 align-middle">
             <thead>
                 <tr>
-                    <th>Date</th> <th>Member</th>
+                    <th>Date</th> 
+                    <th>Member</th>
                     <th>Amount</th>
                     <th>Method</th>
                     <th>Action</th>
