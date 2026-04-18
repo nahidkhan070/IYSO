@@ -174,12 +174,30 @@
     </div>
 
     <div id="events" class="page" style="display:none;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3>Event Management</h3>
-            <button onclick="openForm('events')" class="btn btn-success px-4">Create Event</button>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Event Management</h3>
+        <button onclick="openForm('events')" class="btn btn-success px-4">+ Plan New Event</button>
+    </div>
+
+    <ul class="nav nav-tabs mb-4 border-0" id="eventTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active bg-transparent border-0 text-uppercase fw-bold" id="planning-tab" data-bs-toggle="tab" data-bs-target="#planning-pane">Planning</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link bg-transparent border-0 text-uppercase fw-bold" id="execute-tab" data-bs-toggle="tab" data-bs-target="#execute-pane">Execution</button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="planning-pane">
+            <div class="glass">
+                <div id="planningList">Loading plans...</div>
+            </div>
         </div>
-        <div class="glass">
-            <div id="eventList">Loading events...</div>
+        <div class="tab-pane fade" id="execute-pane">
+            <div class="glass">
+                <div id="executeList">Loading execution results...</div>
+            </div>
         </div>
     </div>
 </div>
