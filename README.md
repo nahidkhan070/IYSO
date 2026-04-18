@@ -257,23 +257,70 @@
             };
         } 
         
-        else if (type === 'donations') {
-            title.innerText = "Add Donation";
-            body.innerHTML = `
-                <input type="number" id="dAmount" class="form-control mb-3" placeholder="Amount ($)">
-                <select id="dType" class="form-select">
-                    <option value="monthly">Monthly Subscription</option>
-                    <option value="event">Event Fund</option>
-                </select>`;
-            saveBtn.onclick = async () => {
-                await addDoc(collection(db, "donations"), {
-                    amount: Number(document.getElementById('dAmount').value),
-                    type: document.getElementById('dType').value,
-                    date: new Date().toLocaleDateString()
-                });
-                bsModal.hide();
-            };
+       else if (type === 'donations') {
+    title.innerText = existingData ? "Edit Donation Log" : "New Donation Entry";
+    body.innerHTML = `
+        <div class="row mb-3">
+            <div class="col-md-5">
+                <input type="text" id="dUID" class="form-control" placeholder="Member ID (e.g. IYSO-001)" value="${existingData?.uid || ''}">
+            </div>
+            <div class="col-md-7">
+                <input type="text" id="dName" class="form-control" placeholder="Member Name" value="${existingData?.name || ''}" readonly style="background: #0d1117; border-color: #222;">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <input type="number" id="dAmount" class="form-control" placeholder="Amount ($)" value="${existingData?.amount || ''}">
+            </div>
+            <div class="col">
+                <select id="dSystem" class="form-select">
+                    <option value="">Payment System</option>
+                    ${['Bkash', 'Nagad', 'By-Cash'].map(sys => 
+                        `<option value="${sys}" ${existingData?.system === sys ? 'selected' : ''}>${sys}</option>`
+                    ).join('')}
+                </select>
+            </div>
+        </div>
+        <select id="dType" class="form-select mb-3">
+            <option value="monthly" ${existingData?.type === 'monthly' ? 'selected' : ''}>Monthly Subscription</option>
+            <option value="event" ${existingData?.type === 'event' ? 'selected' : ''}>Event Fund</option>
+        </select>`;
+
+    // --- AUTO-FILL LOGIC ---
+    const idInput = document.getElementById('dUID');
+    idInput.oninput = () => {
+        const val = idInput.value.trim();
+        const memberList = document.querySelectorAll('#memberList tr');
+        let found = false;
+        memberList.forEach(tr => {
+            const uid = tr.cells[0]?.innerText;
+            const name = tr.cells[1]?.innerText;
+            if(uid === val) {
+                document.getElementById('dName').value = name;
+                found = true;
+            }
+        });
+        if(!found) document.getElementById('dName').value = "";
+    };
+
+    saveBtn.onclick = async () => {
+        const data = {
+            uid: document.getElementById('dUID').value,
+            name: document.getElementById('dName').value,
+            amount: Number(document.getElementById('dAmount').value),
+            system: document.getElementById('dSystem').value,
+            type: document.getElementById('dType').value,
+            date: existingData ? existingData.date : new Date().toLocaleDateString()
+        };
+
+        if (existingData) {
+            await updateDoc(doc(db, "donations", existingData.id), data);
+        } else {
+            await addDoc(collection(db, "donations"), data);
         }
+        bsModal.hide();
+    };
+}
 
         else if (type === 'events') {
             title.innerText = "Add Event";
