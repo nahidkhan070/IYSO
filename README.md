@@ -216,16 +216,23 @@
         const body = document.getElementById('modalBody');
         const saveBtn = document.getElementById('saveBtn');
         const title = document.getElementById('modalTitle');
+        let data = { uid:'', name:'', desig:'', phone:'', blood:'' }
 
         if (type === 'members') {
             title.innerText = "Add Member";
             body.innerHTML = `
-                <input type="text" id="mName" class="form-control mb-3" placeholder="Full Name">
-                <input type="email" id="mEmail" class="form-control" placeholder="Email Address">`;
+               <input type="text" id="mUid" class="form-control" placeholder="${dict[currentLang].id}" value="${data.uid}">
+            <input type="text" id="mName" class="form-control" placeholder="${dict[currentLang].name}" value="${data.name}">
+            <input type="text" id="mDesig" class="form-control" placeholder="${dict[currentLang].desig}" value="${data.desig}">
+            <input type="text" id="mPhone" class="form-control" placeholder="${dict[currentLang].phone}" value="${data.phone}">
+            <input type="email" id="mBlood Group" class="form-control" placeholder="${dict[currentLang].blood}" value="${data.blood}">`;
             saveBtn.onclick = async () => {
                 await addDoc(collection(db, "members"), {
-                    name: document.getElementById('mName').value,
-                    email: document.getElementById('mEmail').value
+                    uid: document.getElementById('mUid').value,
+                name: document.getElementById('mName').value,
+                desig: document.getElementById('mDesig').value,
+                phone: document.getElementById('mPhone').value,
+                email: document.getElementById('mEmail').value
                 });
                 bsModal.hide();
             };
