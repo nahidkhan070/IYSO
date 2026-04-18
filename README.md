@@ -556,17 +556,18 @@
 
     // 3. Events & Chart
     onSnapshot(collection(db, "events"), snap => {
-    let planningHtml = `<table class="table table-hover align-middle"><thead><tr><th>Event</th><th>Exp. Date</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
-    let executeHtml = `<table class="table table-hover align-middle"><thead><tr><th>Event</th><th>Raised/Cost</th><th>Result</th><th>Action</th></tr></thead><tbody>`;
+    let planningHtml = `<div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>Event</th><th>Exp. Date</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
+    let executeHtml = `<div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>Event</th><th>Raised/Cost</th><th>Result</th><th>Action</th></tr></thead><tbody>`;
     
     let totalFund = 0, totalCost = 0;
     const today = new Date().toISOString().split('T')[0];
 
     snap.forEach(d => {
         const e = d.data();
-        const eventData = JSON.stringify({id: d.id, ...e}).replace(/"/g, '&quot;');
+        // Crucial: Sanitize data for the onclick function
+        const safeData = JSON.stringify({id: d.id, ...e}).replace(/'/g, "&apos;").replace(/"/g, '&quot;');
 
-        if (e.status === "Planned") {
+        if (e.status === "Planned" || !e.status) {
             const isOverdue = today > e.date;
             const statusLabel = isOverdue ? `<span class="badge bg-danger">Unsuccessful</span>` : `<span class="badge bg-warning text-dark">Pending</span>`;
             
@@ -576,12 +577,11 @@
                     <td>${e.date}</td>
                     <td>${statusLabel}</td>
                     <td>
-                        <button class="btn btn-sm btn-gold me-1" style="background:var(--gold); color:black;" onclick='openForm("events", ${eventData})'>Execute</button>
+                        <button class="btn btn-sm btn-gold me-1" style="background:var(--gold); color:black;" onclick='openForm("events", ${safeData})'>Execute</button>
                         <button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('events','${d.id}')">Delete</button>
                     </td>
                 </tr>`;
-        } else {
-            // Executed events
+        } else if (e.status === "Executed") {
             totalFund += (e.fund || 0);
             totalCost += (e.cost || 0);
             
@@ -595,20 +595,27 @@
         }
     });
 
-    document.getElementById('planningList').innerHTML = planningHtml + `</tbody></table>`;
-    document.getElementById('executeList').innerHTML = executeHtml + `</tbody></table>`;
-    document.getElementById("balanceFund").innerText = `$${totalFund - totalCost}`;
+    document.getElementById('planningList').innerHTML = planningHtml + `</tbody></table></div>`;
+    document.getElementById('executeList').innerHTML = executeHtml + `</tbody></table></div>`;
+    
+    // Update Dashboard Balance
+    const balance = totalFund - totalCost;
+    const balanceEl = document.getElementById("balanceFund");
+    if (balanceEl) balanceEl.innerText = `$${balance}`;
 
     // Update Chart with Executed Data
     if (eventChart) eventChart.destroy();
-    eventChart = new Chart(document.getElementById('eventChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Raised', 'Expense'],
-            datasets: [{ data: [totalFund, totalCost], backgroundColor: ['#006837', '#c6a34f'] }]
-        },
-        options: { plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } } }
-    });
+    const ctx = document.getElementById('eventChart');
+    if (ctx) {
+        eventChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Raised', 'Expense'],
+                datasets: [{ data: [totalFund, totalCost], backgroundColor: ['#006837', '#c6a34f'] }]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } } }
+        });
+    }
 });
 </script>
 
