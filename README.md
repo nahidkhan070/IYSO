@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -67,7 +68,6 @@
             color: var(--gold);
         }
 
-        /* Modal Customization */
         .modal-content {
             background: #121417;
             border: 1px solid var(--green);
@@ -85,21 +85,19 @@
             box-shadow: none;
         }
         .table { color: white; }
-        /* Custom Payment Method Colors */
-.bg-pink {
-    background-color: #e2136e !important; /* bKash Pink */
-}
+        .bg-pink { background-color: #e2136e !important; }
+        .bg-orange { background-color: #f7941d !important; }
 
-.bg-orange {
-    background-color: #f7941d !important; /* Nagad Orange */
-}
+        .badge {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
 
-.badge {
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-}
+        /* Fixed tab button colors */
+        .nav-tabs .nav-link { color: #aaa; border: none !important; }
+        .nav-tabs .nav-link.active { color: var(--gold) !important; border-bottom: 2px solid var(--gold) !important; }
     </style>
 </head>
 
@@ -174,29 +172,30 @@
     </div>
 
     <div id="events" class="page" style="display:none;">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3>Event Management</h3>
-        <button onclick="openForm('events')" class="btn btn-success px-4">+ Plan New Event</button>
-    </div>
-
-    <ul class="nav nav-tabs mb-4 border-0" id="eventTabs" role="tablist">
-        <li class="nav-item">
-            <button class="nav-link active bg-transparent border-0 text-uppercase fw-bold" id="planning-tab" data-bs-toggle="tab" data-bs-target="#planning-pane">Planning</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link bg-transparent border-0 text-uppercase fw-bold" id="execute-tab" data-bs-toggle="tab" data-bs-target="#execute-pane">Execution</button>
-        </li>
-    </ul>
-
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="planning-pane">
-            <div class="glass">
-                <div id="planningList">Loading plans...</div>
-            </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3>Event Management</h3>
+            <button onclick="openForm('events')" class="btn btn-success px-4">+ Plan New Event</button>
         </div>
-        <div class="tab-pane fade" id="execute-pane">
-            <div class="glass">
-                <div id="executeList">Loading execution results...</div>
+
+        <ul class="nav nav-tabs mb-4 border-0" id="eventTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active bg-transparent" id="planning-tab" data-bs-toggle="tab" data-bs-target="#planning-pane" type="button">Planning</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link bg-transparent" id="execute-tab" data-bs-toggle="tab" data-bs-target="#execute-pane" type="button">Execution</button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="planning-pane" role="tabpanel">
+                <div class="glass">
+                    <div id="planningList">Loading plans...</div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="execute-pane" role="tabpanel">
+                <div class="glass">
+                    <div id="executeList">Loading execution results...</div>
+                </div>
             </div>
         </div>
     </div>
@@ -209,8 +208,7 @@
                 <h5 class="modal-title" id="modalTitle">Entry Form</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body" id="modalBody">
-                </div>
+            <div class="modal-body" id="modalBody"></div>
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-success" id="saveBtn">Save Entry</button>
@@ -235,9 +233,9 @@
     const bsModal = new bootstrap.Modal(document.getElementById('dataModal'));
 
     // NAVIGATION SYSTEM
-    document.querySelectorAll('.nav-link').forEach(link => {
+    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
         link.onclick = () => {
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
             link.classList.add('active');
             document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
             document.getElementById(link.dataset.page).style.display = 'block';
@@ -246,406 +244,197 @@
 
     // OPEN FORM LOGIC
     window.openForm = (type, existingData = null) => {
-    const body = document.getElementById('modalBody');
-    const saveBtn = document.getElementById('saveBtn');
-    const title = document.getElementById('modalTitle');
+        const body = document.getElementById('modalBody');
+        const saveBtn = document.getElementById('saveBtn');
+        const title = document.getElementById('modalTitle');
 
-    if (type === 'members') {
-        title.innerText = existingData ? "Edit Member Details" : "Add New Member";
-        body.innerHTML = `
-            <input type="text" id="mUID" class="form-control mb-3" placeholder="Unique ID (e.g. IYSO-001)" value="${existingData?.uid || ''}">
-            <input type="text" id="mName" class="form-control mb-3" placeholder="Full Name" value="${existingData?.name || ''}">
-            <input type="text" id="mDesig" class="form-control mb-3" placeholder="Designation" value="${existingData?.designation || ''}">
-            <div class="row mb-3">
-                <div class="col">
-                    <select id="mBlood" class="form-select">
-                        <option value="">Blood Group</option>
-                        ${['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(bg => 
-                            `<option value="${bg}" ${existingData?.blood === bg ? 'selected' : ''}>${bg}</option>`
-                        ).join('')}
-                    </select>
+        if (type === 'members') {
+            title.innerText = existingData ? "Edit Member Details" : "Add New Member";
+            body.innerHTML = `
+                <input type="text" id="mUID" class="form-control mb-3" placeholder="Unique ID (e.g. IYSO-001)" value="${existingData?.uid || ''}">
+                <input type="text" id="mName" class="form-control mb-3" placeholder="Full Name" value="${existingData?.name || ''}">
+                <input type="text" id="mDesig" class="form-control mb-3" placeholder="Designation" value="${existingData?.designation || ''}">
+                <div class="row mb-3">
+                    <div class="col">
+                        <select id="mBlood" class="form-select">
+                            <option value="">Blood Group</option>
+                            ${['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(bg => 
+                                `<option value="${bg}" ${existingData?.blood === bg ? 'selected' : ''}>${bg}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="text" id="mPhone" class="form-control" placeholder="Phone No" value="${existingData?.phone || ''}">
+                    </div>
                 </div>
-                <div class="col">
-                    <input type="text" id="mPhone" class="form-control" placeholder="Phone No" value="${existingData?.phone || ''}">
-                </div>
-            </div>
-            <input type="email" id="mEmail" class="form-control" placeholder="Email Address" value="${existingData?.email || ''}">`;
+                <input type="email" id="mEmail" class="form-control" placeholder="Email Address" value="${existingData?.email || ''}">`;
 
-        saveBtn.onclick = async () => {
-            const data = {
-                uid: document.getElementById('mUID').value,
-                name: document.getElementById('mName').value,
-                designation: document.getElementById('mDesig').value,
-                blood: document.getElementById('mBlood').value,
-                phone: document.getElementById('mPhone').value,
-                email: document.getElementById('mEmail').value
-            };
-
-            if (existingData) {
-                await updateDoc(doc(db, "members", existingData.id), data);
-            } else {
-                await addDoc(collection(db, "members"), data);
-            }
-            bsModal.hide();
+            saveBtn.onclick = async () => {
+                const data = {
+                    uid: document.getElementById('mUID').value,
+                    name: document.getElementById('mName').value,
+                    designation: document.getElementById('mDesig').value,
+                    blood: document.getElementById('mBlood').value,
+                    phone: document.getElementById('mPhone').value,
+                    email: document.getElementById('mEmail').value
+                };
+                if (existingData) await updateDoc(doc(db, "members", existingData.id), data);
+                else await addDoc(collection(db, "members"), data);
+                bsModal.hide();
             };
         } 
         
-       else if (type === 'donations') {
-    title.innerText = existingData ? "Edit Donation Log" : "New Donation Entry";
-    
-    // Get current date in YYYY-MM-DD format for the input field
-    const today = new Date().toISOString().split('T')[0];
-    const displayDate = existingData?.date || today;
-
-    body.innerHTML = `
-        <div class="row mb-3">
-            <div class="col-md-5">
-                <label class="small text-muted mb-1">Member ID</label>
-                <input type="text" id="dUID" class="form-control" placeholder="e.g. IYSO-001" value="${existingData?.uid || ''}">
-            </div>
-            <div class="col-md-7">
-                <label class="small text-muted mb-1">Member Name</label>
-                <input type="text" id="dName" class="form-control" placeholder="Auto-filled" value="${existingData?.name || ''}" readonly style="background: #0d1117;">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col">
-                <label class="small text-muted mb-1">Amount ($)</label>
-                <input type="number" id="dAmount" class="form-control" placeholder="0.00" value="${existingData?.amount || ''}">
-            </div>
-            <div class="col">
-                <label class="small text-muted mb-1">Method</label>
-                <select id="dSystem" class="form-select">
-                    <option value="">Select System</option>
-                    ${['Bkash', 'Nagad', 'By-Cash'].map(sys => 
-                        `<option value="${sys}" ${existingData?.system === sys ? 'selected' : ''}>${sys}</option>`
-                    ).join('')}
-                </select>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col">
-                <label class="small text-muted mb-1">Date</label>
-                <input type="date" id="dDate" class="form-control" value="${displayDate}">
-            </div>
-            <div class="col">
-                <label class="small text-muted mb-1">Donation Type</label>
-                <select id="dType" class="form-select">
-                    <option value="monthly" ${existingData?.type === 'monthly' ? 'selected' : ''}>Monthly</option>
-                    <option value="event" ${existingData?.type === 'event' ? 'selected' : ''}>Event</option>
-                </select>
-            </div>
-        </div>`;
-
-    // --- AUTO-FILL LOGIC ---
-    const idInput = document.getElementById('dUID');
-    idInput.oninput = () => {
-        const val = idInput.value.trim();
-        const memberRows = document.querySelectorAll('#memberList tr');
-        let found = false;
-        memberRows.forEach(tr => {
-            const uid = tr.cells[0]?.innerText;
-            const name = tr.cells[1]?.innerText;
-            if(uid === val && val !== "") {
-                document.getElementById('dName').value = name;
-                found = true;
-            }
-        });
-        if(!found) document.getElementById('dName').value = "";
-    };
-
-    // --- SAVE / UPDATE LOGIC ---
-    saveBtn.onclick = async () => {
-        const data = {
-            uid: document.getElementById('dUID').value,
-            name: document.getElementById('dName').value,
-            amount: Number(document.getElementById('dAmount').value),
-            system: document.getElementById('dSystem').value,
-            type: document.getElementById('dType').value,
-            date: document.getElementById('dDate').value
-        };
-
-        try {
-            if (existingData && existingData.id) {
-                // UPDATE existing record
-                const docRef = doc(db, "donations", existingData.id);
-                await updateDoc(docRef, data);
-            } else {
-                // ADD new record
-                await addDoc(collection(db, "donations"), data);
-            }
-            bsModal.hide();
-        } catch (error) {
-            console.error("Error saving donation: ", error);
-            alert("Failed to save. Check console for details.");
-        }
-    };
-}
-
-        else if (type === 'events') {
-        // Check if we are moving from Planning to Execution
-        const isExecuting = existingData?.status === "Planned";
-        title.innerText = isExecuting ? "Execute Event" : (existingData ? "Edit Plan" : "Plan New Event");
-
-        body.innerHTML = `
-            <div class="mb-3">
-                <label class="small text-muted">Event Title</label>
-                <input type="text" id="eName" class="form-control" value="${existingData?.name || ''}" ${isExecuting ? 'readonly' : ''}>
-            </div>
-            <div class="mb-3">
-                <label class="small text-muted">Expected Date</label>
-                <input type="date" id="eDate" class="form-control" value="${existingData?.date || ''}" ${isExecuting ? 'readonly' : ''}>
-            </div>
-            <div class="mb-3">
-                <label class="small text-muted">Expected Budget ($)</label>
-                <input type="number" id="eBudget" class="form-control" value="${existingData?.budget || ''}" ${isExecuting ? 'readonly' : ''}>
-            </div>
-            ${isExecuting ? `
-                <div class="p-3 mb-3 rounded" style="background: rgba(198, 163, 79, 0.1); border: 1px solid var(--gold);">
-                    <div class="mb-3">
-                        <label class="small text-gold fw-bold">Actual Fund Raised ($)</label>
-                        <input type="number" id="eFund" class="form-control" placeholder="0.00" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="small text-gold fw-bold">Actual Expenses ($)</label>
-                        <input type="number" id="eCost" class="form-control" placeholder="0.00" required>
+        else if (type === 'donations') {
+            title.innerText = existingData ? "Edit Donation Log" : "New Donation Entry";
+            const today = new Date().toISOString().split('T')[0];
+            body.innerHTML = `
+                <div class="row mb-3">
+                    <div class="col-md-5"><label class="small text-muted mb-1">Member ID</label><input type="text" id="dUID" class="form-control" value="${existingData?.uid || ''}"></div>
+                    <div class="col-md-7"><label class="small text-muted mb-1">Member Name</label><input type="text" id="dName" class="form-control" value="${existingData?.name || ''}" readonly style="background: #0d1117;"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col"><label class="small text-muted mb-1">Amount ($)</label><input type="number" id="dAmount" class="form-control" value="${existingData?.amount || ''}"></div>
+                    <div class="col"><label class="small text-muted mb-1">Method</label>
+                        <select id="dSystem" class="form-select">
+                            <option value="">Select System</option>
+                            ${['Bkash', 'Nagad', 'By-Cash'].map(sys => `<option value="${sys}" ${existingData?.system === sys ? 'selected' : ''}>${sys}</option>`).join('')}
+                        </select>
                     </div>
                 </div>
-            ` : `
-                <div class="mb-3">
-                    <label class="small text-muted">Event Details</label>
-                    <textarea id="eDetails" class="form-control" rows="3">${existingData?.details || ''}</textarea>
-                </div>
-            `}
-        `;
+                <div class="row mb-3">
+                    <div class="col"><label class="small text-muted mb-1">Date</label><input type="date" id="dDate" class="form-control" value="${existingData?.date || today}"></div>
+                    <div class="col"><label class="small text-muted mb-1">Type</label>
+                        <select id="dType" class="form-select">
+                            <option value="monthly" ${existingData?.type === 'monthly' ? 'selected' : ''}>Monthly</option>
+                            <option value="event" ${existingData?.type === 'event' ? 'selected' : ''}>Event</option>
+                        </select>
+                    </div>
+                </div>`;
 
-        saveBtn.onclick = async () => {
-            const data = {
-                name: document.getElementById('eName').value,
-                date: document.getElementById('eDate').value,
-                budget: Number(document.getElementById('eBudget').value),
-                status: isExecuting ? "Executed" : (existingData?.status || "Planned"),
-                details: !isExecuting ? document.getElementById('eDetails').value : (existingData?.details || "")
+            const idInput = document.getElementById('dUID');
+            idInput.oninput = () => {
+                const val = idInput.value.trim();
+                const rows = document.querySelectorAll('#memberList tr');
+                let found = false;
+                rows.forEach(tr => {
+                    if(tr.cells[0]?.innerText === val && val !== "") {
+                        document.getElementById('dName').value = tr.cells[1]?.innerText;
+                        found = true;
+                    }
+                });
+                if(!found) document.getElementById('dName').value = "";
             };
 
-            if (isExecuting) {
-                data.fund = Number(document.getElementById('eFund').value);
-                data.cost = Number(document.getElementById('eCost').value);
-            }
-
-            try {
-                if (existingData && existingData.id) {
-                    await updateDoc(doc(db, "events", existingData.id), data);
-                } else {
-                    await addDoc(collection(db, "events"), data);
-                }
+            saveBtn.onclick = async () => {
+                const data = {
+                    uid: document.getElementById('dUID').value,
+                    name: document.getElementById('dName').value,
+                    amount: Number(document.getElementById('dAmount').value),
+                    system: document.getElementById('dSystem').value,
+                    type: document.getElementById('dType').value,
+                    date: document.getElementById('dDate').value
+                };
+                if (existingData) await updateDoc(doc(db, "donations", existingData.id), data);
+                else await addDoc(collection(db, "donations"), data);
                 bsModal.hide();
-            } catch (err) {
-                console.error("Save error:", err);
-            }
-        };
-    }
-    bsModal.show();
-};
+            };
+        }
 
-    // GLOBAL DELETE
+        else if (type === 'events') {
+            const isExecuting = existingData?.status === "Planned";
+            title.innerText = isExecuting ? "Execute Event" : (existingData ? "Edit Plan" : "Plan New Event");
+
+            body.innerHTML = `
+                <div class="mb-3"><label class="small text-muted">Title</label><input type="text" id="eName" class="form-control" value="${existingData?.name || ''}" ${isExecuting ? 'readonly' : ''}></div>
+                <div class="mb-3"><label class="small text-muted">Date</label><input type="date" id="eDate" class="form-control" value="${existingData?.date || ''}" ${isExecuting ? 'readonly' : ''}></div>
+                <div class="mb-3"><label class="small text-muted">Budget ($)</label><input type="number" id="eBudget" class="form-control" value="${existingData?.budget || ''}" ${isExecuting ? 'readonly' : ''}></div>
+                ${isExecuting ? `
+                    <div class="p-3 mb-3 rounded border border-warning" style="background: rgba(198, 163, 79, 0.1);">
+                        <div class="mb-3"><label class="small text-gold fw-bold">Fund Raised ($)</label><input type="number" id="eFund" class="form-control" required></div>
+                        <div class="mb-3"><label class="small text-gold fw-bold">Actual Expenses ($)</label><input type="number" id="eCost" class="form-control" required></div>
+                    </div>` : 
+                    `<div class="mb-3"><label class="small text-muted">Details</label><textarea id="eDetails" class="form-control" rows="3">${existingData?.details || ''}</textarea></div>`
+                }`;
+
+            saveBtn.onclick = async () => {
+                const data = {
+                    name: document.getElementById('eName').value,
+                    date: document.getElementById('eDate').value,
+                    budget: Number(document.getElementById('eBudget').value),
+                    status: isExecuting ? "Executed" : (existingData?.status || "Planned"),
+                    details: !isExecuting ? document.getElementById('eDetails').value : (existingData?.details || "")
+                };
+                if (isExecuting) {
+                    data.fund = Number(document.getElementById('eFund').value);
+                    data.cost = Number(document.getElementById('eCost').value);
+                }
+                if (existingData) await updateDoc(doc(db, "events", existingData.id), data);
+                else await addDoc(collection(db, "events"), data);
+                bsModal.hide();
+            };
+        }
+        bsModal.show();
+    };
+
     window.deleteDocItem = async (col, id) => {
         if(confirm("Confirm deletion?")) await deleteDoc(doc(db, col, id));
     };
 
-    // REAL-TIME DATA LISTENERS
     let donationChart, eventChart;
 
-    // 1. Members
-  onSnapshot(collection(db, "members"), snap => {
-    let html = `
-    <div class="table-responsive">
-        <table class="table table-hover mt-2 align-middle" style="font-size: 0.9rem;">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Designation</th>
-                    <th>Blood</th>
-                    <th>Contact</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>`;
-    
-    snap.forEach(d => {
-        const m = d.data();
-        // This converts the data into a string so the Edit button can read it
-        const memberData = JSON.stringify({id: d.id, ...m}).replace(/"/g, '&quot;');
-        
-        html += `
-            <tr>
-                <td class="text-warning fw-bold">${m.uid || '-'}</td>
-                <td>${m.name}</td>
-                <td><small>${m.designation || '-'}</small></td>
-                <td><span class="badge bg-danger">${m.blood || '-'}</span></td>
-                <td><small>${m.phone || ''}<br><span class="text-muted">${m.email}</span></small></td>
-                <td>
-                    <button class="btn btn-sm btn-outline-info me-1" onclick='openForm("members", ${memberData})'>Edit</button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('members','${d.id}')">Delete</button>
-                </td>
-            </tr>`;
-    });
-    document.getElementById('memberList').innerHTML = html + `</tbody></table></div>`;
-});
-
-    // 2. Donations & Chart
-    onSnapshot(collection(db, "donations"), snap => {
-    let total = 0, monthly = 0, event = 0;
-    let html = `
-    <div class="table-responsive">
-        <table class="table table-hover mt-2 align-middle">
-            <thead>
-                <tr>
-                    <th>Date</th> <th>Member</th>
-                    <th>Amount</th>
-                    <th>Method</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>`;
-    
-    snap.forEach(d => {
-        const x = d.data();
-        const donationData = JSON.stringify({id: d.id, ...x}).replace(/"/g, '&quot;');
-        
-        total += x.amount;
-        if (x.type === "monthly") monthly += x.amount; else event += x.amount;
-        
-        // Brand colors for payment badges
-        let systemBadgeColor = "border-secondary text-light";
-        if (x.system === 'Bkash') systemBadgeColor = "bg-pink text-white"; 
-        if (x.system === 'Nagad') systemBadgeColor = "bg-orange text-white";
-        if (x.system === 'By-Cash') systemBadgeColor = "bg-success text-white";
-
-        html += `
-            <tr>
-                <td><small class="text-muted">${x.date || '-'}</small></td> <td>
-                    <span class="text-warning small fw-bold">${x.uid || 'Guest'}</span><br>
-                    ${x.name || 'Anonymous'}
-                </td>
-                <td class="stat" style="font-size: 1.1rem;">$${x.amount}</td>
-                <td><span class="badge ${systemBadgeColor}">${x.system || '-'}</span></td>
-                <td>
-                    <button class="btn btn-sm btn-outline-info me-1" onclick='openForm("donations", ${donationData})'>Edit</button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('donations','${d.id}')">Delete</button>
-                </td>
-            </tr>`;
-    });
-
-    document.getElementById("totalFund").innerText = `$${total}`;
-    document.getElementById("monthlyFund").innerText = `$${monthly}`;
-    document.getElementById('donationList').innerHTML = html + `</tbody></table></div>`;
-
-    // --- CHART UPDATE LOGIC --- (Keep your existing chart code here)
-    if (donationChart) donationChart.destroy();
-    donationChart = new Chart(document.getElementById('donationChart'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Monthly', 'Event'],
-            datasets: [{ data: [monthly, event], backgroundColor: ['#006837', '#c6a34f'], borderWidth: 0 }]
-        },
-        options: { plugins: { legend: { labels: { color: '#fff' } } } }
-    });
-});
-
-    // 3. Events & Chart
-    onSnapshot(collection(db, "events"), snap => {
-    // 1. Separate headers for both tables
-    let planningHtml = `
-    <div class="table-responsive">
-        <table class="table table-hover mt-2 align-middle">
-            <thead>
-                <tr>
-                    <th>Event Details</th>
-                    <th>Exp. Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>`;
-
-    let executeHtml = `
-    <div class="table-responsive">
-        <table class="table table-hover mt-2 align-middle">
-            <thead>
-                <tr>
-                    <th>Event</th>
-                    <th>Financials (Raised/Cost)</th>
-                    <th>Result</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>`;
-    
-    let totalFund = 0, totalCost = 0;
-    const today = new Date().toISOString().split('T')[0];
-
-    snap.forEach(d => {
-        const e = d.data();
-        const safeData = JSON.stringify({id: d.id, ...e}).replace(/'/g, "&apos;").replace(/"/g, '&quot;');
-
-        // 2. LOGIC: If status is Planned (or missing), put it in Planning Tab
-        if (e.status === "Planned" || !e.status) {
-            const isOverdue = today > e.date;
-            const statusLabel = isOverdue ? `<span class="badge bg-danger">Unsuccessful</span>` : `<span class="badge bg-warning text-dark">Pending</span>`;
-            
-            planningHtml += `
-                <tr>
-                    <td><b>${e.name}</b><br><small class="text-muted">${e.details || ''}</small></td>
-                    <td>${e.date}</td>
-                    <td>${statusLabel}</td>
-                    <td>
-                        <button class="btn btn-sm btn-gold me-1" style="background:var(--gold); color:black;" onclick='openForm("events", ${safeData})'>Execute</button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('events','${d.id}')">Delete</button>
-                    </td>
-                </tr>`;
-        } 
-        // 3. LOGIC: If status is Executed, put it in Execution Tab
-        else if (e.status === "Executed") {
-            totalFund += (Number(e.fund) || 0);
-            totalCost += (Number(e.cost) || 0);
-            
-            executeHtml += `
-                <tr>
-                    <td><b>${e.name}</b><br><small class="text-muted text-gold">Plan: $${e.budget}</small></td>
-                    <td>
-                        <span class="text-success fw-bold">+$${e.fund}</span><br>
-                        <span class="text-danger">-$${e.cost}</span>
-                    </td>
-                    <td><span class="badge bg-success">Successful</span></td>
-                    <td><button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('events','${d.id}')">Delete</button></td>
-                </tr>`;
-        }
-    });
-
-    // 4. Close the tags and push to HTML
-    document.getElementById('planningList').innerHTML = planningHtml + `</tbody></table></div>`;
-document.getElementById('executeList').innerHTML = executeHtml + `</tbody></table></div>`;
-    
-    // 5. Update the Dashboard Balance
-    const balanceFundEl = document.getElementById("balanceFund");
-    if (balanceFundEl) balanceFundEl.innerText = `$${totalFund - totalCost}`;
-
-    // 6. Update Chart
-    if (eventChart) eventChart.destroy();
-    const ctx = document.getElementById('eventChart');
-    if (ctx) {
-        eventChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Raised', 'Expense'],
-                datasets: [{ data: [totalFund, totalCost], backgroundColor: ['#006837', '#c6a34f'] }]
-            },
-            options: { plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } } }
+    // LISTENERS
+    onSnapshot(collection(db, "members"), snap => {
+        let html = `<div class="table-responsive"><table class="table table-hover mt-2 align-middle"><thead><tr><th>ID</th><th>Name</th><th>Designation</th><th>Blood</th><th>Contact</th><th>Action</th></tr></thead><tbody>`;
+        snap.forEach(d => {
+            const m = d.data();
+            const memberData = JSON.stringify({id: d.id, ...m}).replace(/"/g, '&quot;');
+            html += `<tr><td class="text-warning fw-bold">${m.uid || '-'}</td><td>${m.name}</td><td><small>${m.designation || '-'}</small></td><td><span class="badge bg-danger">${m.blood || '-'}</span></td><td><small>${m.phone || ''}<br><span class="text-muted">${m.email}</span></small></td><td><button class="btn btn-sm btn-outline-info me-1" onclick='openForm("members", ${memberData})'>Edit</button><button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('members','${d.id}')">Delete</button></td></tr>`;
         });
-    }
-});
+        document.getElementById('memberList').innerHTML = html + `</tbody></table></div>`;
+    });
+
+    onSnapshot(collection(db, "donations"), snap => {
+        let total = 0, monthly = 0, event = 0;
+        let html = `<div class="table-responsive"><table class="table table-hover mt-2 align-middle"><thead><tr><th>Date</th><th>Member</th><th>Amount</th><th>Method</th><th>Action</th></tr></thead><tbody>`;
+        snap.forEach(d => {
+            const x = d.data();
+            const donationData = JSON.stringify({id: d.id, ...x}).replace(/"/g, '&quot;');
+            total += x.amount;
+            if (x.type === "monthly") monthly += x.amount; else event += x.amount;
+            let systemBadgeColor = x.system === 'Bkash' ? "bg-pink" : x.system === 'Nagad' ? "bg-orange" : "bg-success";
+            html += `<tr><td><small class="text-muted">${x.date || '-'}</small></td><td><span class="text-warning small fw-bold">${x.uid || 'Guest'}</span><br>${x.name || 'Anonymous'}</td><td class="stat" style="font-size: 1.1rem;">$${x.amount}</td><td><span class="badge ${systemBadgeColor}">${x.system || '-'}</span></td><td><button class="btn btn-sm btn-outline-info me-1" onclick='openForm("donations", ${donationData})'>Edit</button><button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('donations','${d.id}')">Delete</button></td></tr>`;
+        });
+        document.getElementById("totalFund").innerText = `$${total}`;
+        document.getElementById("monthlyFund").innerText = `$${monthly}`;
+        document.getElementById('donationList').innerHTML = html + `</tbody></table></div>`;
+        if (donationChart) donationChart.destroy();
+        donationChart = new Chart(document.getElementById('donationChart'), { type: 'doughnut', data: { labels: ['Monthly', 'Event'], datasets: [{ data: [monthly, event], backgroundColor: ['#006837', '#c6a34f'], borderWidth: 0 }] }, options: { plugins: { legend: { labels: { color: '#fff' } } } } });
+    });
+
+    onSnapshot(collection(db, "events"), snap => {
+        let planHtml = `<div class="table-responsive"><table class="table table-hover mt-2 align-middle"><thead><tr><th>Event Details</th><th>Exp. Date</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
+        let execHtml = `<div class="table-responsive"><table class="table table-hover mt-2 align-middle"><thead><tr><th>Event</th><th>Raised/Cost</th><th>Result</th><th>Action</th></tr></thead><tbody>`;
+        let totalFund = 0, totalCost = 0;
+        const today = new Date().toISOString().split('T')[0];
+
+        snap.forEach(d => {
+            const e = d.data();
+            const safeData = JSON.stringify({id: d.id, ...e}).replace(/'/g, "&apos;").replace(/"/g, '&quot;');
+            if (e.status === "Planned" || !e.status) {
+                const label = today > e.date ? `<span class="badge bg-danger">Unsuccessful</span>` : `<span class="badge bg-warning text-dark">Pending</span>`;
+                planHtml += `<tr><td><b>${e.name}</b><br><small class="text-muted">${e.details || ''}</small></td><td>${e.date}</td><td>${label}</td><td><button class="btn btn-sm btn-gold me-1" style="background:var(--gold); color:black;" onclick='openForm("events", ${safeData})'>Execute</button><button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('events','${d.id}')">Delete</button></td></tr>`;
+            } else if (e.status === "Executed") {
+                totalFund += (Number(e.fund) || 0); totalCost += (Number(e.cost) || 0);
+                execHtml += `<tr><td><b>${e.name}</b><br><small class="text-muted text-gold">Plan: $${e.budget}</small></td><td><span class="text-success">+$${e.fund}</span><br><span class="text-danger">-$${e.cost}</span></td><td><span class="badge bg-success">Successful</span></td><td><button class="btn btn-sm btn-outline-danger" onclick="deleteDocItem('events','${d.id}')">Delete</button></td></tr>`;
+            }
+        });
+        document.getElementById('planningList').innerHTML = planHtml + `</tbody></table></div>`;
+        document.getElementById('executeList').innerHTML = execHtml + `</tbody></table></div>`;
+        if (document.getElementById("balanceFund")) document.getElementById("balanceFund").innerText = `$${totalFund - totalCost}`;
+        if (eventChart) eventChart.destroy();
+        const ctx = document.getElementById('eventChart');
+        if (ctx) eventChart = new Chart(ctx, { type: 'bar', data: { labels: ['Raised', 'Expense'], datasets: [{ data: [totalFund, totalCost], backgroundColor: ['#006837', '#c6a34f'] }] }, options: { plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } } } });
+    });
 </script>
 
 </body>
