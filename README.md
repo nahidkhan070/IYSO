@@ -17,22 +17,35 @@
             --card: rgba(20, 25, 32, 0.85);
         }
 
-        body {
-            background: radial-gradient(circle at top right, #003d21, var(--bg));
-            color: #fff;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
-        }
+        body::before {
+        content: "";
+        position: fixed;
+        top: 50%;
+        left: 55%; /* Offset to center it within the main content area */
+        width: 500px;
+        height: 500px;
+        transform: translate(-50%, -50%);
+        background: url('image_0.png') no-repeat center;
+        background-size: contain;
+        opacity: 0.04; /* Very subtle so it doesn't block text */
+        z-index: -1;
+        pointer-events: none;
+    }
 
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            position: fixed;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(20px);
-            padding: 20px;
-            border-right: 1px solid rgba(255,255,255,0.1);
-        }
+    /* UPDATED: Sidebar Alignment */
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        position: fixed;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(20px);
+        padding: 30px 20px;
+        border-right: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* Aligns items to the left */
+        z-index: 100;
+    }
 
         .main {
             margin-left: 260px;
@@ -104,7 +117,8 @@
 <body>
 
 <div class="sidebar">
-    <h2 class="fw-800 mb-4 text-center" style="color: var(--gold);">IYSO</h2>
+    <h2 class="fw-800 mb-5 ms-2" style="color: var(--gold); letter-spacing: 1px;">IYSO</h2>
+    
     <div class="nav-link active" data-page="dash">Dashboard</div>
     <div class="nav-link" data-page="members">Members</div>
     <div class="nav-link" data-page="donations">Donations</div>
