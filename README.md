@@ -33,14 +33,17 @@ body::before {
     pointer-events: none; /* Prevents it from interfering with clicks */
 }
         .sidebar {
-            width: 250px;
-            height: 100vh;
-            position: fixed;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(20px);
-            padding: 20px;
-            border-right: 1px solid rgba(255,255,255,0.1);
-        }
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(20px);
+    padding: 30px 20px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Keeps menu items on the left */
+}
 
         .main {
             margin-left: 260px;
