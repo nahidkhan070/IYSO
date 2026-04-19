@@ -1,4 +1,5 @@
 
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,24 +24,7 @@
             min-height: 100vh;
         }
 
-
-
-/* Background Watermark */
-body::before {
-    content: "";
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 600px;
-    height: 600px;
-    transform: translate(-50%, -50%);
-    background: url('image_0.png') no-repeat center;
-    background-size: contain;
-    opacity: 0.03; /* Very subtle */
-    z-index: -1;
-    pointer-events: none;
-}.
-        sidebar {
+        .sidebar {
             width: 250px;
             height: 100vh;
             position: fixed;
@@ -120,8 +104,7 @@ body::before {
 <body>
 
 <div class="sidebar">
-    <h2 class="fw-800 mb-5 ms-2" style="color: var(--gold); font-size: 1.8rem; letter-spacing: 2px;">IYSO</h2>
-    
+    <h2 class="fw-800 mb-4 text-center" style="color: var(--gold);">IYSO</h2>
     <div class="nav-link active" data-page="dash">Dashboard</div>
     <div class="nav-link" data-page="members">Members</div>
     <div class="nav-link" data-page="donations">Donations</div>
