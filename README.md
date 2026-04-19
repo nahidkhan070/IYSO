@@ -113,27 +113,78 @@
 
 <div class="main">
     <div id="dash" class="page">
-        <h3 class="mb-4">Executive Overview</h3>
-        <div class="row g-3">
-            <div class="col-md-4">
-                <div class="glass">
-                    <h6>Total Fund Collected</h6>
-                    <div class="stat" id="totalFund">0</div>
-                </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">Executive Overview</h3>
+        <div class="text-muted small">Real-time Financial Tracking</div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="glass p-3 border-start border-success border-4">
+                <h6 class="text-uppercase small fw-bold opacity-75">Total Fund Collection</h6>
+                <div class="stat text-success" id="totalFund">$0</div>
+                <div class="small text-muted">All-time Revenue</div>
             </div>
-            <div class="col-md-4">
-                <div class="glass">
-                    <h6>Monthly Subscription Total</h6>
-                    <div class="stat" id="monthlyFund">0</div>
-                </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass p-3 border-start border-success border-4">
+                <h6 class="text-uppercase small fw-bold opacity-75">Monthly: <span id="currentMonthName" class="text-success">-</span></h6>
+                <div class="stat text-success" id="monthlyFund">$0</div>
+                <div class="small text-muted">Subscription Revenue</div>
             </div>
-            <div class="col-md-4">
-                <div class="glass">
-                    <h6>Net Event Balance</h6>
-                    <div class="stat" id="balanceFund">0</div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass p-3 border-start border-success border-4">
+                <h6 class="text-uppercase small fw-bold opacity-75">Event Fund: <span id="latestEventName" class="text-success">-</span></h6>
+                <div class="stat text-success" id="eventFundOnly">$0</div>
+                <div class="small text-muted">Event Collections</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4 align-items-center">
+        <div class="col-md-8">
+            <div class="glass p-5 text-center shadow-lg" style="border: 2px solid var(--gold);">
+                <h5 class="text-uppercase fw-bold text-gold opacity-75">Net Organization Balance</h5>
+                <div class="display-3 fw-800 text-gold" id="balanceFund" style="text-shadow: 0 0 20px rgba(198, 163, 79, 0.4);">$0</div>
+                <div class="small opacity-50 mt-2">Calculated: Total Funds - Total Expenses</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-uppercase small fw-bold m-0">Payment Info</h6>
+                    <button class="btn btn-sm btn-outline-warning" onclick="editPaymentInfo()" style="font-size: 10px;">Edit</button>
+                </div>
+                <div class="mb-2">
+                    <small class="text-muted d-block">bKash (Send Money):</small>
+                    <span class="fw-bold text-light" id="displayBkash">017XXXXXXXX</span>
+                </div>
+                <div>
+                    <small class="text-muted d-block">Nagad (Send Money):</small>
+                    <span class="fw-bold text-light" id="displayNagad">018XXXXXXXX</span>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="glass p-3 border-start border-danger border-4">
+                <h6 class="text-uppercase small fw-bold opacity-75">Monthly Expenses: <span id="expenseMonth" class="text-danger">-</span></h6>
+                <div class="stat" style="color: #ff4d4d;" id="monthlyExpense">$0</div>
+                <div class="small text-muted">Current Month Spending</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="glass p-3 border-start border-danger border-4">
+                <h6 class="text-uppercase small fw-bold opacity-75">Total Expenses</h6>
+                <div class="stat" style="color: #ff4d4d;" id="totalExpense">$0</div>
+                <div class="small text-muted">All-time Expenditures</div>
+            </div>
+        </div>
+    </div>
+</div>
 
         <div class="row mt-4">
             <div class="col-md-6">
