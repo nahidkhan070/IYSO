@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -113,78 +113,27 @@
 
 <div class="main">
     <div id="dash" class="page">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold">Executive Overview</h3>
-        <div class="text-muted small">Real-time Financial Tracking</div>
-    </div>
-
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="glass p-3 border-start border-success border-4">
-                <h6 class="text-uppercase small fw-bold opacity-75">Total Fund Collection</h6>
-                <div class="stat text-success" id="totalFund">$0</div>
-                <div class="small text-muted">All-time Revenue</div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="glass p-3 border-start border-success border-4">
-                <h6 class="text-uppercase small fw-bold opacity-75">Monthly: <span id="currentMonthName" class="text-success">-</span></h6>
-                <div class="stat text-success" id="monthlyFund">$0</div>
-                <div class="small text-muted">Subscription Revenue</div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="glass p-3 border-start border-success border-4">
-                <h6 class="text-uppercase small fw-bold opacity-75">Event Fund: <span id="latestEventName" class="text-success">-</span></h6>
-                <div class="stat text-success" id="eventFundOnly">$0</div>
-                <div class="small text-muted">Event Collections</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-3 mb-4 align-items-center">
-        <div class="col-md-8">
-            <div class="glass p-5 text-center shadow-lg" style="border: 2px solid var(--gold);">
-                <h5 class="text-uppercase fw-bold text-gold opacity-75">Net Organization Balance</h5>
-                <div class="display-3 fw-800 text-gold" id="balanceFund" style="text-shadow: 0 0 20px rgba(198, 163, 79, 0.4);">$0</div>
-                <div class="small opacity-50 mt-2">Calculated: Total Funds - Total Expenses</div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="glass p-3 h-100">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h6 class="text-uppercase small fw-bold m-0">Payment Info</h6>
-                    <button class="btn btn-sm btn-outline-warning" onclick="editPaymentInfo()" style="font-size: 10px;">Edit</button>
+        <h3 class="mb-4">Executive Overview</h3>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="glass">
+                    <h6>Total Fund Collected</h6>
+                    <div class="stat" id="totalFund">0</div>
                 </div>
-                <div class="mb-2">
-                    <small class="text-muted d-block">bKash (Send Money):</small>
-                    <span class="fw-bold text-light" id="displayBkash">017XXXXXXXX</span>
+            </div>
+            <div class="col-md-4">
+                <div class="glass">
+                    <h6>Monthly Subscription Total</h6>
+                    <div class="stat" id="monthlyFund">0</div>
                 </div>
-                <div>
-                    <small class="text-muted d-block">Nagad (Send Money):</small>
-                    <span class="fw-bold text-light" id="displayNagad">018XXXXXXXX</span>
+            </div>
+            <div class="col-md-4">
+                <div class="glass">
+                    <h6>Net Event Balance</h6>
+                    <div class="stat" id="balanceFund">0</div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row g-3">
-        <div class="col-md-6">
-            <div class="glass p-3 border-start border-danger border-4">
-                <h6 class="text-uppercase small fw-bold opacity-75">Monthly Expenses: <span id="expenseMonth" class="text-danger">-</span></h6>
-                <div class="stat" style="color: #ff4d4d;" id="monthlyExpense">$0</div>
-                <div class="small text-muted">Current Month Spending</div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="glass p-3 border-start border-danger border-4">
-                <h6 class="text-uppercase small fw-bold opacity-75">Total Expenses</h6>
-                <div class="stat" style="color: #ff4d4d;" id="totalExpense">$0</div>
-                <div class="small text-muted">All-time Expenditures</div>
-            </div>
-        </div>
-    </div>
-</div>
 
         <div class="row mt-4">
             <div class="col-md-6">
@@ -282,75 +231,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const bsModal = new bootstrap.Modal(document.getElementById('dataModal'));
-    // Function to update the Dashboard numbers
-function updateDashboardMetrics(donations, events) {
-    const now = new Date();
-    const currentMonth = now.toLocaleString('default', { month: 'long' });
-    const currentYearMonth = now.toISOString().slice(0, 7); // YYYY-MM
-
-    let totalFund = 0, monthlyColl = 0, eventColl = 0;
-    let totalExpense = 0, monthlyExpense = 0;
-    let latestEvent = "None";
-
-    // 1. Calculate Donation Metrics
-    donations.forEach(d => {
-        totalFund += d.amount;
-        // Check if donation is from the current month
-        if (d.date && d.date.startsWith(currentYearMonth)) {
-            if (d.type === "monthly") monthlyColl += d.amount;
-        }
-        if (d.type === "event") eventColl += d.amount;
-    });
-
-    // 2. Calculate Event Metrics
-    events.forEach(e => {
-        if (e.status === "Executed") {
-            totalExpense += (e.cost || 0);
-            // Check if event happened this month
-            if (e.date && e.date.startsWith(currentYearMonth)) {
-                monthlyExpense += (e.cost || 0);
-            }
-            latestEvent = e.name; // Stores the last executed event name
-        }
-    });
-
-    // 3. Update DOM
-    document.getElementById("currentMonthName").innerText = currentMonth;
-    document.getElementById("expenseMonth").innerText = currentMonth;
-    document.getElementById("latestEventName").innerText = latestEvent;
-
-    document.getElementById("totalFund").innerText = `$${totalFund}`;
-    document.getElementById("monthlyFund").innerText = `$${monthlyColl}`;
-    document.getElementById("eventFundOnly").innerText = `$${eventColl}`;
-    
-    document.getElementById("monthlyExpense").innerText = `$${monthlyExpense}`;
-    document.getElementById("totalExpense").innerText = `$${totalExpense}`;
-    
-    // The "Heart" Calculation
-    const netBalance = totalFund - totalExpense;
-    document.getElementById("balanceFund").innerText = `$${netBalance}`;
-}
-
-// Editable Payment Numbers Logic
-window.editPaymentInfo = () => {
-    const bkash = prompt("Enter bKash Number:", document.getElementById("displayBkash").innerText);
-    const nagad = prompt("Enter Nagad Number:", document.getElementById("displayNagad").innerText);
-    
-    if (bkash !== null) {
-        document.getElementById("displayBkash").innerText = bkash;
-        localStorage.setItem('iyso_bkash', bkash);
-    }
-    if (nagad !== null) {
-        document.getElementById("displayNagad").innerText = nagad;
-        localStorage.setItem('iyso_nagad', nagad);
-    }
-};
-
-// Load saved numbers on startup
-document.addEventListener("DOMContentLoaded", () => {
-    if(localStorage.getItem('iyso_bkash')) document.getElementById("displayBkash").innerText = localStorage.getItem('iyso_bkash');
-    if(localStorage.getItem('iyso_nagad')) document.getElementById("displayNagad").innerText = localStorage.getItem('iyso_nagad');
-});
 
     // NAVIGATION SYSTEM
     document.querySelectorAll('.sidebar .nav-link').forEach(link => {
