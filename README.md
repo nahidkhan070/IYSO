@@ -282,6 +282,75 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const bsModal = new bootstrap.Modal(document.getElementById('dataModal'));
+    // Function to update the Dashboard numbers
+function updateDashboardMetrics(donations, events) {
+    const now = new Date();
+    const currentMonth = now.toLocaleString('default', { month: 'long' });
+    const currentYearMonth = now.toISOString().slice(0, 7); // YYYY-MM
+
+    let totalFund = 0, monthlyColl = 0, eventColl = 0;
+    let totalExpense = 0, monthlyExpense = 0;
+    let latestEvent = "None";
+
+    // 1. Calculate Donation Metrics
+    donations.forEach(d => {
+        totalFund += d.amount;
+        // Check if donation is from the current month
+        if (d.date && d.date.startsWith(currentYearMonth)) {
+            if (d.type === "monthly") monthlyColl += d.amount;
+        }
+        if (d.type === "event") eventColl += d.amount;
+    });
+
+    // 2. Calculate Event Metrics
+    events.forEach(e => {
+        if (e.status === "Executed") {
+            totalExpense += (e.cost || 0);
+            // Check if event happened this month
+            if (e.date && e.date.startsWith(currentYearMonth)) {
+                monthlyExpense += (e.cost || 0);
+            }
+            latestEvent = e.name; // Stores the last executed event name
+        }
+    });
+
+    // 3. Update DOM
+    document.getElementById("currentMonthName").innerText = currentMonth;
+    document.getElementById("expenseMonth").innerText = currentMonth;
+    document.getElementById("latestEventName").innerText = latestEvent;
+
+    document.getElementById("totalFund").innerText = `$${totalFund}`;
+    document.getElementById("monthlyFund").innerText = `$${monthlyColl}`;
+    document.getElementById("eventFundOnly").innerText = `$${eventColl}`;
+    
+    document.getElementById("monthlyExpense").innerText = `$${monthlyExpense}`;
+    document.getElementById("totalExpense").innerText = `$${totalExpense}`;
+    
+    // The "Heart" Calculation
+    const netBalance = totalFund - totalExpense;
+    document.getElementById("balanceFund").innerText = `$${netBalance}`;
+}
+
+// Editable Payment Numbers Logic
+window.editPaymentInfo = () => {
+    const bkash = prompt("Enter bKash Number:", document.getElementById("displayBkash").innerText);
+    const nagad = prompt("Enter Nagad Number:", document.getElementById("displayNagad").innerText);
+    
+    if (bkash !== null) {
+        document.getElementById("displayBkash").innerText = bkash;
+        localStorage.setItem('iyso_bkash', bkash);
+    }
+    if (nagad !== null) {
+        document.getElementById("displayNagad").innerText = nagad;
+        localStorage.setItem('iyso_nagad', nagad);
+    }
+};
+
+// Load saved numbers on startup
+document.addEventListener("DOMContentLoaded", () => {
+    if(localStorage.getItem('iyso_bkash')) document.getElementById("displayBkash").innerText = localStorage.getItem('iyso_bkash');
+    if(localStorage.getItem('iyso_nagad')) document.getElementById("displayNagad").innerText = localStorage.getItem('iyso_nagad');
+});
 
     // NAVIGATION SYSTEM
     document.querySelectorAll('.sidebar .nav-link').forEach(link => {
