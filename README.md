@@ -41,34 +41,29 @@ body::before {
     z-index: -1;
     pointer-events: none;
 }.
-        sidebar {
-            width: 250px;
-            height: 100vh;
-            position: fixed;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(20px);
-            padding: 20px;
-            border-right: 1px solid rgba(255,255,255,0.1);
-        }
+        .sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(20px);
+    padding: 30px 20px; /* Increased top padding */
+    border-right: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Aligns content to the left */
+}
 
-        .main {
-            margin-left: 260px;
-            padding: 25px;
-        }
-
-        .nav-link {
-            color: #aaa;
-            margin-bottom: 10px;
-            cursor: pointer;
-            padding: 10px;
-            transition: 0.3s;
-            border-radius: 8px;
-        }
-
-        .nav-link.active, .nav-link:hover {
-            color: #fff !important;
-            background: var(--green);
-        }
+.nav-link {
+    width: 100%; /* Ensures the hover background spans the width */
+    color: #aaa;
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 12px 15px;
+    transition: 0.3s;
+    border-radius: 8px;
+    text-align: left; /* Forces text to the left */
+}
 
         .glass {
             background: var(--card);
