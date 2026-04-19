@@ -17,13 +17,21 @@
             --card: rgba(20, 25, 32, 0.85);
         }
 
-        body {
-            background: radial-gradient(circle at top right, #003d21, var(--bg));
-            color: #fff;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
-        }
-
+        /* Background Watermark Logic */
+body::before {
+    content: "";
+    position: fixed; /* Keeps it in place when you scroll */
+    top: 50%;
+    left: 55%; /* Slightly offset to the right to center it relative to the 'Main' area, not the sidebar */
+    width: 500px;
+    height: 500px;
+    transform: translate(-50%, -50%);
+    background: url('image_0.png') no-repeat center;
+    background-size: contain;
+    opacity: 0.05; /* Adjust this (0.01 to 0.1) to make it more or less visible */
+    z-index: -1; /* Ensures it stays behind your cards and text */
+    pointer-events: none; /* Prevents it from interfering with clicks */
+}
         .sidebar {
             width: 250px;
             height: 100vh;
