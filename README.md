@@ -121,7 +121,7 @@ body::before {
 <body>
 
 <div class="sidebar">
-    <h2 class="fw-800 mb-4 text-center" style="color: var(--gold); font-size: 1.5rem;">IYSO</h2>
+    <h2 class="fw-800 mb-5 ms-2" style="color: var(--gold); font-size: 1.8rem; letter-spacing: 2px;">IYSO</h2>
     
     <div class="nav-link active" data-page="dash">Dashboard</div>
     <div class="nav-link" data-page="members">Members</div>
