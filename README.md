@@ -24,46 +24,34 @@
             min-height: 100vh;
         }
 
-
-
-/* Background Watermark */
-body::before {
-    content: "";
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 600px;
-    height: 600px;
-    transform: translate(-50%, -50%);
-    background: url('image_0.png') no-repeat center;
-    background-size: contain;
-    opacity: 0.03; /* Very subtle */
-    z-index: -1;
-    pointer-events: none;
-}.
         .sidebar {
-    width: 250px;
-    height: 100vh;
-    position: fixed;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(20px);
-    padding: 30px 20px; /* Increased top padding */
-    border-right: 1px solid rgba(255,255,255,0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Aligns content to the left */
-}
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
 
-.nav-link {
-    width: 100%; /* Ensures the hover background spans the width */
-    color: #aaa;
-    margin-bottom: 10px;
-    cursor: pointer;
-    padding: 12px 15px;
-    transition: 0.3s;
-    border-radius: 8px;
-    text-align: left; /* Forces text to the left */
-}
+        .main {
+            margin-left: 260px;
+            padding: 25px;
+        }
+
+        .nav-link {
+            color: #aaa;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            transition: 0.3s;
+            border-radius: 8px;
+        }
+
+        .nav-link.active, .nav-link:hover {
+            color: #fff !important;
+            background: var(--green);
+        }
 
         .glass {
             background: var(--card);
@@ -116,8 +104,7 @@ body::before {
 <body>
 
 <div class="sidebar">
-    <h2 class="fw-800 mb-5 ms-2" style="color: var(--gold); font-size: 1.8rem; letter-spacing: 2px;">IYSO</h2>
-    
+    <h2 class="fw-800 mb-4 text-center" style="color: var(--gold);">IYSO</h2>
     <div class="nav-link active" data-page="dash">Dashboard</div>
     <div class="nav-link" data-page="members">Members</div>
     <div class="nav-link" data-page="donations">Donations</div>
