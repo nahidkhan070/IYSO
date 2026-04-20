@@ -20,7 +20,7 @@
             --card: rgba(18, 25, 32, 0.95);
             --pink: #e2136e;
             --orange: #f7941d;
-            --handcash: #555;
+            --handcash: #888;
             --purple: #9b59b6;
             --aqua: #1abc9c;
             --light-grey: #bdc3c7;
@@ -118,6 +118,9 @@
             }
             .money-numbers {
                 margin-top: 10px;
+            }
+            .donation-summary-card {
+                margin-top: 15px;
             }
         }
 
@@ -472,6 +475,52 @@
             font-weight: 600;
         }
 
+        /* Donation Tabs */
+        .donation-tabs {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 5px;
+        }
+
+        .donation-tabs .nav-link {
+            color: rgba(255,255,255,0.7);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .donation-tabs .nav-link.active {
+            background: var(--green);
+            color: white;
+        }
+
+        .donation-tabs .nav-link:hover:not(.active) {
+            background: rgba(0,104,55,0.3);
+            color: white;
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background: linear-gradient(135deg, rgba(0,104,55,0.2), rgba(198,163,79,0.1));
+            border-radius: 12px;
+            padding: 12px 20px;
+            border: 1px solid rgba(198,163,79,0.3);
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: var(--gold);
+            letter-spacing: 1px;
+        }
+
+        .summary-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
         /* Modal */
         .modal-content {
             background: linear-gradient(135deg, #1a1f24, #0f1419);
@@ -779,31 +828,52 @@
         <div class="data-table" id="memberList">লোড হচ্ছে...</div>
     </div>
 
-    <!-- Donations Page with Monthly Lists -->
+    <!-- Donations Page with 3 Tabs -->
     <div id="donations" class="page" style="display:none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h3><i class="fas fa-hand-holding-usd text-gold"></i> দান-অনুদানের তালিকা</h3>
             <button onclick="openDonationForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন দান</button>
         </div>
         
-        <!-- Monthly Donator Lists -->
+        <!-- Tabs with Summary -->
         <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="glass-card">
-                    <h5 class="text-gold mb-3"><i class="fas fa-calendar-alt"></i> চলতি মাসের দাতা তালিকা</h5>
-                    <div id="currentMonthDonors" class="data-table" style="max-height: 300px; overflow-y: auto;">লোড হচ্ছে...</div>
-                </div>
+            <div class="col-md-9">
+                <ul class="nav donation-tabs" id="donationTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="lifetime-tab" data-bs-toggle="tab" data-bs-target="#lifetime" type="button" role="tab">সর্বমোট দান তালিকা</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="current-tab" data-bs-toggle="tab" data-bs-target="#current" type="button" role="tab">চলতি মাসের দান তালিকা</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="previous-tab" data-bs-toggle="tab" data-bs-target="#previous" type="button" role="tab">পূর্ববর্তী মাসের দান তালিকা</button>
+                    </li>
+                </ul>
             </div>
-            <div class="col-md-6">
-                <div class="glass-card">
-                    <h5 class="text-gold mb-3"><i class="fas fa-history"></i> পূর্ববর্তী মাসের দাতা তালিকা</h5>
-                    <div id="previousMonthDonors" class="data-table" style="max-height: 300px; overflow-y: auto;">লোড হচ্ছে...</div>
+            <div class="col-md-3">
+                <div class="summary-card" id="summaryCard">
+                    <div class="summary-label">সর্বমোট সংগ্রহ</div>
+                    <div class="summary-amount" id="summaryAmount">৳0</div>
                 </div>
             </div>
         </div>
         
-        <!-- All Donations Table -->
-        <div class="data-table" id="donationList">লোড হচ্ছে...</div>
+        <div class="tab-content">
+            <!-- Lifetime Donations Tab -->
+            <div class="tab-pane fade show active" id="lifetime" role="tabpanel">
+                <div class="data-table" id="lifetimeDonationList">লোড হচ্ছে...</div>
+            </div>
+            
+            <!-- Current Month Donations Tab -->
+            <div class="tab-pane fade" id="current" role="tabpanel">
+                <div class="data-table" id="currentDonationList">লোড হচ্ছে...</div>
+            </div>
+            
+            <!-- Previous Month Donations Tab -->
+            <div class="tab-pane fade" id="previous" role="tabpanel">
+                <div class="data-table" id="previousDonationList">লোড হচ্ছে...</div>
+            </div>
+        </div>
     </div>
 
     <!-- Expenses Page -->
@@ -941,11 +1011,36 @@
         };
     });
 
+    // Update summary based on active tab
+    function updateSummary(tab, currentTotal, currentMonthTotal, previousMonthTotal) {
+        const summaryCard = document.getElementById('summaryCard');
+        const summaryAmount = document.getElementById('summaryAmount');
+        
+        if (tab === 'lifetime') {
+            summaryCard.querySelector('.summary-label').innerHTML = 'সর্বমোট সংগ্রহ';
+            summaryAmount.innerHTML = `৳${currentTotal}`;
+        } else if (tab === 'current') {
+            summaryCard.querySelector('.summary-label').innerHTML = 'চলতি মাসের মোট সংগ্রহ';
+            summaryAmount.innerHTML = `৳${currentMonthTotal}`;
+        } else if (tab === 'previous') {
+            summaryCard.querySelector('.summary-label').innerHTML = 'পূর্ববর্তী মাসের মোট সংগ্রহ';
+            summaryAmount.innerHTML = `৳${previousMonthTotal}`;
+        }
+    }
+
     // Get current month in Bangla
     function getCurrentMonthBangla() {
         const months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
         const now = new Date();
         return `${months[now.getMonth()]} ${now.getFullYear()}`;
+    }
+
+    function getPreviousMonthBangla() {
+        const months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
+        const now = new Date();
+        const prevMonth = now.getMonth() === 0 ? 11 : now.getMonth() - 1;
+        const prevYear = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
+        return `${months[prevMonth]} ${prevYear}`;
     }
 
     // Send numbers
@@ -1009,7 +1104,6 @@
                     container.appendChild(div);
                 });
                 
-                // Add event listeners to phone inputs
                 document.querySelectorAll('.phone-input').forEach(input => {
                     input.onchange = (e) => {
                         const idx = parseInt(e.target.dataset.index);
@@ -1279,63 +1373,66 @@
     // Real-time data listeners
     let totalFunds = 0, monthlyFunds = 0, eventFunds = 0;
     let totalExpensesAmount = 0, monthlyExpensesAmount = 0;
-    let allDonations = [];
+    let currentMonthTotal = 0;
+    let previousMonthTotal = 0;
 
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-    const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+    const currentMonthNum = new Date().getMonth();
+    const currentYearNum = new Date().getFullYear();
+    const previousMonthNum = currentMonthNum === 0 ? 11 : currentMonthNum - 1;
+    const previousYearNum = currentMonthNum === 0 ? currentYearNum - 1 : currentYearNum;
 
-    function isCurrentMonth(dateStr) {
+    function isCurrentMonthDonation(dateStr) {
         if (!dateStr) return false;
         const date = new Date(dateStr);
-        return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+        return date.getMonth() === currentMonthNum && date.getFullYear() === currentYearNum;
     }
 
-    function isPreviousMonth(dateStr) {
+    function isPreviousMonthDonation(dateStr) {
         if (!dateStr) return false;
         const date = new Date(dateStr);
-        return date.getMonth() === previousMonth && date.getFullYear() === previousYear;
+        return date.getMonth() === previousMonthNum && date.getFullYear() === previousYearNum;
     }
 
-    // Donations Listener
+    // Tab change handler
+    document.querySelectorAll('#donationTabs button').forEach(tab => {
+        tab.addEventListener('shown.bs.tab', (event) => {
+            const tabId = event.target.id;
+            if (tabId === 'lifetime-tab') {
+                updateSummary('lifetime', totalFunds, currentMonthTotal, previousMonthTotal);
+            } else if (tabId === 'current-tab') {
+                updateSummary('current', totalFunds, currentMonthTotal, previousMonthTotal);
+            } else if (tabId === 'previous-tab') {
+                updateSummary('previous', totalFunds, currentMonthTotal, previousMonthTotal);
+            }
+        });
+    });
+
+    // Donations Listener for 3 tabs
     onSnapshot(collection(db, "donations"), (snap) => {
         totalFunds = 0;
         monthlyFunds = 0;
         eventFunds = 0;
-        allDonations = [];
+        currentMonthTotal = 0;
+        previousMonthTotal = 0;
         
-        let currentMonthDonorsHtml = '<table class="table"><thead><tr><th>নাম</th><th>তারিখ</th><th>পরিমাণ</th></tr></thead><tbody>';
-        let previousMonthDonorsHtml = '<table class="table"><thead><tr><th>নাম</th><th>তারিখ</th><th>পরিমাণ</th></tr></thead><tbody>';
-        let html = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody>`;
+        let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody>`;
+        let currentHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody>`;
+        let previousHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody>`;
         
         snap.forEach(doc => {
             const d = doc.data();
-            allDonations.push({id: doc.id, ...d});
             totalFunds += d.amount;
             
             if (d.type === 'monthly') {
-                if (isCurrentMonth(d.date)) monthlyFunds += d.amount;
+                if (isCurrentMonthDonation(d.date)) {
+                    monthlyFunds += d.amount;
+                    currentMonthTotal += d.amount;
+                }
+                if (isPreviousMonthDonation(d.date)) {
+                    previousMonthTotal += d.amount;
+                }
             } else if (d.type === 'event') {
                 eventFunds += d.amount;
-            }
-            
-            // Current Month Donors
-            if (isCurrentMonth(d.date) && d.type === 'monthly') {
-                currentMonthDonorsHtml += `<tr>
-                    <td class="name-text">${d.name || 'অতিথি'}</td>
-                    <td>${d.date || '-'}</td>
-                    <td style="font-weight:bold">৳${d.amount}</td>
-                </tr>`;
-            }
-            
-            // Previous Month Donors
-            if (isPreviousMonth(d.date) && d.type === 'monthly') {
-                previousMonthDonorsHtml += `<tr>
-                    <td class="name-text">${d.name || 'অতিথি'}</td>
-                    <td>${d.date || '-'}</td>
-                    <td style="font-weight:bold">৳${d.amount}</td>
-                </tr>`;
             }
             
             const typeBadge = d.type === 'monthly' ? '<span class="badge-add">মাসিক</span>' : '<span class="badge-add">ইভেন্ট</span>';
@@ -1353,7 +1450,7 @@
                 methodText = 'হ্যান্ড ক্যাশ';
             }
             
-            html += `<tr>
+            const row = `<tr>
                 <td>${d.date || '-'}</td>
                 <td><strong class="uid-text">${d.uid || 'অতিথি'}</strong><br><span class="name-text">${d.name || ''}</span><br><small class="text-muted">${d.phone || ''}</small></td>
                 <td style="font-weight:bold">৳${d.amount}</td>
@@ -1361,19 +1458,33 @@
                 <td class="${methodClass}">${methodText}</td>
                 <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openDonationForm(${JSON.stringify({id:doc.id,...d})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('donations','${doc.id}')"><i class="fas fa-trash"></i></button></td>
             </tr>`;
+            
+            lifetimeHtml += row;
+            
+            if (isCurrentMonthDonation(d.date)) {
+                currentHtml += row;
+            }
+            
+            if (isPreviousMonthDonation(d.date)) {
+                previousHtml += row;
+            }
         });
         
-        currentMonthDonorsHtml += `</tbody></table>`;
-        previousMonthDonorsHtml += `</tbody></table>`;
-        html += `</tbody></table>`;
+        lifetimeHtml += `</tbody></table>`;
+        currentHtml += `</tbody></table>`;
+        previousHtml += `</tbody></table>`;
         
-        document.getElementById('currentMonthDonors').innerHTML = currentMonthDonorsHtml || '<p class="text-muted p-3">কোন দান নেই</p>';
-        document.getElementById('previousMonthDonors').innerHTML = previousMonthDonorsHtml || '<p class="text-muted p-3">কোন দান নেই</p>';
-        document.getElementById('donationList').innerHTML = html || '<p class="text-muted p-3">কোন দান নেই</p>';
+        document.getElementById('lifetimeDonationList').innerHTML = lifetimeHtml || '<p class="text-muted p-3">কোন দান নেই</p>';
+        document.getElementById('currentDonationList').innerHTML = currentHtml || '<p class="text-muted p-3">কোন দান নেই</p>';
+        document.getElementById('previousDonationList').innerHTML = previousHtml || '<p class="text-muted p-3">কোন দান নেই</p>';
+        
         document.getElementById('totalFund').innerHTML = `৳${totalFunds}`;
         document.getElementById('monthlyCollection').innerHTML = `৳${monthlyFunds}`;
         document.getElementById('eventFundCollection').innerHTML = `৳${eventFunds}`;
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
+        
+        // Set initial summary
+        updateSummary('lifetime', totalFunds, currentMonthTotal, previousMonthTotal);
     });
 
     // Expenses Listener
@@ -1386,7 +1497,7 @@
         snap.forEach(doc => {
             const e = doc.data();
             totalExpensesAmount += e.amount;
-            if (e.type === 'monthly' && isCurrentMonth(e.date)) {
+            if (e.type === 'monthly' && isCurrentMonthDonation(e.date)) {
                 monthlyExpensesAmount += e.amount;
             }
             
