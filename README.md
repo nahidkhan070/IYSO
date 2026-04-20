@@ -20,7 +20,10 @@
             --card: rgba(18, 25, 32, 0.95);
             --pink: #e2136e;
             --orange: #f7941d;
-            --black: #2c2c2c;
+            --handcash: #555;
+            --purple: #9b59b6;
+            --aqua: #1abc9c;
+            --light-grey: #bdc3c7;
             --success-green: #2ecc71;
             --danger-red: #e74c3c;
             --warning-yellow: #f39c12;
@@ -353,7 +356,7 @@
             direction: ltr;
         }
 
-        /* Tables - Dark Green Text */
+        /* Tables */
         .data-table {
             background: var(--table-bg);
             border-radius: 16px;
@@ -379,9 +382,6 @@
         .data-table td {
             padding: 12px;
             border-bottom: 1px solid rgba(255,255,255,0.08);
-            color: #1a5c2e !important;
-            font-weight: 500;
-            font-size: 14px;
             background: transparent;
         }
 
@@ -393,18 +393,23 @@
             background: var(--table-hover) !important;
         }
 
-        /* Dark green text for table content */
-        .data-table td,
-        .data-table td * {
-            color: #1a7a3a !important;
+        /* Custom Colors for Member Fields */
+        .uid-text {
+            color: var(--purple) !important;
+            font-weight: 600;
         }
 
-        .data-table td strong,
-        .data-table td span {
-            color: #1a7a3a !important;
+        .name-text {
+            color: var(--aqua) !important;
+            font-weight: 600;
         }
 
-        /* Payment method colors in donation section */
+        .blood-text {
+            color: var(--light-grey) !important;
+            font-weight: 500;
+        }
+
+        /* Payment method colors */
         .bkash-text {
             color: var(--pink) !important;
             font-weight: 600;
@@ -415,8 +420,8 @@
             font-weight: 600;
         }
 
-        .cash-text {
-            color: #555 !important;
+        .handcash-text {
+            color: var(--handcash) !important;
             font-weight: 600;
         }
 
@@ -502,6 +507,16 @@
             transform: translateY(-2px);
         }
 
+        .btn-danger {
+            background: var(--danger-red);
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
         /* Password Modal */
         .password-modal .modal-content {
             background: linear-gradient(135deg, #1a1f24, #0f1419);
@@ -571,8 +586,6 @@
 
         /* Utility */
         .text-gold { color: var(--gold); }
-        .text-dark-green { color: #1a7a3a; }
-        .text-dark-red { color: #ffb3b3; }
 
         /* Animations */
         @keyframes fadeInUp {
@@ -623,19 +636,41 @@
             margin-left: 0;
         }
 
-        /* Loading Spinner */
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: var(--gold);
-            animation: spin 0.8s ease infinite;
+        /* Phone numbers container */
+        .phone-numbers-container {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #3a3f45;
+            border-radius: 8px;
+            padding: 10px;
+            background: #1a1f24;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .phone-number-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 5px;
+            background: #2a2f35;
+            border-radius: 6px;
+        }
+
+        .remove-phone-btn {
+            background: none;
+            border: none;
+            color: var(--danger-red);
+            cursor: pointer;
+            padding: 0 5px;
+        }
+
+        .remove-phone-btn:hover {
+            color: #ff6b6b;
+        }
+
+        .add-phone-btn {
+            margin-top: 10px;
+            width: 100%;
         }
     </style>
 </head>
@@ -744,12 +779,30 @@
         <div class="data-table" id="memberList">লোড হচ্ছে...</div>
     </div>
 
-    <!-- Donations Page -->
+    <!-- Donations Page with Monthly Lists -->
     <div id="donations" class="page" style="display:none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h3><i class="fas fa-hand-holding-usd text-gold"></i> দান-অনুদানের তালিকা</h3>
             <button onclick="openDonationForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন দান</button>
         </div>
+        
+        <!-- Monthly Donator Lists -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="glass-card">
+                    <h5 class="text-gold mb-3"><i class="fas fa-calendar-alt"></i> চলতি মাসের দাতা তালিকা</h5>
+                    <div id="currentMonthDonors" class="data-table" style="max-height: 300px; overflow-y: auto;">লোড হচ্ছে...</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="glass-card">
+                    <h5 class="text-gold mb-3"><i class="fas fa-history"></i> পূর্ববর্তী মাসের দাতা তালিকা</h5>
+                    <div id="previousMonthDonors" class="data-table" style="max-height: 300px; overflow-y: auto;">লোড হচ্ছে...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- All Donations Table -->
         <div class="data-table" id="donationList">লোড হচ্ছে...</div>
     </div>
 
@@ -833,12 +886,9 @@
     const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
 
     const ADMIN_PASSWORD = "IYSO2020";
-    let pendingAction = null;
-    let pendingData = null;
 
     // Password verification function
-    function verifyPassword(callback, actionData = null, skipForAdd = false) {
-        // For add operations, we still require password
+    function verifyPassword(callback, actionData = null) {
         document.getElementById('passwordInput').value = '';
         document.getElementById('passwordError').style.display = 'none';
         
@@ -924,9 +974,11 @@
         });
     };
 
-    // Member Form
+    // Member Form with Multiple Phone Numbers
     window.openMemberForm = (data = null) => {
         const action = () => {
+            let phoneNumbers = data?.phoneNumbers || (data?.phone ? [data.phone] : ['']);
+            
             document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> সদস্য সম্পাদনা' : '<i class="fas fa-user-plus"></i> নতুন সদস্য';
             document.getElementById('modalBody').innerHTML = `
                 <input type="text" id="mUID" class="form-control mb-3" placeholder="সদস্য আইডি" value="${data?.uid || ''}">
@@ -936,19 +988,60 @@
                     <option value="">ব্লাড গ্রুপ</option>
                     ${['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(b => `<option value="${b}" ${data?.blood === b ? 'selected' : ''}>${b}</option>`).join('')}
                 </select>
-                <input type="text" id="mPhone" class="form-control mb-3" placeholder="ফোন নম্বর" value="${data?.phone || ''}">
-                <input type="email" id="mEmail" class="form-control" placeholder="ইমেইল" value="${data?.email || ''}">
+                <label class="small text-muted mb-2">ফোন নম্বরসমূহ (একাধিক)</label>
+                <div id="phoneNumbersContainer" class="phone-numbers-container mb-3"></div>
+                <button type="button" class="btn btn-sm btn-outline-success add-phone-btn" onclick="addPhoneField()"><i class="fas fa-plus"></i> আরও ফোন নম্বর যোগ করুন</button>
+                <input type="email" id="mEmail" class="form-control mt-3" placeholder="ইমেইল" value="${data?.email || ''}">
             `;
+            
+            // Render phone numbers
+            window.renderPhoneNumbers = () => {
+                const container = document.getElementById('phoneNumbersContainer');
+                if (!container) return;
+                container.innerHTML = '';
+                phoneNumbers.forEach((phone, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'phone-number-item';
+                    div.innerHTML = `
+                        <input type="tel" class="form-control phone-input" style="flex:1; margin-right:10px;" placeholder="017XXXXXXXX" value="${phone}" data-index="${index}">
+                        <button type="button" class="remove-phone-btn" onclick="removePhoneField(${index})"><i class="fas fa-trash"></i></button>
+                    `;
+                    container.appendChild(div);
+                });
+                
+                // Add event listeners to phone inputs
+                document.querySelectorAll('.phone-input').forEach(input => {
+                    input.onchange = (e) => {
+                        const idx = parseInt(e.target.dataset.index);
+                        phoneNumbers[idx] = e.target.value;
+                    };
+                });
+            };
+            
+            window.addPhoneField = () => {
+                phoneNumbers.push('');
+                renderPhoneNumbers();
+            };
+            
+            window.removePhoneField = (index) => {
+                phoneNumbers.splice(index, 1);
+                renderPhoneNumbers();
+            };
+            
+            renderPhoneNumbers();
+            
             const saveBtn = document.getElementById('saveBtn');
             const newSaveBtn = saveBtn.cloneNode(true);
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
             newSaveBtn.onclick = async () => {
+                const validPhoneNumbers = phoneNumbers.filter(p => p && p.trim().length >= 8);
                 const memberData = {
                     uid: document.getElementById('mUID').value,
                     name: document.getElementById('mName').value,
                     designation: document.getElementById('mDesignation').value,
                     blood: document.getElementById('mBlood').value,
-                    phone: document.getElementById('mPhone').value,
+                    phoneNumbers: validPhoneNumbers,
+                    phone: validPhoneNumbers[0] || '',
                     email: document.getElementById('mEmail').value
                 };
                 if (data) await updateDoc(doc(db, "members", data.id), memberData);
@@ -958,7 +1051,6 @@
             bsModal.show();
         };
         
-        // Require password for both add and edit
         verifyPassword(action, data);
     };
 
@@ -966,7 +1058,7 @@
     window.getMemberByPhone = async (phone) => {
         if (!phone || phone.length < 8) return null;
         const membersRef = collection(db, "members");
-        const q = query(membersRef, where("phone", "==", phone));
+        const q = query(membersRef, where("phoneNumbers", "array-contains", phone));
         const snapshot = await getDocs(q);
         if (!snapshot.empty) {
             const member = snapshot.docs[0].data();
@@ -975,7 +1067,7 @@
         return null;
     };
 
-    // Donation Form with Phone Number Auto-fill and correct payment methods
+    // Donation Form with Phone Number Auto-fill
     window.openDonationForm = (data = null) => {
         const action = () => {
             const today = new Date().toISOString().split('T')[0];
@@ -997,7 +1089,7 @@
                     <option value="">পেমেন্ট পদ্ধতি</option>
                     <option value="Bkash" ${data?.system === 'Bkash' ? 'selected' : ''}>বিকাশ</option>
                     <option value="Nagad" ${data?.system === 'Nagad' ? 'selected' : ''}>নগদ</option>
-                    <option value="Cash" ${data?.system === 'Cash' ? 'selected' : ''}>নগদ (By Cash)</option>
+                    <option value="HandCash" ${data?.system === 'HandCash' ? 'selected' : ''}>হ্যান্ড ক্যাশ</option>
                 </select>
                 <input type="date" id="dDate" class="form-control mb-3" value="${data?.date || today}">
                 <input type="text" id="dEventName" class="form-control" placeholder="ইভেন্টের নাম (যদি ইভেন্ট দান হয়)" value="${data?.eventName || ''}">
@@ -1064,7 +1156,6 @@
             bsModal.show();
         };
         
-        // Require password for both add and edit
         verifyPassword(action, data);
     };
 
@@ -1102,7 +1193,6 @@
             bsModal.show();
         };
         
-        // Require password for both add and edit
         verifyPassword(action, data);
     };
 
@@ -1175,7 +1265,6 @@
             bsModal.show();
         };
         
-        // Require password for both add and edit
         verifyPassword(action, data);
     };
 
@@ -1190,9 +1279,12 @@
     // Real-time data listeners
     let totalFunds = 0, monthlyFunds = 0, eventFunds = 0;
     let totalExpensesAmount = 0, monthlyExpensesAmount = 0;
+    let allDonations = [];
 
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
+    const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+    const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
 
     function isCurrentMonth(dateStr) {
         if (!dateStr) return false;
@@ -1200,21 +1292,50 @@
         return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
     }
 
+    function isPreviousMonth(dateStr) {
+        if (!dateStr) return false;
+        const date = new Date(dateStr);
+        return date.getMonth() === previousMonth && date.getFullYear() === previousYear;
+    }
+
     // Donations Listener
     onSnapshot(collection(db, "donations"), (snap) => {
         totalFunds = 0;
         monthlyFunds = 0;
         eventFunds = 0;
+        allDonations = [];
         
+        let currentMonthDonorsHtml = '<table class="table"><thead><tr><th>নাম</th><th>তারিখ</th><th>পরিমাণ</th></tr></thead><tbody>';
+        let previousMonthDonorsHtml = '<table class="table"><thead><tr><th>নাম</th><th>তারিখ</th><th>পরিমাণ</th></tr></thead><tbody>';
         let html = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody>`;
         
         snap.forEach(doc => {
             const d = doc.data();
+            allDonations.push({id: doc.id, ...d});
             totalFunds += d.amount;
+            
             if (d.type === 'monthly') {
                 if (isCurrentMonth(d.date)) monthlyFunds += d.amount;
             } else if (d.type === 'event') {
                 eventFunds += d.amount;
+            }
+            
+            // Current Month Donors
+            if (isCurrentMonth(d.date) && d.type === 'monthly') {
+                currentMonthDonorsHtml += `<tr>
+                    <td class="name-text">${d.name || 'অতিথি'}</td>
+                    <td>${d.date || '-'}</td>
+                    <td style="font-weight:bold">৳${d.amount}</td>
+                </tr>`;
+            }
+            
+            // Previous Month Donors
+            if (isPreviousMonth(d.date) && d.type === 'monthly') {
+                previousMonthDonorsHtml += `<tr>
+                    <td class="name-text">${d.name || 'অতিথি'}</td>
+                    <td>${d.date || '-'}</td>
+                    <td style="font-weight:bold">৳${d.amount}</td>
+                </tr>`;
             }
             
             const typeBadge = d.type === 'monthly' ? '<span class="badge-add">মাসিক</span>' : '<span class="badge-add">ইভেন্ট</span>';
@@ -1227,14 +1348,14 @@
             } else if (d.system === 'Nagad') {
                 methodClass = 'nagad-text';
                 methodText = 'নগদ';
-            } else if (d.system === 'Cash') {
-                methodClass = 'cash-text';
-                methodText = 'নগদ (By Cash)';
+            } else if (d.system === 'HandCash') {
+                methodClass = 'handcash-text';
+                methodText = 'হ্যান্ড ক্যাশ';
             }
             
             html += `<tr>
                 <td>${d.date || '-'}</td>
-                <td><strong>${d.uid || 'অতিথি'}</strong><br><small>${d.name || ''}</small><br><small class="text-muted">${d.phone || ''}</small></td>
+                <td><strong class="uid-text">${d.uid || 'অতিথি'}</strong><br><span class="name-text">${d.name || ''}</span><br><small class="text-muted">${d.phone || ''}</small></td>
                 <td style="font-weight:bold">৳${d.amount}</td>
                 <td>${typeBadge}${d.eventName ? `<br><small>${d.eventName}</small>` : ''}</td>
                 <td class="${methodClass}">${methodText}</td>
@@ -1242,7 +1363,12 @@
             </tr>`;
         });
         
+        currentMonthDonorsHtml += `</tbody></table>`;
+        previousMonthDonorsHtml += `</tbody></table>`;
         html += `</tbody></table>`;
+        
+        document.getElementById('currentMonthDonors').innerHTML = currentMonthDonorsHtml || '<p class="text-muted p-3">কোন দান নেই</p>';
+        document.getElementById('previousMonthDonors').innerHTML = previousMonthDonorsHtml || '<p class="text-muted p-3">কোন দান নেই</p>';
         document.getElementById('donationList').innerHTML = html || '<p class="text-muted p-3">কোন দান নেই</p>';
         document.getElementById('totalFund').innerHTML = `৳${totalFunds}`;
         document.getElementById('monthlyCollection').innerHTML = `৳${monthlyFunds}`;
@@ -1274,24 +1400,25 @@
             </tr>`;
         });
         
-        html += `</tbody></tr>`;
+        html += `</tbody></table>`;
         document.getElementById('expenseList').innerHTML = html || '<p class="text-muted p-3">কোন খরচ নেই</p>';
         document.getElementById('monthlyExpenses').innerHTML = `৳${monthlyExpensesAmount}`;
         document.getElementById('totalExpenses').innerHTML = `৳${totalExpensesAmount}`;
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
-    // Members Listener
+    // Members Listener with custom colors
     onSnapshot(collection(db, "members"), (snap) => {
         let html = `<table class="table"><thead><tr><th>আইডি</th><th>নাম</th><th>পদবি</th><th>ব্লাড</th><th>যোগাযোগ</th><th>অ্যাকশন</th></tr></thead><tbody>`;
         snap.forEach(doc => {
             const m = doc.data();
+            const phoneDisplay = m.phoneNumbers ? m.phoneNumbers.join(', ') : (m.phone || '-');
             html += `<tr>
-                <td style="font-weight:bold">${m.uid || '-'}</td>
-                <td>${m.name}</td>
+                <td class="uid-text" style="font-weight:bold">${m.uid || '-'}</td>
+                <td class="name-text">${m.name}</td>
                 <td>${m.designation || '-'}</td>
-                <td><span class="badge bg-danger">${m.blood || '-'}</span></td>
-                <td>${m.phone}<br><small>${m.email}</small></td>
+                <td class="blood-text"><span class="badge bg-danger">${m.blood || '-'}</span></td>
+                <td>${phoneDisplay}<br><small>${m.email || ''}</small></td>
                 <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openMemberForm(${JSON.stringify({id:doc.id,...m})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('members','${doc.id}')"><i class="fas fa-trash"></i></button></td>
             </tr>`;
         });
@@ -1306,7 +1433,6 @@
         snap.forEach(doc => {
             const e = doc.data();
             let statusBadge = '';
-            let rowColor = '';
             
             if (e.status === 'successful') {
                 statusBadge = '<span class="status-success"><i class="fas fa-check-circle"></i> সফল</span>';
