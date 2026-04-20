@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
@@ -20,6 +20,7 @@
             --card: rgba(18, 25, 32, 0.95);
             --pink: #e2136e;
             --orange: #f7941d;
+            --black: #2c2c2c;
             --success-green: #2ecc71;
             --danger-red: #e74c3c;
             --warning-yellow: #f39c12;
@@ -403,7 +404,7 @@
             color: #1a7a3a !important;
         }
 
-        /* bKash and Nagad colors in donation section */
+        /* Payment method colors in donation section */
         .bkash-text {
             color: var(--pink) !important;
             font-weight: 600;
@@ -411,6 +412,11 @@
 
         .nagad-text {
             color: var(--orange) !important;
+            font-weight: 600;
+        }
+
+        .cash-text {
+            color: #555 !important;
             font-weight: 600;
         }
 
@@ -781,7 +787,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>এডিট বা ডিলিট করতে পাসওয়ার্ড দিন:</p>
+                <p>এই অপারেশন করতে পাসওয়ার্ড দিন:</p>
                 <input type="password" id="passwordInput" class="form-control password-input" placeholder="পাসওয়ার্ড">
                 <div id="passwordError" class="text-danger mt-2" style="display:none;">ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।</div>
             </div>
@@ -831,7 +837,8 @@
     let pendingData = null;
 
     // Password verification function
-    function verifyPassword(callback, actionData = null) {
+    function verifyPassword(callback, actionData = null, skipForAdd = false) {
+        // For add operations, we still require password
         document.getElementById('passwordInput').value = '';
         document.getElementById('passwordError').style.display = 'none';
         
@@ -951,8 +958,8 @@
             bsModal.show();
         };
         
-        if (data) verifyPassword(action, data);
-        else action();
+        // Require password for both add and edit
+        verifyPassword(action, data);
     };
 
     // Function to get member by phone number
@@ -968,7 +975,7 @@
         return null;
     };
 
-    // Donation Form with Phone Number Auto-fill
+    // Donation Form with Phone Number Auto-fill and correct payment methods
     window.openDonationForm = (data = null) => {
         const action = () => {
             const today = new Date().toISOString().split('T')[0];
@@ -990,7 +997,7 @@
                     <option value="">পেমেন্ট পদ্ধতি</option>
                     <option value="Bkash" ${data?.system === 'Bkash' ? 'selected' : ''}>বিকাশ</option>
                     <option value="Nagad" ${data?.system === 'Nagad' ? 'selected' : ''}>নগদ</option>
-                    <option value="Cash" ${data?.system === 'Cash' ? 'selected' : ''}>নগদ</option>
+                    <option value="Cash" ${data?.system === 'Cash' ? 'selected' : ''}>নগদ (By Cash)</option>
                 </select>
                 <input type="date" id="dDate" class="form-control mb-3" value="${data?.date || today}">
                 <input type="text" id="dEventName" class="form-control" placeholder="ইভেন্টের নাম (যদি ইভেন্ট দান হয়)" value="${data?.eventName || ''}">
@@ -1057,8 +1064,8 @@
             bsModal.show();
         };
         
-        if (data) verifyPassword(action, data);
-        else action();
+        // Require password for both add and edit
+        verifyPassword(action, data);
     };
 
     // Expense Form
@@ -1095,8 +1102,8 @@
             bsModal.show();
         };
         
-        if (data) verifyPassword(action, data);
-        else action();
+        // Require password for both add and edit
+        verifyPassword(action, data);
     };
 
     // Event Form
@@ -1168,8 +1175,8 @@
             bsModal.show();
         };
         
-        if (data) verifyPassword(action, data);
-        else action();
+        // Require password for both add and edit
+        verifyPassword(action, data);
     };
 
     window.deleteItem = async (collectionName, id) => {
@@ -1211,13 +1218,26 @@
             }
             
             const typeBadge = d.type === 'monthly' ? '<span class="badge-add">মাসিক</span>' : '<span class="badge-add">ইভেন্ট</span>';
-            const methodClass = d.system === 'Bkash' ? 'bkash-text' : (d.system === 'Nagad' ? 'nagad-text' : '');
+            let methodClass = '';
+            let methodText = d.system || '-';
+            
+            if (d.system === 'Bkash') {
+                methodClass = 'bkash-text';
+                methodText = 'বিকাশ';
+            } else if (d.system === 'Nagad') {
+                methodClass = 'nagad-text';
+                methodText = 'নগদ';
+            } else if (d.system === 'Cash') {
+                methodClass = 'cash-text';
+                methodText = 'নগদ (By Cash)';
+            }
+            
             html += `<tr>
                 <td>${d.date || '-'}</td>
                 <td><strong>${d.uid || 'অতিথি'}</strong><br><small>${d.name || ''}</small><br><small class="text-muted">${d.phone || ''}</small></td>
                 <td style="font-weight:bold">৳${d.amount}</td>
                 <td>${typeBadge}${d.eventName ? `<br><small>${d.eventName}</small>` : ''}</td>
-                <td class="${methodClass}">${d.system || '-'}</td>
+                <td class="${methodClass}">${methodText}</td>
                 <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openDonationForm(${JSON.stringify({id:doc.id,...d})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('donations','${doc.id}')"><i class="fas fa-trash"></i></button></td>
             </tr>`;
         });
@@ -1254,7 +1274,7 @@
             </tr>`;
         });
         
-        html += `</tbody></table>`;
+        html += `</tbody></tr>`;
         document.getElementById('expenseList').innerHTML = html || '<p class="text-muted p-3">কোন খরচ নেই</p>';
         document.getElementById('monthlyExpenses').innerHTML = `৳${monthlyExpensesAmount}`;
         document.getElementById('totalExpenses').innerHTML = `৳${totalExpensesAmount}`;
