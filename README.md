@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>IYSO প্রিমিয়াম ড্যাশবোর্ড | আইডিয়াল যুব সেবা সংস্থা</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -24,7 +24,7 @@
             --danger-red: #e74c3c;
             --warning-yellow: #f39c12;
             --table-bg: rgba(0, 0, 0, 0.6);
-            --table-hover: rgba(255, 255, 255, 0.08);
+            --table-hover: rgba(0, 104, 55, 0.15);
         }
 
         * {
@@ -61,83 +61,93 @@
             width: 280px;
             height: 100vh;
             position: fixed;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(20px);
             padding: 25px 15px;
             border-right: 1px solid rgba(255,255,255,0.08);
-            z-index: 100;
-            transition: all 0.3s ease;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-y: auto;
+            transform: translateX(0);
         }
 
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
                 width: 260px;
-                z-index: 1000;
-                transition: transform 0.3s ease;
             }
             .sidebar.open {
                 transform: translateX(0);
             }
             .main {
                 margin-left: 0 !important;
-                padding: 15px !important;
+                padding: 60px 12px 20px !important;
             }
             .menu-toggle {
-                display: block !important;
+                display: flex !important;
                 position: fixed;
-                top: 15px;
-                left: 15px;
+                top: 12px;
+                left: 12px;
                 z-index: 1001;
                 background: var(--green);
                 border: none;
                 color: white;
-                padding: 10px 15px;
-                border-radius: 8px;
+                padding: 10px 14px;
+                border-radius: 10px;
                 cursor: pointer;
+                align-items: center;
+                gap: 8px;
+                font-size: 14px;
             }
             .net-balance-amount {
-                font-size: 40px !important;
+                font-size: 36px !important;
             }
             .small-card-amount {
-                font-size: 22px !important;
-            }
-            .stat {
-                font-size: 24px;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .menu-toggle {
-                display: none;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .main {
-                padding: 10px !important;
+                font-size: 20px !important;
             }
             .glass-card {
                 padding: 15px !important;
             }
             .net-balance-card {
                 padding: 20px !important;
+                margin-bottom: 15px;
+            }
+            .money-numbers {
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main {
+                padding: 55px 10px 15px !important;
             }
             .net-balance-amount {
-                font-size: 32px !important;
+                font-size: 28px !important;
             }
             .small-card-amount {
                 font-size: 18px !important;
             }
+            .small-card-title {
+                font-size: 10px !important;
+            }
             .data-table {
-                font-size: 12px;
+                font-size: 11px;
             }
             .data-table th, .data-table td {
-                padding: 8px !important;
+                padding: 8px 6px !important;
             }
-            .money-numbers {
-                margin-top: 15px;
+            .btn {
+                padding: 6px 12px !important;
+                font-size: 12px !important;
+            }
+            h3 {
+                font-size: 18px !important;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none;
             }
         }
 
@@ -222,6 +232,7 @@
             position: relative;
             z-index: 1;
             transition: margin-left 0.3s ease;
+            min-height: 100vh;
         }
 
         /* Glass Card Effect */
@@ -309,6 +320,7 @@
             border-radius: 16px;
             padding: 12px;
             border: 1px solid rgba(255,255,255,0.1);
+            height: 100%;
         }
 
         .bkash-box {
@@ -318,7 +330,6 @@
             margin-bottom: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
-            animation: slideIn 0.5s ease;
         }
 
         .nagad-box {
@@ -327,18 +338,6 @@
             padding: 10px 14px;
             cursor: pointer;
             transition: all 0.3s ease;
-            animation: slideIn 0.5s ease 0.1s;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
         }
 
         .bkash-box:hover, .nagad-box:hover {
@@ -353,7 +352,7 @@
             direction: ltr;
         }
 
-        /* Tables - Enhanced Visibility */
+        /* Tables - Dark Green Text */
         .data-table {
             background: var(--table-bg);
             border-radius: 16px;
@@ -379,7 +378,8 @@
         .data-table td {
             padding: 12px;
             border-bottom: 1px solid rgba(255,255,255,0.08);
-            color: #f0f0f0 !important;
+            color: #1a5c2e !important;
+            font-weight: 500;
             font-size: 14px;
             background: transparent;
         }
@@ -390,6 +390,28 @@
 
         .data-table tr:hover {
             background: var(--table-hover) !important;
+        }
+
+        /* Dark green text for table content */
+        .data-table td,
+        .data-table td * {
+            color: #1a7a3a !important;
+        }
+
+        .data-table td strong,
+        .data-table td span {
+            color: #1a7a3a !important;
+        }
+
+        /* bKash and Nagad colors in donation section */
+        .bkash-text {
+            color: var(--pink) !important;
+            font-weight: 600;
+        }
+
+        .nagad-text {
+            color: var(--orange) !important;
+            font-weight: 600;
         }
 
         /* Badges */
@@ -460,6 +482,10 @@
             box-shadow: 0 0 0 0.2rem rgba(0,104,55,0.25);
         }
 
+        .form-control::placeholder {
+            color: #888;
+        }
+
         .btn-success {
             background: var(--green);
             border: none;
@@ -468,6 +494,18 @@
         .btn-success:hover {
             background: var(--dark-green);
             transform: translateY(-2px);
+        }
+
+        /* Password Modal */
+        .password-modal .modal-content {
+            background: linear-gradient(135deg, #1a1f24, #0f1419);
+            border: 2px solid var(--gold);
+        }
+
+        .password-input {
+            font-size: 18px;
+            letter-spacing: 2px;
+            text-align: center;
         }
 
         /* Footer Glowing Texts */
@@ -527,7 +565,7 @@
 
         /* Utility */
         .text-gold { color: var(--gold); }
-        .text-dark-green { color: #a8e6cf; }
+        .text-dark-green { color: #1a7a3a; }
         .text-dark-red { color: #ffb3b3; }
 
         /* Animations */
@@ -578,12 +616,27 @@
             margin-right: 0;
             margin-left: 0;
         }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--gold);
+            animation: spin 0.8s ease infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
 
 <button class="menu-toggle" onclick="toggleSidebar()">
-    <i class="fas fa-bars"></i>
+    <i class="fas fa-bars"></i> মেনু
 </button>
 
 <div class="sidebar" id="sidebar">
@@ -719,7 +772,28 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Password Modal -->
+<div class="modal fade" id="passwordModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title"><i class="fas fa-lock"></i> পাসওয়ার্ড প্রয়োজন</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>এডিট বা ডিলিট করতে পাসওয়ার্ড দিন:</p>
+                <input type="password" id="passwordInput" class="form-control password-input" placeholder="পাসওয়ার্ড">
+                <div id="passwordError" class="text-danger mt-2" style="display:none;">ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।</div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
+                <button type="button" class="btn btn-success" id="confirmPasswordBtn">নিশ্চিত করুন</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Modal -->
 <div class="modal fade" id="dataModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -740,7 +814,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "YOUR_KEY",
@@ -750,6 +824,33 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const bsModal = new bootstrap.Modal(document.getElementById('dataModal'));
+    const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
+
+    const ADMIN_PASSWORD = "IYSO2020";
+    let pendingAction = null;
+    let pendingData = null;
+
+    // Password verification function
+    function verifyPassword(callback, actionData = null) {
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('passwordError').style.display = 'none';
+        
+        const confirmBtn = document.getElementById('confirmPasswordBtn');
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        
+        newConfirmBtn.onclick = () => {
+            const enteredPassword = document.getElementById('passwordInput').value;
+            if (enteredPassword === ADMIN_PASSWORD) {
+                passwordModal.hide();
+                if (callback) callback(actionData);
+            } else {
+                document.getElementById('passwordError').style.display = 'block';
+            }
+        };
+        
+        passwordModal.show();
+    }
 
     // Sidebar Toggle for Mobile
     window.toggleSidebar = () => {
@@ -800,200 +901,283 @@
     document.getElementById('eventMonthName').innerText = 'ইভেন্ট সংগ্রহ';
 
     window.editSendNumber = (type) => {
-        const newNumber = prompt(`${type.toUpperCase()} সেন্ড মানি নম্বর দিন:`, type === 'bkash' ? bkashNumber : nagadNumber);
-        if (newNumber && newNumber.trim()) {
-            if (type === 'bkash') {
-                bkashNumber = newNumber;
-                document.getElementById('bkashNumber').innerText = bkashNumber;
-                localStorage.setItem('bkashNumber', bkashNumber);
-            } else {
-                nagadNumber = newNumber;
-                document.getElementById('nagadNumber').innerText = nagadNumber;
-                localStorage.setItem('nagadNumber', nagadNumber);
+        verifyPassword(() => {
+            const newNumber = prompt(`${type.toUpperCase()} সেন্ড মানি নম্বর দিন:`, type === 'bkash' ? bkashNumber : nagadNumber);
+            if (newNumber && newNumber.trim()) {
+                if (type === 'bkash') {
+                    bkashNumber = newNumber;
+                    document.getElementById('bkashNumber').innerText = bkashNumber;
+                    localStorage.setItem('bkashNumber', bkashNumber);
+                } else {
+                    nagadNumber = newNumber;
+                    document.getElementById('nagadNumber').innerText = nagadNumber;
+                    localStorage.setItem('nagadNumber', nagadNumber);
+                }
             }
-        }
+        });
     };
 
     // Member Form
     window.openMemberForm = (data = null) => {
-        document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> সদস্য সম্পাদনা' : '<i class="fas fa-user-plus"></i> নতুন সদস্য';
-        document.getElementById('modalBody').innerHTML = `
-            <input type="text" id="mUID" class="form-control mb-3" placeholder="সদস্য আইডি" value="${data?.uid || ''}">
-            <input type="text" id="mName" class="form-control mb-3" placeholder="পুরো নাম" value="${data?.name || ''}">
-            <input type="text" id="mDesignation" class="form-control mb-3" placeholder="পদবি" value="${data?.designation || ''}">
-            <select id="mBlood" class="form-select mb-3">
-                <option value="">ব্লাড গ্রুপ</option>
-                ${['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(b => `<option value="${b}" ${data?.blood === b ? 'selected' : ''}>${b}</option>`).join('')}
-            </select>
-            <input type="text" id="mPhone" class="form-control mb-3" placeholder="ফোন নম্বর" value="${data?.phone || ''}">
-            <input type="email" id="mEmail" class="form-control" placeholder="ইমেইল" value="${data?.email || ''}">
-        `;
-        document.getElementById('saveBtn').onclick = async () => {
-            const memberData = {
-                uid: document.getElementById('mUID').value,
-                name: document.getElementById('mName').value,
-                designation: document.getElementById('mDesignation').value,
-                blood: document.getElementById('mBlood').value,
-                phone: document.getElementById('mPhone').value,
-                email: document.getElementById('mEmail').value
+        const action = () => {
+            document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> সদস্য সম্পাদনা' : '<i class="fas fa-user-plus"></i> নতুন সদস্য';
+            document.getElementById('modalBody').innerHTML = `
+                <input type="text" id="mUID" class="form-control mb-3" placeholder="সদস্য আইডি" value="${data?.uid || ''}">
+                <input type="text" id="mName" class="form-control mb-3" placeholder="পুরো নাম" value="${data?.name || ''}">
+                <input type="text" id="mDesignation" class="form-control mb-3" placeholder="পদবি" value="${data?.designation || ''}">
+                <select id="mBlood" class="form-select mb-3">
+                    <option value="">ব্লাড গ্রুপ</option>
+                    ${['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(b => `<option value="${b}" ${data?.blood === b ? 'selected' : ''}>${b}</option>`).join('')}
+                </select>
+                <input type="text" id="mPhone" class="form-control mb-3" placeholder="ফোন নম্বর" value="${data?.phone || ''}">
+                <input type="email" id="mEmail" class="form-control" placeholder="ইমেইল" value="${data?.email || ''}">
+            `;
+            const saveBtn = document.getElementById('saveBtn');
+            const newSaveBtn = saveBtn.cloneNode(true);
+            saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+            newSaveBtn.onclick = async () => {
+                const memberData = {
+                    uid: document.getElementById('mUID').value,
+                    name: document.getElementById('mName').value,
+                    designation: document.getElementById('mDesignation').value,
+                    blood: document.getElementById('mBlood').value,
+                    phone: document.getElementById('mPhone').value,
+                    email: document.getElementById('mEmail').value
+                };
+                if (data) await updateDoc(doc(db, "members", data.id), memberData);
+                else await addDoc(collection(db, "members"), memberData);
+                bsModal.hide();
             };
-            if (data) await updateDoc(doc(db, "members", data.id), memberData);
-            else await addDoc(collection(db, "members"), memberData);
-            bsModal.hide();
+            bsModal.show();
         };
-        bsModal.show();
+        
+        if (data) verifyPassword(action, data);
+        else action();
     };
 
-    // Donation Form
+    // Function to get member by phone number
+    window.getMemberByPhone = async (phone) => {
+        if (!phone || phone.length < 8) return null;
+        const membersRef = collection(db, "members");
+        const q = query(membersRef, where("phone", "==", phone));
+        const snapshot = await getDocs(q);
+        if (!snapshot.empty) {
+            const member = snapshot.docs[0].data();
+            return { id: snapshot.docs[0].id, ...member };
+        }
+        return null;
+    };
+
+    // Donation Form with Phone Number Auto-fill
     window.openDonationForm = (data = null) => {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> দান সম্পাদনা' : '<i class="fas fa-plus"></i> নতুন দান';
-        document.getElementById('modalBody').innerHTML = `
-            <input type="text" id="dUID" class="form-control mb-3" placeholder="সদস্য আইডি" value="${data?.uid || ''}">
-            <input type="text" id="dName" class="form-control mb-3" placeholder="সদস্যের নাম" value="${data?.name || ''}" readonly style="background:#1a1f24">
-            <input type="number" id="dAmount" class="form-control mb-3" placeholder="পরিমাণ (টাকা)" value="${data?.amount || ''}">
-            <select id="dType" class="form-select mb-3">
-                <option value="monthly" ${data?.type === 'monthly' ? 'selected' : ''}>মাসিক চাঁদা</option>
-                <option value="event" ${data?.type === 'event' ? 'selected' : ''}>ইভেন্ট দান</option>
-            </select>
-            <select id="dSystem" class="form-select mb-3">
-                <option value="">পেমেন্ট পদ্ধতি</option>
-                <option value="Bkash" ${data?.system === 'Bkash' ? 'selected' : ''}>বিকাশ</option>
-                <option value="Nagad" ${data?.system === 'Nagad' ? 'selected' : ''}>নগদ</option>
-                <option value="Cash" ${data?.system === 'Cash' ? 'selected' : ''}>নগদ</option>
-            </select>
-            <input type="date" id="dDate" class="form-control" value="${data?.date || today}">
-            <input type="text" id="dEventName" class="form-control mt-3" placeholder="ইভেন্টের নাম (যদি ইভেন্ট দান হয়)" value="${data?.eventName || ''}">
-        `;
-        const uidInput = document.getElementById('dUID');
-        uidInput.oninput = async () => {
-            const uid = uidInput.value.trim();
-            if (uid) {
-                const membersRef = collection(db, "members");
-                const q = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js").then(m => m.query(membersRef, m.where("uid", "==", uid)));
-                const snapshot = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js").then(m => m.getDocs(q));
-                snapshot.forEach(doc => {
-                    document.getElementById('dName').value = doc.data().name;
-                });
-            }
-        };
-        document.getElementById('saveBtn').onclick = async () => {
-            const donationData = {
-                uid: document.getElementById('dUID').value,
-                name: document.getElementById('dName').value,
-                amount: Number(document.getElementById('dAmount').value),
-                type: document.getElementById('dType').value,
-                system: document.getElementById('dSystem').value,
-                date: document.getElementById('dDate').value,
-                eventName: document.getElementById('dEventName').value || '',
-                timestamp: new Date().toISOString()
+        const action = () => {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> দান সম্পাদনা' : '<i class="fas fa-plus"></i> নতুন দান';
+            document.getElementById('modalBody').innerHTML = `
+                <div class="mb-3">
+                    <label class="small text-muted">ফোন নম্বর (সদস্য খুঁজতে)</label>
+                    <input type="tel" id="dPhone" class="form-control mb-2" placeholder="017XXXXXXXX" value="${data?.phone || ''}">
+                    <div id="phoneSearchStatus" class="small" style="display:none;"></div>
+                </div>
+                <input type="text" id="dUID" class="form-control mb-3" placeholder="সদস্য আইডি" value="${data?.uid || ''}" readonly style="background:#1a1f24">
+                <input type="text" id="dName" class="form-control mb-3" placeholder="সদস্যের নাম" value="${data?.name || ''}" readonly style="background:#1a1f24">
+                <input type="number" id="dAmount" class="form-control mb-3" placeholder="পরিমাণ (টাকা)" value="${data?.amount || ''}">
+                <select id="dType" class="form-select mb-3">
+                    <option value="monthly" ${data?.type === 'monthly' ? 'selected' : ''}>মাসিক চাঁদা</option>
+                    <option value="event" ${data?.type === 'event' ? 'selected' : ''}>ইভেন্ট দান</option>
+                </select>
+                <select id="dSystem" class="form-select mb-3">
+                    <option value="">পেমেন্ট পদ্ধতি</option>
+                    <option value="Bkash" ${data?.system === 'Bkash' ? 'selected' : ''}>বিকাশ</option>
+                    <option value="Nagad" ${data?.system === 'Nagad' ? 'selected' : ''}>নগদ</option>
+                    <option value="Cash" ${data?.system === 'Cash' ? 'selected' : ''}>নগদ</option>
+                </select>
+                <input type="date" id="dDate" class="form-control mb-3" value="${data?.date || today}">
+                <input type="text" id="dEventName" class="form-control" placeholder="ইভেন্টের নাম (যদি ইভেন্ট দান হয়)" value="${data?.eventName || ''}">
+            `;
+            
+            const phoneInput = document.getElementById('dPhone');
+            const statusDiv = document.getElementById('phoneSearchStatus');
+            let debounceTimer;
+            
+            phoneInput.oninput = async () => {
+                clearTimeout(debounceTimer);
+                const phone = phoneInput.value.trim();
+                if (phone.length >= 8) {
+                    statusDiv.style.display = 'block';
+                    statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> খুঁজছি...';
+                    statusDiv.style.color = '#c6a34f';
+                    
+                    debounceTimer = setTimeout(async () => {
+                        const member = await getMemberByPhone(phone);
+                        if (member) {
+                            document.getElementById('dUID').value = member.uid || '';
+                            document.getElementById('dName').value = member.name || '';
+                            statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> সদস্য পাওয়া গেছে!';
+                            statusDiv.style.color = '#2ecc71';
+                            setTimeout(() => {
+                                statusDiv.style.display = 'none';
+                            }, 2000);
+                        } else {
+                            document.getElementById('dUID').value = '';
+                            document.getElementById('dName').value = '';
+                            statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> সদস্য পাওয়া যায়নি';
+                            statusDiv.style.color = '#e74c3c';
+                            setTimeout(() => {
+                                statusDiv.style.display = 'none';
+                            }, 2000);
+                        }
+                    }, 500);
+                } else {
+                    statusDiv.style.display = 'none';
+                    document.getElementById('dUID').value = '';
+                    document.getElementById('dName').value = '';
+                }
             };
-            if (data) await updateDoc(doc(db, "donations", data.id), donationData);
-            else await addDoc(collection(db, "donations"), donationData);
-            bsModal.hide();
+            
+            const saveBtn = document.getElementById('saveBtn');
+            const newSaveBtn = saveBtn.cloneNode(true);
+            saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+            newSaveBtn.onclick = async () => {
+                const donationData = {
+                    uid: document.getElementById('dUID').value,
+                    name: document.getElementById('dName').value,
+                    phone: document.getElementById('dPhone').value,
+                    amount: Number(document.getElementById('dAmount').value),
+                    type: document.getElementById('dType').value,
+                    system: document.getElementById('dSystem').value,
+                    date: document.getElementById('dDate').value,
+                    eventName: document.getElementById('dEventName').value || '',
+                    timestamp: new Date().toISOString()
+                };
+                if (data) await updateDoc(doc(db, "donations", data.id), donationData);
+                else await addDoc(collection(db, "donations"), donationData);
+                bsModal.hide();
+            };
+            bsModal.show();
         };
-        bsModal.show();
+        
+        if (data) verifyPassword(action, data);
+        else action();
     };
 
     // Expense Form
     window.openExpenseForm = (data = null) => {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> খরচ সম্পাদনা' : '<i class="fas fa-plus"></i> নতুন খরচ';
-        document.getElementById('modalBody').innerHTML = `
-            <input type="text" id="eDesc" class="form-control mb-3" placeholder="খরচের বিবরণ" value="${data?.description || ''}">
-            <input type="number" id="eAmount" class="form-control mb-3" placeholder="পরিমাণ (টাকা)" value="${data?.amount || ''}">
-            <select id="eType" class="form-select mb-3">
-                <option value="monthly" ${data?.type === 'monthly' ? 'selected' : ''}>মাসিক খরচ</option>
-                <option value="event" ${data?.type === 'event' ? 'selected' : ''}>ইভেন্ট খরচ</option>
-            </select>
-            <input type="date" id="eDate" class="form-control" value="${data?.date || today}">
-            <input type="text" id="eEventName" class="form-control mt-3" placeholder="ইভেন্টের নাম (যদি ইভেন্ট খরচ হয়)" value="${data?.eventName || ''}">
-        `;
-        document.getElementById('saveBtn').onclick = async () => {
-            const expenseData = {
-                description: document.getElementById('eDesc').value,
-                amount: Number(document.getElementById('eAmount').value),
-                type: document.getElementById('eType').value,
-                date: document.getElementById('eDate').value,
-                eventName: document.getElementById('eEventName').value || '',
-                timestamp: new Date().toISOString()
+        const action = () => {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> খরচ সম্পাদনা' : '<i class="fas fa-plus"></i> নতুন খরচ';
+            document.getElementById('modalBody').innerHTML = `
+                <input type="text" id="eDesc" class="form-control mb-3" placeholder="খরচের বিবরণ" value="${data?.description || ''}">
+                <input type="number" id="eAmount" class="form-control mb-3" placeholder="পরিমাণ (টাকা)" value="${data?.amount || ''}">
+                <select id="eType" class="form-select mb-3">
+                    <option value="monthly" ${data?.type === 'monthly' ? 'selected' : ''}>মাসিক খরচ</option>
+                    <option value="event" ${data?.type === 'event' ? 'selected' : ''}>ইভেন্ট খরচ</option>
+                </select>
+                <input type="date" id="eDate" class="form-control mb-3" value="${data?.date || today}">
+                <input type="text" id="eEventName" class="form-control" placeholder="ইভেন্টের নাম (যদি ইভেন্ট খরচ হয়)" value="${data?.eventName || ''}">
+            `;
+            const saveBtn = document.getElementById('saveBtn');
+            const newSaveBtn = saveBtn.cloneNode(true);
+            saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+            newSaveBtn.onclick = async () => {
+                const expenseData = {
+                    description: document.getElementById('eDesc').value,
+                    amount: Number(document.getElementById('eAmount').value),
+                    type: document.getElementById('eType').value,
+                    date: document.getElementById('eDate').value,
+                    eventName: document.getElementById('eEventName').value || '',
+                    timestamp: new Date().toISOString()
+                };
+                if (data) await updateDoc(doc(db, "expenses", data.id), expenseData);
+                else await addDoc(collection(db, "expenses"), expenseData);
+                bsModal.hide();
             };
-            if (data) await updateDoc(doc(db, "expenses", data.id), expenseData);
-            else await addDoc(collection(db, "expenses"), expenseData);
-            bsModal.hide();
+            bsModal.show();
         };
-        bsModal.show();
+        
+        if (data) verifyPassword(action, data);
+        else action();
     };
 
     // Event Form
     window.openEventForm = (data = null) => {
-        document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> ইভেন্ট সম্পাদনা' : '<i class="fas fa-calendar-plus"></i> নতুন ইভেন্ট';
-        document.getElementById('modalBody').innerHTML = `
-            <input type="text" id="evName" class="form-control mb-3" placeholder="ইভেন্টের নাম" value="${data?.name || ''}">
-            <input type="date" id="evDate" class="form-control mb-3" value="${data?.date || ''}">
-            <input type="number" id="evBudget" class="form-control mb-3" placeholder="বাজেট (টাকা)" value="${data?.budget || ''}">
-            <select id="evStatus" class="form-select mb-3">
-                <option value="pending" ${data?.status === 'pending' || !data?.status ? 'selected' : ''}>🟡 পেন্ডিং</option>
-                <option value="successful" ${data?.status === 'successful' ? 'selected' : ''}>🟢 সফল</option>
-                <option value="failed" ${data?.status === 'failed' ? 'selected' : ''}>🔴 ব্যর্থ</option>
-            </select>
-            <textarea id="evDetails" class="form-control" rows="3" placeholder="ইভেন্টের বিবরণ">${data?.details || ''}</textarea>
-            ${data?.status === 'successful' ? `
-                <div class="mt-3 p-3 border border-success rounded">
-                    <label>সংগৃহীত তহবিল (টাকা)</label>
-                    <input type="number" id="evFund" class="form-control mt-1" value="${data?.fund || 0}">
-                    <label class="mt-2">আসল খরচ (টাকা)</label>
-                    <input type="number" id="evCost" class="form-control mt-1" value="${data?.cost || 0}">
-                </div>
-            ` : ''}
-        `;
-        
-        const statusSelect = document.getElementById('evStatus');
-        if (statusSelect) {
-            statusSelect.onchange = () => {
-                const body = document.getElementById('modalBody');
-                const existingFund = data?.fund || 0;
-                const existingCost = data?.cost || 0;
-                if (statusSelect.value === 'successful') {
-                    if (!document.getElementById('evFund')) {
-                        const div = document.createElement('div');
-                        div.className = 'mt-3 p-3 border border-success rounded';
-                        div.innerHTML = `
-                            <label>সংগৃহীত তহবিল (টাকা)</label>
-                            <input type="number" id="evFund" class="form-control mt-1" value="${existingFund}">
-                            <label class="mt-2">আসল খরচ (টাকা)</label>
-                            <input type="number" id="evCost" class="form-control mt-1" value="${existingCost}">
-                        `;
-                        body.appendChild(div);
+        const action = () => {
+            document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> ইভেন্ট সম্পাদনা' : '<i class="fas fa-calendar-plus"></i> নতুন ইভেন্ট';
+            document.getElementById('modalBody').innerHTML = `
+                <input type="text" id="evName" class="form-control mb-3" placeholder="ইভেন্টের নাম" value="${data?.name || ''}">
+                <input type="date" id="evDate" class="form-control mb-3" value="${data?.date || ''}">
+                <input type="number" id="evBudget" class="form-control mb-3" placeholder="বাজেট (টাকা)" value="${data?.budget || ''}">
+                <select id="evStatus" class="form-select mb-3">
+                    <option value="pending" ${data?.status === 'pending' || !data?.status ? 'selected' : ''}>🟡 পেন্ডিং</option>
+                    <option value="successful" ${data?.status === 'successful' ? 'selected' : ''}>🟢 সফল</option>
+                    <option value="failed" ${data?.status === 'failed' ? 'selected' : ''}>🔴 ব্যর্থ</option>
+                </select>
+                <textarea id="evDetails" class="form-control" rows="3" placeholder="ইভেন্টের বিবরণ">${data?.details || ''}</textarea>
+                ${data?.status === 'successful' ? `
+                    <div class="mt-3 p-3 border border-success rounded">
+                        <label>সংগৃহীত তহবিল (টাকা)</label>
+                        <input type="number" id="evFund" class="form-control mt-1" value="${data?.fund || 0}">
+                        <label class="mt-2">আসল খরচ (টাকা)</label>
+                        <input type="number" id="evCost" class="form-control mt-1" value="${data?.cost || 0}">
+                    </div>
+                ` : ''}
+            `;
+            
+            const statusSelect = document.getElementById('evStatus');
+            if (statusSelect) {
+                statusSelect.onchange = () => {
+                    const body = document.getElementById('modalBody');
+                    const existingFund = data?.fund || 0;
+                    const existingCost = data?.cost || 0;
+                    if (statusSelect.value === 'successful') {
+                        if (!document.getElementById('evFund')) {
+                            const div = document.createElement('div');
+                            div.className = 'mt-3 p-3 border border-success rounded';
+                            div.innerHTML = `
+                                <label>সংগৃহীত তহবিল (টাকা)</label>
+                                <input type="number" id="evFund" class="form-control mt-1" value="${existingFund}">
+                                <label class="mt-2">আসল খরচ (টাকা)</label>
+                                <input type="number" id="evCost" class="form-control mt-1" value="${existingCost}">
+                            `;
+                            body.appendChild(div);
+                        }
+                    } else {
+                        const fundDiv = document.getElementById('evFund')?.parentElement;
+                        if (fundDiv && fundDiv.parentElement === body) fundDiv.remove();
                     }
-                } else {
-                    const fundDiv = document.getElementById('evFund')?.parentElement;
-                    if (fundDiv && fundDiv.parentElement === body) fundDiv.remove();
-                }
+                };
+            }
+            
+            const saveBtn = document.getElementById('saveBtn');
+            const newSaveBtn = saveBtn.cloneNode(true);
+            saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+            newSaveBtn.onclick = async () => {
+                const eventData = {
+                    name: document.getElementById('evName').value,
+                    date: document.getElementById('evDate').value,
+                    budget: Number(document.getElementById('evBudget').value),
+                    status: document.getElementById('evStatus').value,
+                    details: document.getElementById('evDetails').value,
+                    fund: document.getElementById('evFund') ? Number(document.getElementById('evFund').value) : (data?.fund || 0),
+                    cost: document.getElementById('evCost') ? Number(document.getElementById('evCost').value) : (data?.cost || 0)
+                };
+                if (data) await updateDoc(doc(db, "events", data.id), eventData);
+                else await addDoc(collection(db, "events"), eventData);
+                bsModal.hide();
             };
-        }
-        
-        document.getElementById('saveBtn').onclick = async () => {
-            const eventData = {
-                name: document.getElementById('evName').value,
-                date: document.getElementById('evDate').value,
-                budget: Number(document.getElementById('evBudget').value),
-                status: document.getElementById('evStatus').value,
-                details: document.getElementById('evDetails').value,
-                fund: document.getElementById('evFund') ? Number(document.getElementById('evFund').value) : (data?.fund || 0),
-                cost: document.getElementById('evCost') ? Number(document.getElementById('evCost').value) : (data?.cost || 0)
-            };
-            if (data) await updateDoc(doc(db, "events", data.id), eventData);
-            else await addDoc(collection(db, "events"), eventData);
-            bsModal.hide();
+            bsModal.show();
         };
-        bsModal.show();
+        
+        if (data) verifyPassword(action, data);
+        else action();
     };
 
     window.deleteItem = async (collectionName, id) => {
-        if (confirm("এই এন্ট্রি ডিলিট করবেন?")) {
-            await deleteDoc(doc(db, collectionName, id));
-        }
+        verifyPassword(async () => {
+            if (confirm("এই এন্ট্রি ডিলিট করবেন?")) {
+                await deleteDoc(doc(db, collectionName, id));
+            }
+        });
     };
 
     // Real-time data listeners
@@ -1027,12 +1211,13 @@
             }
             
             const typeBadge = d.type === 'monthly' ? '<span class="badge-add">মাসিক</span>' : '<span class="badge-add">ইভেন্ট</span>';
+            const methodClass = d.system === 'Bkash' ? 'bkash-text' : (d.system === 'Nagad' ? 'nagad-text' : '');
             html += `<tr>
-                <td style="color:#ddd">${d.date || '-'}</td>
-                <td style="color:#fff"><strong>${d.uid || 'অতিথি'}</strong><br><small>${d.name || ''}</small></td>
-                <td style="color:#a8e6cf; font-weight:bold">৳${d.amount}</td>
+                <td>${d.date || '-'}</td>
+                <td><strong>${d.uid || 'অতিথি'}</strong><br><small>${d.name || ''}</small><br><small class="text-muted">${d.phone || ''}</small></td>
+                <td style="font-weight:bold">৳${d.amount}</td>
                 <td>${typeBadge}${d.eventName ? `<br><small>${d.eventName}</small>` : ''}</td>
-                <td style="color:#ddd">${d.system || '-'}</td>
+                <td class="${methodClass}">${d.system || '-'}</td>
                 <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openDonationForm(${JSON.stringify({id:doc.id,...d})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('donations','${doc.id}')"><i class="fas fa-trash"></i></button></td>
             </tr>`;
         });
@@ -1061,9 +1246,9 @@
             
             const typeBadge = e.type === 'monthly' ? '<span class="badge-subtract">মাসিক</span>' : '<span class="badge-subtract">ইভেন্ট</span>';
             html += `<tr>
-                <td style="color:#ddd">${e.date || '-'}</td>
-                <td style="color:#fff">${e.description}${e.eventName ? `<br><small>${e.eventName}</small>` : ''}</td>
-                <td style="color:#ffb3b3; font-weight:bold">৳${e.amount}</td>
+                <td>${e.date || '-'}</td>
+                <td>${e.description}${e.eventName ? `<br><small>${e.eventName}</small>` : ''}</td>
+                <td style="font-weight:bold">৳${e.amount}</td>
                 <td>${typeBadge}</td>
                 <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openExpenseForm(${JSON.stringify({id:doc.id,...e})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('expenses','${doc.id}')"><i class="fas fa-trash"></i></button></td>
             </tr>`;
@@ -1082,11 +1267,11 @@
         snap.forEach(doc => {
             const m = doc.data();
             html += `<tr>
-                <td style="color:#c6a34f; font-weight:bold">${m.uid || '-'}</td>
-                <td style="color:#fff">${m.name}</td>
-                <td style="color:#fff">${m.designation || '-'}</td>
+                <td style="font-weight:bold">${m.uid || '-'}</td>
+                <td>${m.name}</td>
+                <td>${m.designation || '-'}</td>
                 <td><span class="badge bg-danger">${m.blood || '-'}</span></td>
-                <td style="color:#fff">${m.phone}<br><small>${m.email}</small></td>
+                <td>${m.phone}<br><small>${m.email}</small></td>
                 <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openMemberForm(${JSON.stringify({id:doc.id,...m})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('members','${doc.id}')"><i class="fas fa-trash"></i></button></td>
             </tr>`;
         });
@@ -1105,23 +1290,20 @@
             
             if (e.status === 'successful') {
                 statusBadge = '<span class="status-success"><i class="fas fa-check-circle"></i> সফল</span>';
-                rowColor = 'style="border-left: 3px solid #2ecc71"';
             } else if (e.status === 'failed') {
                 statusBadge = '<span class="status-failed"><i class="fas fa-times-circle"></i> ব্যর্থ</span>';
-                rowColor = 'style="border-left: 3px solid #e74c3c"';
             } else {
                 statusBadge = '<span class="status-pending"><i class="fas fa-clock"></i> পেন্ডিং</span>';
-                rowColor = 'style="border-left: 3px solid #f39c12"';
             }
             
-            planningHtml += `<tr ${rowColor}>
-                <td style="color:#fff"><strong>${e.name}</strong><br><small>${e.details || ''}</small></td>
-                <td style="color:#ddd">${e.date || '-'}</td>
-                <td style="color:#c6a34f">৳${e.budget || 0}</td>
+            planningHtml += `<tr>
+                <td><strong>${e.name}</strong><br><small>${e.details || ''}</small></td>
+                <td>${e.date || '-'}</td>
+                <td style="font-weight:bold">৳${e.budget || 0}</td>
                 <td>${statusBadge}</td>
-                <td style="color:#a8e6cf">৳${e.fund || 0}</td>
-                <td style="color:#ffb3b3">৳${e.cost || 0}</td>
-                <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openEventForm(${JSON.stringify({id:doc.id,...e})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('events','${doc.id}")'><i class="fas fa-trash"></i></button></td>
+                <td style="font-weight:bold">৳${e.fund || 0}</td>
+                <td style="font-weight:bold">৳${e.cost || 0}</td>
+                <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openEventForm(${JSON.stringify({id:doc.id,...e})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('events','${doc.id}')"><i class="fas fa-trash"></i></button></td>
             </tr>`;
         });
         
