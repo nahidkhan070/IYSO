@@ -9,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
     <style>
         :root {
@@ -55,37 +58,38 @@
             right: 0;
             bottom: 0;
             background: url('image_0.png') center/contain no-repeat;
-            opacity: 0.04;
+            opacity: 0.03;
             pointer-events: none;
             z-index: 0;
         }
 
-        /* Premium Sidebar - Responsive */
+        /* Premium Sidebar */
         .sidebar {
             width: 280px;
             height: 100vh;
             position: fixed;
-            background: rgba(0, 0, 0, 0.85);
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 50, 25, 0.95) 100%);
             backdrop-filter: blur(20px);
-            padding: 25px 15px;
-            border-right: 1px solid rgba(255,255,255,0.08);
+            padding: 30px 20px;
+            border-right: 1px solid rgba(198, 163, 79, 0.2);
             z-index: 1000;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-y: auto;
             transform: translateX(0);
+            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.3);
         }
 
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
-                width: 260px;
+                width: 280px;
             }
             .sidebar.open {
                 transform: translateX(0);
             }
             .main {
                 margin-left: 0 !important;
-                padding: 60px 12px 20px !important;
+                padding: 70px 12px 20px !important;
             }
             .menu-toggle {
                 display: flex !important;
@@ -93,15 +97,17 @@
                 top: 12px;
                 left: 12px;
                 z-index: 1001;
-                background: var(--green);
+                background: linear-gradient(135deg, var(--green), var(--dark-green));
                 border: none;
                 color: white;
-                padding: 10px 14px;
-                border-radius: 10px;
+                padding: 12px 16px;
+                border-radius: 12px;
                 cursor: pointer;
                 align-items: center;
-                gap: 8px;
+                gap: 10px;
                 font-size: 14px;
+                font-weight: 600;
+                box-shadow: 0 4px 15px rgba(0,104,55,0.3);
             }
             .net-balance-amount {
                 font-size: 36px !important;
@@ -121,17 +127,23 @@
             }
             .chrome-tabs {
                 flex-wrap: wrap;
+                gap: 8px;
             }
             .chrome-tab {
                 flex: 1;
                 min-width: 100px;
                 text-align: center;
+                padding: 10px 12px !important;
+                font-size: 12px !important;
+            }
+            .export-buttons {
+                flex-wrap: wrap;
             }
         }
 
         @media (max-width: 480px) {
             .main {
-                padding: 55px 10px 15px !important;
+                padding: 65px 10px 15px !important;
             }
             .net-balance-amount {
                 font-size: 28px !important;
@@ -156,8 +168,8 @@
                 font-size: 18px !important;
             }
             .chrome-tab {
-                font-size: 12px !important;
-                padding: 8px 12px !important;
+                font-size: 10px !important;
+                padding: 8px 10px !important;
             }
         }
 
@@ -167,42 +179,50 @@
             }
         }
 
+        /* Premium Logo */
         .logo {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--gold) 0%, #ffd700 100%);
+            background: linear-gradient(135deg, var(--gold) 0%, #ffd700 50%, var(--gold) 100%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
             text-align: center;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             position: relative;
             font-family: 'Hind Siliguri', sans-serif;
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(198,163,79,0.3)); }
+            50% { filter: drop-shadow(0 0 20px rgba(198,163,79,0.6)); }
         }
 
         .logo::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: -12px;
             left: 50%;
             transform: translateX(-50%);
-            width: 50px;
+            width: 60px;
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
         }
 
+        /* Premium Nav Items */
         .nav-item {
-            padding: 12px 16px;
-            margin: 6px 0;
-            border-radius: 12px;
+            padding: 14px 18px;
+            margin: 8px 0;
+            border-radius: 14px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: rgba(255,255,255,0.8);
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             position: relative;
             overflow: hidden;
             font-family: 'Hind Siliguri', sans-serif;
@@ -212,6 +232,11 @@
         .nav-item i {
             width: 24px;
             font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover i {
+            transform: scale(1.1);
         }
 
         .nav-item::before {
@@ -232,13 +257,17 @@
         .nav-item:hover {
             background: rgba(0, 104, 55, 0.3);
             color: white;
-            transform: translateX(5px);
+            transform: translateX(8px);
         }
 
         .nav-item.active {
             background: linear-gradient(135deg, var(--green), var(--dark-green));
             color: white;
-            box-shadow: 0 4px 15px rgba(0,104,55,0.4);
+            box-shadow: 0 6px 20px rgba(0,104,55,0.4);
+        }
+
+        .nav-item.active i {
+            transform: scale(1.05);
         }
 
         /* Main Content */
@@ -405,37 +434,13 @@
             background: var(--table-hover) !important;
         }
 
-        /* Custom Colors for Member Fields */
-        .uid-text {
-            color: var(--purple) !important;
-            font-weight: 600;
-        }
-
-        .name-text {
-            color: var(--aqua) !important;
-            font-weight: 600;
-        }
-
-        .blood-text {
-            color: var(--light-grey) !important;
-            font-weight: 500;
-        }
-
-        /* Payment method colors */
-        .bkash-text {
-            color: var(--pink) !important;
-            font-weight: 600;
-        }
-
-        .nagad-text {
-            color: var(--orange) !important;
-            font-weight: 600;
-        }
-
-        .handcash-text {
-            color: var(--handcash) !important;
-            font-weight: 600;
-        }
+        /* Custom Colors */
+        .uid-text { color: var(--purple) !important; font-weight: 600; }
+        .name-text { color: var(--aqua) !important; font-weight: 600; }
+        .blood-text { color: var(--light-grey) !important; font-weight: 500; }
+        .bkash-text { color: var(--pink) !important; font-weight: 600; }
+        .nagad-text { color: var(--orange) !important; font-weight: 600; }
+        .handcash-text { color: var(--handcash) !important; font-weight: 600; }
 
         /* Badges */
         .badge-add {
@@ -465,7 +470,6 @@
             font-size: 11px;
             font-weight: 600;
         }
-
         .status-failed {
             background: var(--danger-red);
             color: white;
@@ -474,7 +478,6 @@
             font-size: 11px;
             font-weight: 600;
         }
-
         .status-pending {
             background: var(--warning-yellow);
             color: #333;
@@ -487,16 +490,16 @@
         /* Chrome-Style Tabs */
         .chrome-tabs {
             display: flex;
-            gap: 4px;
+            gap: 8px;
             background: rgba(0, 0, 0, 0.3);
             padding: 8px;
             border-radius: 16px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .chrome-tab {
-            flex: 1;
-            padding: 12px 20px;
+            padding: 12px 24px;
             background: rgba(255, 255, 255, 0.05);
             border: none;
             color: rgba(255, 255, 255, 0.7);
@@ -574,7 +577,7 @@
         .search-container {
             position: relative;
             flex: 1;
-            max-width: 400px;
+            max-width: 350px;
         }
 
         .search-container input {
@@ -601,10 +604,37 @@
             color: var(--gold);
         }
 
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            color: rgba(255,255,255,0.5);
+        /* Export Buttons */
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-export-excel {
+            background: linear-gradient(135deg, #1e8449, #145a32);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-export-pdf {
+            background: linear-gradient(135deg, #c0392b, #922b21);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-export-excel:hover, .btn-export-pdf:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
         }
 
         /* Modal */
@@ -628,30 +658,6 @@
             box-shadow: 0 0 0 0.2rem rgba(0,104,55,0.25);
         }
 
-        .form-control::placeholder {
-            color: #888;
-        }
-
-        .btn-success {
-            background: var(--green);
-            border: none;
-        }
-
-        .btn-success:hover {
-            background: var(--dark-green);
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            background: var(--danger-red);
-            border: none;
-        }
-
-        .btn-danger:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-        }
-
         /* Password Modal */
         .password-modal .modal-content {
             background: linear-gradient(135deg, #1a1f24, #0f1419);
@@ -664,7 +670,7 @@
             text-align: center;
         }
 
-        /* Footer Glowing Texts */
+        /* Footer */
         .footer-text {
             text-align: center;
             padding: 20px 0 10px;
@@ -691,67 +697,26 @@
         }
 
         @keyframes textGlow {
-            0%, 100% {
-                text-shadow: 0 0 5px rgba(198, 163, 79, 0.3);
-                opacity: 0.8;
-            }
-            50% {
-                text-shadow: 0 0 15px rgba(198, 163, 79, 0.6);
-                opacity: 1;
-            }
+            0%, 100% { text-shadow: 0 0 5px rgba(198, 163, 79, 0.3); opacity: 0.8; }
+            50% { text-shadow: 0 0 15px rgba(198, 163, 79, 0.6); opacity: 1; }
         }
-
-        /* Utility */
-        .text-gold { color: var(--gold); }
 
         /* Animations */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .page {
-            animation: fadeInUp 0.4s ease;
-        }
+        .page { animation: fadeInUp 0.4s ease; }
 
-        button {
-            transition: all 0.3s ease;
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
+        button { transition: all 0.3s ease; }
+        button:active { transform: scale(0.95); }
 
         /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--green);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--gold);
-        }
-
-        .row {
-            margin-right: 0;
-            margin-left: 0;
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
         /* Phone numbers container */
         .phone-numbers-container {
@@ -780,15 +745,8 @@
             cursor: pointer;
             padding: 0 5px;
         }
-
-        .remove-phone-btn:hover {
-            color: #ff6b6b;
-        }
-
-        .add-phone-btn {
-            margin-top: 10px;
-            width: 100%;
-        }
+        .remove-phone-btn:hover { color: #ff6b6b; }
+        .add-phone-btn { margin-top: 10px; width: 100%; }
     </style>
 </head>
 <body>
@@ -887,81 +845,94 @@
         </div>
     </div>
 
-    <!-- Members Page with Search -->
+    <!-- Members Page -->
     <div id="members" class="page" style="display:none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
             <h3><i class="fas fa-users text-gold"></i> সদস্যবৃন্দ</h3>
-            <div class="d-flex gap-2 flex-wrap">
+            <div class="d-flex gap-2 flex-wrap export-buttons">
                 <div class="search-container">
                     <input type="text" id="memberSearchInput" placeholder="আইডি, নাম, ফোন, ইমেইল দিয়ে খুঁজুন..." onkeyup="searchMembers()">
                     <i class="fas fa-search"></i>
                 </div>
+                <button onclick="exportToExcel('members')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel</button>
+                <button onclick="exportToPDF('members')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
                 <button onclick="openMemberForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন সদস্য</button>
             </div>
         </div>
         <div class="data-table" id="memberList">লোড হচ্ছে...</div>
     </div>
 
-    <!-- Donations Page with Chrome-Style Tabs -->
+    <!-- Donations Page -->
     <div id="donations" class="page" style="display:none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h3><i class="fas fa-hand-holding-usd text-gold"></i> দান-অনুদানের তালিকা</h3>
-            <button onclick="openDonationForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন দান</button>
-        </div>
-        
-        <!-- Chrome-Style Tabs -->
-        <div class="chrome-tabs">
-            <button class="chrome-tab active" data-tab="lifetime">
-                <i class="fas fa-globe"></i> সর্বমোট দান
-            </button>
-            <button class="chrome-tab" data-tab="current">
-                <i class="fas fa-calendar-week"></i> চলতি মাসের দান
-            </button>
-            <button class="chrome-tab" data-tab="previous">
-                <i class="fas fa-history"></i> পূর্ববর্তী মাসের দান
-            </button>
-        </div>
-        
-        <!-- Tab Content -->
-        <div id="lifetimeTab" class="tab-content-active">
-            <div class="summary-card mb-3">
-                <div class="summary-label">সর্বমোট সংগ্রহ</div>
-                <div class="summary-amount" id="lifetimeSummary">৳0</div>
+            <div class="d-flex gap-2 export-buttons">
+                <button onclick="exportToExcel('donations')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel</button>
+                <button onclick="exportToPDF('donations')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button onclick="openDonationForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন দান</button>
             </div>
+        </div>
+        
+        <div class="chrome-tabs">
+            <button class="chrome-tab active" data-tab="lifetime"><i class="fas fa-globe"></i> সর্বমোট দান</button>
+            <button class="chrome-tab" data-tab="current"><i class="fas fa-calendar-week"></i> চলতি মাসের দান</button>
+            <button class="chrome-tab" data-tab="previous"><i class="fas fa-history"></i> পূর্ববর্তী মাসের দান</button>
+        </div>
+        
+        <div id="lifetimeTab" class="tab-content-active">
+            <div class="summary-card mb-3"><div class="summary-label">সর্বমোট সংগ্রহ</div><div class="summary-amount" id="lifetimeSummary">৳0</div></div>
             <div class="data-table" id="lifetimeDonationList">লোড হচ্ছে...</div>
         </div>
-        
         <div id="currentTab" class="tab-content-hidden" style="display:none;">
-            <div class="summary-card mb-3">
-                <div class="summary-label">চলতি মাসের মোট সংগ্রহ</div>
-                <div class="summary-amount" id="currentSummary">৳0</div>
-            </div>
+            <div class="summary-card mb-3"><div class="summary-label">চলতি মাসের মোট সংগ্রহ</div><div class="summary-amount" id="currentSummary">৳0</div></div>
             <div class="data-table" id="currentDonationList">লোড হচ্ছে...</div>
         </div>
-        
         <div id="previousTab" class="tab-content-hidden" style="display:none;">
-            <div class="summary-card mb-3">
-                <div class="summary-label">পূর্ববর্তী মাসের মোট সংগ্রহ</div>
-                <div class="summary-amount" id="previousSummary">৳0</div>
-            </div>
+            <div class="summary-card mb-3"><div class="summary-label">পূর্ববর্তী মাসের মোট সংগ্রহ</div><div class="summary-amount" id="previousSummary">৳0</div></div>
             <div class="data-table" id="previousDonationList">লোড হচ্ছে...</div>
         </div>
     </div>
 
-    <!-- Expenses Page -->
+    <!-- Expenses Page with Tabs -->
     <div id="expenses" class="page" style="display:none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h3><i class="fas fa-chart-line text-gold"></i> খরচের তালিকা</h3>
-            <button onclick="openExpenseForm()" class="btn btn-danger px-4"><i class="fas fa-plus"></i> নতুন খরচ</button>
+            <div class="d-flex gap-2 export-buttons">
+                <button onclick="exportToExcel('expenses')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel</button>
+                <button onclick="exportToPDF('expenses')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button onclick="openExpenseForm()" class="btn btn-danger px-4"><i class="fas fa-plus"></i> নতুন খরচ</button>
+            </div>
         </div>
-        <div class="data-table" id="expenseList">লোড হচ্ছে...</div>
+        
+        <div class="chrome-tabs">
+            <button class="chrome-tab expense-tab active" data-expense-tab="lifetime"><i class="fas fa-globe"></i> সর্বমোট খরচ</button>
+            <button class="chrome-tab expense-tab" data-expense-tab="current"><i class="fas fa-calendar-week"></i> চলতি মাসের খরচ</button>
+            <button class="chrome-tab expense-tab" data-expense-tab="previous"><i class="fas fa-history"></i> পূর্ববর্তী মাসের খরচ</button>
+        </div>
+        
+        <div id="expenseLifetimeTab" class="expense-tab-content">
+            <div class="summary-card mb-3"><div class="summary-label">সর্বমোট খরচ</div><div class="summary-amount" id="expenseLifetimeSummary">৳0</div></div>
+            <div class="data-table" id="expenseLifetimeList">লোড হচ্ছে...</div>
+        </div>
+        <div id="expenseCurrentTab" class="expense-tab-content" style="display:none;">
+            <div class="summary-card mb-3"><div class="summary-label">চলতি মাসের মোট খরচ</div><div class="summary-amount" id="expenseCurrentSummary">৳0</div></div>
+            <div class="data-table" id="expenseCurrentList">লোড হচ্ছে...</div>
+        </div>
+        <div id="expensePreviousTab" class="expense-tab-content" style="display:none;">
+            <div class="summary-card mb-3"><div class="summary-label">পূর্ববর্তী মাসের মোট খরচ</div><div class="summary-amount" id="expensePreviousSummary">৳0</div></div>
+            <div class="data-table" id="expensePreviousList">লোড হচ্ছে...</div>
+        </div>
     </div>
 
     <!-- Events Page -->
     <div id="events" class="page" style="display:none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h3><i class="fas fa-calendar-alt text-gold"></i> ইভেন্ট প্ল্যানিং</h3>
-            <button onclick="openEventForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন ইভেন্ট</button>
+            <div class="d-flex gap-2 export-buttons">
+                <button onclick="exportToExcel('events')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel</button>
+                <button onclick="exportToPDF('events')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button onclick="openEventForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন ইভেন্ট</button>
+            </div>
         </div>
         <div class="data-table" id="planningList">লোড হচ্ছে...</div>
     </div>
@@ -1028,36 +999,26 @@
     const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
 
     const ADMIN_PASSWORD = "IYSO2020";
-    let allMembersData = [];
 
-    // Password verification function
     function verifyPassword(callback, actionData = null) {
         document.getElementById('passwordInput').value = '';
         document.getElementById('passwordError').style.display = 'none';
-        
         const confirmBtn = document.getElementById('confirmPasswordBtn');
         const newConfirmBtn = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-        
         newConfirmBtn.onclick = () => {
-            const enteredPassword = document.getElementById('passwordInput').value;
-            if (enteredPassword === ADMIN_PASSWORD) {
+            if (document.getElementById('passwordInput').value === ADMIN_PASSWORD) {
                 passwordModal.hide();
                 if (callback) callback(actionData);
             } else {
                 document.getElementById('passwordError').style.display = 'block';
             }
         };
-        
         passwordModal.show();
     }
 
-    // Sidebar Toggle for Mobile
-    window.toggleSidebar = () => {
-        document.getElementById('sidebar').classList.toggle('open');
-    };
+    window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('open');
 
-    // Close sidebar when clicking outside on mobile
     document.addEventListener('click', (e) => {
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.querySelector('.menu-toggle');
@@ -1068,7 +1029,6 @@
         }
     });
 
-    // Navigation
     document.querySelectorAll('.nav-item').forEach(item => {
         item.onclick = () => {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -1078,79 +1038,16 @@
             pageId.style.display = 'block';
             pageId.style.animation = 'none';
             setTimeout(() => pageId.style.animation = 'fadeInUp 0.4s ease', 10);
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.remove('open');
-            }
+            if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
         };
     });
 
-    // Donation Tab Switching
-    function initDonationTabs() {
-        const tabs = document.querySelectorAll('.chrome-tab');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Remove active class from all tabs
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                // Hide all tab contents
-                document.getElementById('lifetimeTab').style.display = 'none';
-                document.getElementById('currentTab').style.display = 'none';
-                document.getElementById('previousTab').style.display = 'none';
-                
-                // Show selected tab content
-                const tabName = tab.getAttribute('data-tab');
-                if (tabName === 'lifetime') {
-                    document.getElementById('lifetimeTab').style.display = 'block';
-                } else if (tabName === 'current') {
-                    document.getElementById('currentTab').style.display = 'block';
-                } else if (tabName === 'previous') {
-                    document.getElementById('previousTab').style.display = 'block';
-                }
-            });
-        });
-    }
-
-    // Member Search Function
-    window.searchMembers = () => {
-        const searchTerm = document.getElementById('memberSearchInput').value.toLowerCase();
-        const tableBody = document.getElementById('membersTableBody');
-        if (!tableBody) return;
-        
-        const rows = tableBody.querySelectorAll('tr');
-        let hasResults = false;
-        
-        rows.forEach(row => {
-            const text = row.innerText.toLowerCase();
-            if (text.includes(searchTerm)) {
-                row.style.display = '';
-                hasResults = true;
-            } else {
-                row.style.display = 'none';
-            }
-        });
-        
-        if (!hasResults && rows.length > 0) {
-            const noResultRow = document.createElement('tr');
-            noResultRow.innerHTML = `<td colspan="6" class="no-results">কোন সদস্য পাওয়া যায়নি</td>`;
-            if (!document.querySelector('.no-results-row')) {
-                tableBody.appendChild(noResultRow);
-                noResultRow.classList.add('no-results-row');
-            }
-        } else {
-            const noResultRow = document.querySelector('.no-results-row');
-            if (noResultRow) noResultRow.remove();
-        }
-    };
-
-    // Get current month info
     function getCurrentMonthBangla() {
         const months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
         const now = new Date();
         return `${months[now.getMonth()]} ${now.getFullYear()}`;
     }
 
-    // Send numbers
     let bkashNumber = localStorage.getItem('bkashNumber') || '017XXXXXXXX';
     let nagadNumber = localStorage.getItem('nagadNumber') || '017XXXXXXXX';
     document.getElementById('bkashNumber').innerText = bkashNumber;
@@ -1163,24 +1060,16 @@
         verifyPassword(() => {
             const newNumber = prompt(`${type.toUpperCase()} সেন্ড মানি নম্বর দিন:`, type === 'bkash' ? bkashNumber : nagadNumber);
             if (newNumber && newNumber.trim()) {
-                if (type === 'bkash') {
-                    bkashNumber = newNumber;
-                    document.getElementById('bkashNumber').innerText = bkashNumber;
-                    localStorage.setItem('bkashNumber', bkashNumber);
-                } else {
-                    nagadNumber = newNumber;
-                    document.getElementById('nagadNumber').innerText = nagadNumber;
-                    localStorage.setItem('nagadNumber', nagadNumber);
-                }
+                if (type === 'bkash') { bkashNumber = newNumber; document.getElementById('bkashNumber').innerText = bkashNumber; localStorage.setItem('bkashNumber', bkashNumber); }
+                else { nagadNumber = newNumber; document.getElementById('nagadNumber').innerText = nagadNumber; localStorage.setItem('nagadNumber', nagadNumber); }
             }
         });
     };
 
-    // Member Form with Multiple Phone Numbers
+    // Member Form
     window.openMemberForm = (data = null) => {
         const action = () => {
             let phoneNumbers = data?.phoneNumbers || (data?.phone ? [data.phone] : ['']);
-            
             document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> সদস্য সম্পাদনা' : '<i class="fas fa-user-plus"></i> নতুন সদস্য';
             document.getElementById('modalBody').innerHTML = `
                 <input type="text" id="mUID" class="form-control mb-3" placeholder="সদস্য আইডি" value="${data?.uid || ''}">
@@ -1195,7 +1084,6 @@
                 <button type="button" class="btn btn-sm btn-outline-success add-phone-btn" onclick="addPhoneField()"><i class="fas fa-plus"></i> আরও ফোন নম্বর যোগ করুন</button>
                 <input type="email" id="mEmail" class="form-control mt-3" placeholder="ইমেইল" value="${data?.email || ''}">
             `;
-            
             window.renderPhoneNumbers = () => {
                 const container = document.getElementById('phoneNumbersContainer');
                 if (!container) return;
@@ -1203,33 +1091,16 @@
                 phoneNumbers.forEach((phone, index) => {
                     const div = document.createElement('div');
                     div.className = 'phone-number-item';
-                    div.innerHTML = `
-                        <input type="tel" class="form-control phone-input" style="flex:1; margin-right:10px;" placeholder="017XXXXXXXX" value="${phone}" data-index="${index}">
-                        <button type="button" class="remove-phone-btn" onclick="removePhoneField(${index})"><i class="fas fa-trash"></i></button>
-                    `;
+                    div.innerHTML = `<input type="tel" class="form-control phone-input" style="flex:1; margin-right:10px;" placeholder="017XXXXXXXX" value="${phone}" data-index="${index}"><button type="button" class="remove-phone-btn" onclick="removePhoneField(${index})"><i class="fas fa-trash"></i></button>`;
                     container.appendChild(div);
                 });
-                
                 document.querySelectorAll('.phone-input').forEach(input => {
-                    input.onchange = (e) => {
-                        const idx = parseInt(e.target.dataset.index);
-                        phoneNumbers[idx] = e.target.value;
-                    };
+                    input.onchange = (e) => { phoneNumbers[parseInt(e.target.dataset.index)] = e.target.value; };
                 });
             };
-            
-            window.addPhoneField = () => {
-                phoneNumbers.push('');
-                renderPhoneNumbers();
-            };
-            
-            window.removePhoneField = (index) => {
-                phoneNumbers.splice(index, 1);
-                renderPhoneNumbers();
-            };
-            
+            window.addPhoneField = () => { phoneNumbers.push(''); renderPhoneNumbers(); };
+            window.removePhoneField = (index) => { phoneNumbers.splice(index, 1); renderPhoneNumbers(); };
             renderPhoneNumbers();
-            
             const saveBtn = document.getElementById('saveBtn');
             const newSaveBtn = saveBtn.cloneNode(true);
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
@@ -1250,55 +1121,35 @@
             };
             bsModal.show();
         };
-        
         verifyPassword(action, data);
     };
 
-    // Function to get member by phone number
     window.getMemberByPhone = async (phone) => {
         if (!phone || phone.length < 8) return null;
         const membersRef = collection(db, "members");
         const q = query(membersRef, where("phoneNumbers", "array-contains", phone));
         const snapshot = await getDocs(q);
-        if (!snapshot.empty) {
-            const member = snapshot.docs[0].data();
-            return { id: snapshot.docs[0].id, ...member };
-        }
+        if (!snapshot.empty) return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
         return null;
     };
 
-    // Donation Form
     window.openDonationForm = (data = null) => {
         const action = () => {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> দান সম্পাদনা' : '<i class="fas fa-plus"></i> নতুন দান';
             document.getElementById('modalBody').innerHTML = `
-                <div class="mb-3">
-                    <label class="small text-muted">ফোন নম্বর (সদস্য খুঁজতে)</label>
-                    <input type="tel" id="dPhone" class="form-control mb-2" placeholder="017XXXXXXXX" value="${data?.phone || ''}">
-                    <div id="phoneSearchStatus" class="small" style="display:none;"></div>
-                </div>
+                <div class="mb-3"><label class="small text-muted">ফোন নম্বর (সদস্য খুঁজতে)</label><input type="tel" id="dPhone" class="form-control mb-2" placeholder="017XXXXXXXX" value="${data?.phone || ''}"><div id="phoneSearchStatus" class="small" style="display:none;"></div></div>
                 <input type="text" id="dUID" class="form-control mb-3" placeholder="সদস্য আইডি" value="${data?.uid || ''}" readonly style="background:#1a1f24">
                 <input type="text" id="dName" class="form-control mb-3" placeholder="সদস্যের নাম" value="${data?.name || ''}" readonly style="background:#1a1f24">
                 <input type="number" id="dAmount" class="form-control mb-3" placeholder="পরিমাণ (টাকা)" value="${data?.amount || ''}">
-                <select id="dType" class="form-select mb-3">
-                    <option value="monthly" ${data?.type === 'monthly' ? 'selected' : ''}>মাসিক চাঁদা</option>
-                    <option value="event" ${data?.type === 'event' ? 'selected' : ''}>ইভেন্ট দান</option>
-                </select>
-                <select id="dSystem" class="form-select mb-3">
-                    <option value="">পেমেন্ট পদ্ধতি</option>
-                    <option value="Bkash" ${data?.system === 'Bkash' ? 'selected' : ''}>বিকাশ</option>
-                    <option value="Nagad" ${data?.system === 'Nagad' ? 'selected' : ''}>নগদ</option>
-                    <option value="HandCash" ${data?.system === 'HandCash' ? 'selected' : ''}>হ্যান্ড ক্যাশ</option>
-                </select>
+                <select id="dType" class="form-select mb-3"><option value="monthly" ${data?.type === 'monthly' ? 'selected' : ''}>মাসিক চাঁদা</option><option value="event" ${data?.type === 'event' ? 'selected' : ''}>ইভেন্ট দান</option></select>
+                <select id="dSystem" class="form-select mb-3"><option value="">পেমেন্ট পদ্ধতি</option><option value="Bkash" ${data?.system === 'Bkash' ? 'selected' : ''}>বিকাশ</option><option value="Nagad" ${data?.system === 'Nagad' ? 'selected' : ''}>নগদ</option><option value="HandCash" ${data?.system === 'HandCash' ? 'selected' : ''}>হ্যান্ড ক্যাশ</option></select>
                 <input type="date" id="dDate" class="form-control mb-3" value="${data?.date || today}">
                 <input type="text" id="dEventName" class="form-control" placeholder="ইভেন্টের নাম (যদি ইভেন্ট দান হয়)" value="${data?.eventName || ''}">
             `;
-            
             const phoneInput = document.getElementById('dPhone');
             const statusDiv = document.getElementById('phoneSearchStatus');
             let debounceTimer;
-            
             phoneInput.oninput = async () => {
                 clearTimeout(debounceTimer);
                 const phone = phoneInput.value.trim();
@@ -1306,7 +1157,6 @@
                     statusDiv.style.display = 'block';
                     statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> খুঁজছি...';
                     statusDiv.style.color = '#c6a34f';
-                    
                     debounceTimer = setTimeout(async () => {
                         const member = await getMemberByPhone(phone);
                         if (member) {
@@ -1314,40 +1164,26 @@
                             document.getElementById('dName').value = member.name || '';
                             statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> সদস্য পাওয়া গেছে!';
                             statusDiv.style.color = '#2ecc71';
-                            setTimeout(() => {
-                                statusDiv.style.display = 'none';
-                            }, 2000);
+                            setTimeout(() => statusDiv.style.display = 'none', 2000);
                         } else {
                             document.getElementById('dUID').value = '';
                             document.getElementById('dName').value = '';
                             statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> সদস্য পাওয়া যায়নি';
                             statusDiv.style.color = '#e74c3c';
-                            setTimeout(() => {
-                                statusDiv.style.display = 'none';
-                            }, 2000);
+                            setTimeout(() => statusDiv.style.display = 'none', 2000);
                         }
                     }, 500);
-                } else {
-                    statusDiv.style.display = 'none';
-                    document.getElementById('dUID').value = '';
-                    document.getElementById('dName').value = '';
-                }
+                } else { statusDiv.style.display = 'none'; document.getElementById('dUID').value = ''; document.getElementById('dName').value = ''; }
             };
-            
             const saveBtn = document.getElementById('saveBtn');
             const newSaveBtn = saveBtn.cloneNode(true);
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
             newSaveBtn.onclick = async () => {
                 const donationData = {
-                    uid: document.getElementById('dUID').value,
-                    name: document.getElementById('dName').value,
-                    phone: document.getElementById('dPhone').value,
-                    amount: Number(document.getElementById('dAmount').value),
-                    type: document.getElementById('dType').value,
-                    system: document.getElementById('dSystem').value,
-                    date: document.getElementById('dDate').value,
-                    eventName: document.getElementById('dEventName').value || '',
-                    timestamp: new Date().toISOString()
+                    uid: document.getElementById('dUID').value, name: document.getElementById('dName').value, phone: document.getElementById('dPhone').value,
+                    amount: Number(document.getElementById('dAmount').value), type: document.getElementById('dType').value,
+                    system: document.getElementById('dSystem').value, date: document.getElementById('dDate').value,
+                    eventName: document.getElementById('dEventName').value || '', timestamp: new Date().toISOString()
                 };
                 if (data) await updateDoc(doc(db, "donations", data.id), donationData);
                 else await addDoc(collection(db, "donations"), donationData);
@@ -1355,11 +1191,9 @@
             };
             bsModal.show();
         };
-        
         verifyPassword(action, data);
     };
 
-    // Expense Form
     window.openExpenseForm = (data = null) => {
         const action = () => {
             const today = new Date().toISOString().split('T')[0];
@@ -1367,10 +1201,7 @@
             document.getElementById('modalBody').innerHTML = `
                 <input type="text" id="eDesc" class="form-control mb-3" placeholder="খরচের বিবরণ" value="${data?.description || ''}">
                 <input type="number" id="eAmount" class="form-control mb-3" placeholder="পরিমাণ (টাকা)" value="${data?.amount || ''}">
-                <select id="eType" class="form-select mb-3">
-                    <option value="monthly" ${data?.type === 'monthly' ? 'selected' : ''}>মাসিক খরচ</option>
-                    <option value="event" ${data?.type === 'event' ? 'selected' : ''}>ইভেন্ট খরচ</option>
-                </select>
+                <select id="eType" class="form-select mb-3"><option value="monthly" ${data?.type === 'monthly' ? 'selected' : ''}>মাসিক খরচ</option><option value="event" ${data?.type === 'event' ? 'selected' : ''}>ইভেন্ট খরচ</option></select>
                 <input type="date" id="eDate" class="form-control mb-3" value="${data?.date || today}">
                 <input type="text" id="eEventName" class="form-control" placeholder="ইভেন্টের নাম (যদি ইভেন্ট খরচ হয়)" value="${data?.eventName || ''}">
             `;
@@ -1379,12 +1210,9 @@
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
             newSaveBtn.onclick = async () => {
                 const expenseData = {
-                    description: document.getElementById('eDesc').value,
-                    amount: Number(document.getElementById('eAmount').value),
-                    type: document.getElementById('eType').value,
-                    date: document.getElementById('eDate').value,
-                    eventName: document.getElementById('eEventName').value || '',
-                    timestamp: new Date().toISOString()
+                    description: document.getElementById('eDesc').value, amount: Number(document.getElementById('eAmount').value),
+                    type: document.getElementById('eType').value, date: document.getElementById('eDate').value,
+                    eventName: document.getElementById('eEventName').value || '', timestamp: new Date().toISOString()
                 };
                 if (data) await updateDoc(doc(db, "expenses", data.id), expenseData);
                 else await addDoc(collection(db, "expenses"), expenseData);
@@ -1392,11 +1220,9 @@
             };
             bsModal.show();
         };
-        
         verifyPassword(action, data);
     };
 
-    // Event Form
     window.openEventForm = (data = null) => {
         const action = () => {
             document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> ইভেন্ট সম্পাদনা' : '<i class="fas fa-calendar-plus"></i> নতুন ইভেন্ট';
@@ -1404,56 +1230,34 @@
                 <input type="text" id="evName" class="form-control mb-3" placeholder="ইভেন্টের নাম" value="${data?.name || ''}">
                 <input type="date" id="evDate" class="form-control mb-3" value="${data?.date || ''}">
                 <input type="number" id="evBudget" class="form-control mb-3" placeholder="বাজেট (টাকা)" value="${data?.budget || ''}">
-                <select id="evStatus" class="form-select mb-3">
-                    <option value="pending" ${data?.status === 'pending' || !data?.status ? 'selected' : ''}>🟡 পেন্ডিং</option>
-                    <option value="successful" ${data?.status === 'successful' ? 'selected' : ''}>🟢 সফল</option>
-                    <option value="failed" ${data?.status === 'failed' ? 'selected' : ''}>🔴 ব্যর্থ</option>
-                </select>
+                <select id="evStatus" class="form-select mb-3"><option value="pending" ${data?.status === 'pending' || !data?.status ? 'selected' : ''}>🟡 পেন্ডিং</option><option value="successful" ${data?.status === 'successful' ? 'selected' : ''}>🟢 সফল</option><option value="failed" ${data?.status === 'failed' ? 'selected' : ''}>🔴 ব্যর্থ</option></select>
                 <textarea id="evDetails" class="form-control" rows="3" placeholder="ইভেন্টের বিবরণ">${data?.details || ''}</textarea>
-                ${data?.status === 'successful' ? `
-                    <div class="mt-3 p-3 border border-success rounded">
-                        <label>সংগৃহীত তহবিল (টাকা)</label>
-                        <input type="number" id="evFund" class="form-control mt-1" value="${data?.fund || 0}">
-                        <label class="mt-2">আসল খরচ (টাকা)</label>
-                        <input type="number" id="evCost" class="form-control mt-1" value="${data?.cost || 0}">
-                    </div>
-                ` : ''}
+                ${data?.status === 'successful' ? `<div class="mt-3 p-3 border border-success rounded"><label>সংগৃহীত তহবিল (টাকা)</label><input type="number" id="evFund" class="form-control mt-1" value="${data?.fund || 0}"><label class="mt-2">আসল খরচ (টাকা)</label><input type="number" id="evCost" class="form-control mt-1" value="${data?.cost || 0}"></div>` : ''}
             `;
-            
             const statusSelect = document.getElementById('evStatus');
             if (statusSelect) {
                 statusSelect.onchange = () => {
                     const body = document.getElementById('modalBody');
                     const existingFund = data?.fund || 0;
                     const existingCost = data?.cost || 0;
-                    if (statusSelect.value === 'successful') {
-                        if (!document.getElementById('evFund')) {
-                            const div = document.createElement('div');
-                            div.className = 'mt-3 p-3 border border-success rounded';
-                            div.innerHTML = `
-                                <label>সংগৃহীত তহবিল (টাকা)</label>
-                                <input type="number" id="evFund" class="form-control mt-1" value="${existingFund}">
-                                <label class="mt-2">আসল খরচ (টাকা)</label>
-                                <input type="number" id="evCost" class="form-control mt-1" value="${existingCost}">
-                            `;
-                            body.appendChild(div);
-                        }
-                    } else {
+                    if (statusSelect.value === 'successful' && !document.getElementById('evFund')) {
+                        const div = document.createElement('div');
+                        div.className = 'mt-3 p-3 border border-success rounded';
+                        div.innerHTML = `<label>সংগৃহীত তহবিল (টাকা)</label><input type="number" id="evFund" class="form-control mt-1" value="${existingFund}"><label class="mt-2">আসল খরচ (টাকা)</label><input type="number" id="evCost" class="form-control mt-1" value="${existingCost}">`;
+                        body.appendChild(div);
+                    } else if (statusSelect.value !== 'successful') {
                         const fundDiv = document.getElementById('evFund')?.parentElement;
                         if (fundDiv && fundDiv.parentElement === body) fundDiv.remove();
                     }
                 };
             }
-            
             const saveBtn = document.getElementById('saveBtn');
             const newSaveBtn = saveBtn.cloneNode(true);
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
             newSaveBtn.onclick = async () => {
                 const eventData = {
-                    name: document.getElementById('evName').value,
-                    date: document.getElementById('evDate').value,
-                    budget: Number(document.getElementById('evBudget').value),
-                    status: document.getElementById('evStatus').value,
+                    name: document.getElementById('evName').value, date: document.getElementById('evDate').value,
+                    budget: Number(document.getElementById('evBudget').value), status: document.getElementById('evStatus').value,
                     details: document.getElementById('evDetails').value,
                     fund: document.getElementById('evFund') ? Number(document.getElementById('evFund').value) : (data?.fund || 0),
                     cost: document.getElementById('evCost') ? Number(document.getElementById('evCost').value) : (data?.cost || 0)
@@ -1464,49 +1268,177 @@
             };
             bsModal.show();
         };
-        
         verifyPassword(action, data);
     };
 
     window.deleteItem = async (collectionName, id) => {
         verifyPassword(async () => {
-            if (confirm("এই এন্ট্রি ডিলিট করবেন?")) {
-                await deleteDoc(doc(db, collectionName, id));
-            }
+            if (confirm("এই এন্ট্রি ডিলিট করবেন?")) await deleteDoc(doc(db, collectionName, id));
         });
     };
 
-    // Real-time data listeners
-    let totalFunds = 0, monthlyFunds = 0, eventFunds = 0;
-    let totalExpensesAmount = 0, monthlyExpensesAmount = 0;
-    let currentMonthTotal = 0;
-    let previousMonthTotal = 0;
+    // Export Functions
+    window.exportToExcel = (type) => {
+        verifyPassword(() => {
+            let data = [];
+            let filename = '';
+            if (type === 'members') {
+                const rows = document.querySelectorAll('#membersTableBody tr');
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length > 0 && row.style.display !== 'none') {
+                        data.push({
+                            'আইডি': cells[0]?.innerText || '', 'নাম': cells[1]?.innerText || '',
+                            'পদবি': cells[2]?.innerText || '', 'ব্লাড': cells[3]?.innerText.replace('ব্লাড', '').trim() || '',
+                            'যোগাযোগ': cells[4]?.innerText || ''
+                        });
+                    }
+                });
+                filename = 'members_data';
+            } else if (type === 'donations') {
+                const activeTab = document.querySelector('.chrome-tab.active')?.getAttribute('data-tab') || 'lifetime';
+                let tableId = '';
+                if (activeTab === 'lifetime') tableId = 'lifetimeTableBody';
+                else if (activeTab === 'current') tableId = 'currentTableBody';
+                else tableId = 'previousTableBody';
+                const rows = document.querySelectorAll(`#${tableId} tr`);
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length > 0) {
+                        data.push({
+                            'তারিখ': cells[0]?.innerText || '', 'সদস্য আইডি': cells[1]?.innerText.split('\n')[0] || '',
+                            'নাম': cells[1]?.innerText.split('\n')[1] || '', 'পরিমাণ': cells[2]?.innerText || '',
+                            'ধরন': cells[3]?.innerText || '', 'পদ্ধতি': cells[4]?.innerText || ''
+                        });
+                    }
+                });
+                filename = `donations_${activeTab}_data`;
+            } else if (type === 'expenses') {
+                const activeTab = document.querySelector('.expense-tab.active')?.getAttribute('data-expense-tab') || 'lifetime';
+                let tableId = '';
+                if (activeTab === 'lifetime') tableId = 'expenseLifetimeTableBody';
+                else if (activeTab === 'current') tableId = 'expenseCurrentTableBody';
+                else tableId = 'expensePreviousTableBody';
+                const rows = document.querySelectorAll(`#${tableId} tr`);
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length > 0) {
+                        data.push({
+                            'তারিখ': cells[0]?.innerText || '', 'বিবরণ': cells[1]?.innerText || '',
+                            'পরিমাণ': cells[2]?.innerText || '', 'ধরন': cells[3]?.innerText || ''
+                        });
+                    }
+                });
+                filename = `expenses_${activeTab}_data`;
+            } else if (type === 'events') {
+                const rows = document.querySelectorAll('#eventsTableBody tr');
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length > 0) {
+                        data.push({
+                            'ইভেন্ট': cells[0]?.innerText || '', 'তারিখ': cells[1]?.innerText || '',
+                            'বাজেট': cells[2]?.innerText || '', 'স্ট্যাটাস': cells[3]?.innerText || '',
+                            'সংগৃহীত': cells[4]?.innerText || '', 'খরচ': cells[5]?.innerText || ''
+                        });
+                    }
+                });
+                filename = 'events_data';
+            }
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+            XLSX.writeFile(wb, `${filename}.xlsx`);
+        });
+    };
 
-    const currentMonthNum = new Date().getMonth();
-    const currentYearNum = new Date().getFullYear();
+    window.exportToPDF = (type) => {
+        verifyPassword(async () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('landscape');
+            let columns = [];
+            let rows = [];
+            let title = '';
+            
+            if (type === 'members') {
+                title = 'সদস্য তালিকা - IYSO';
+                columns = ['আইডি', 'নাম', 'পদবি', 'ব্লাড', 'যোগাযোগ'];
+                const memberRows = document.querySelectorAll('#membersTableBody tr');
+                memberRows.forEach(row => {
+                    if (row.style.display !== 'none') {
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length > 0) {
+                            rows.push([cells[0]?.innerText || '', cells[1]?.innerText || '', cells[2]?.innerText || '', cells[3]?.innerText.replace('ব্লাড', '').trim() || '', cells[4]?.innerText || '']);
+                        }
+                    }
+                });
+            } else if (type === 'donations') {
+                const activeTab = document.querySelector('.chrome-tab.active')?.getAttribute('data-tab') || 'lifetime';
+                title = activeTab === 'lifetime' ? 'সর্বমোট দান তালিকা' : (activeTab === 'current' ? 'চলতি মাসের দান তালিকা' : 'পূর্ববর্তী মাসের দান তালিকা');
+                columns = ['তারিখ', 'সদস্য আইডি', 'নাম', 'পরিমাণ', 'ধরন', 'পদ্ধতি'];
+                let tableId = activeTab === 'lifetime' ? 'lifetimeTableBody' : (activeTab === 'current' ? 'currentTableBody' : 'previousTableBody');
+                const rowsData = document.querySelectorAll(`#${tableId} tr`);
+                rowsData.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length > 0) {
+                        rows.push([cells[0]?.innerText || '', cells[1]?.innerText.split('\n')[0] || '', cells[1]?.innerText.split('\n')[1] || '', cells[2]?.innerText || '', cells[3]?.innerText || '', cells[4]?.innerText || '']);
+                    }
+                });
+            } else if (type === 'expenses') {
+                const activeTab = document.querySelector('.expense-tab.active')?.getAttribute('data-expense-tab') || 'lifetime';
+                title = activeTab === 'lifetime' ? 'সর্বমোট খরচ তালিকা' : (activeTab === 'current' ? 'চলতি মাসের খরচ তালিকা' : 'পূর্ববর্তী মাসের খরচ তালিকা');
+                columns = ['তারিখ', 'বিবরণ', 'পরিমাণ', 'ধরন'];
+                let tableId = activeTab === 'lifetime' ? 'expenseLifetimeTableBody' : (activeTab === 'current' ? 'expenseCurrentTableBody' : 'expensePreviousTableBody');
+                const rowsData = document.querySelectorAll(`#${tableId} tr`);
+                rowsData.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length > 0) {
+                        rows.push([cells[0]?.innerText || '', cells[1]?.innerText || '', cells[2]?.innerText || '', cells[3]?.innerText || '']);
+                    }
+                });
+            }
+            
+            doc.setFontSize(18);
+            doc.text(title, 14, 15);
+            doc.autoTable({ head: [columns], body: rows, startY: 25, theme: 'dark', styles: { fontSize: 8, cellPadding: 2, textColor: [255,255,255], fillColor: [0,104,55] }, headStyles: { fillColor: [198,163,79], textColor: [0,0,0], fontStyle: 'bold' } });
+            doc.save(`${title.replace(/ /g, '_')}.pdf`);
+        });
+    };
+
+    window.searchMembers = () => {
+        const searchTerm = document.getElementById('memberSearchInput').value.toLowerCase();
+        const rows = document.querySelectorAll('#membersTableBody tr');
+        let hasResults = false;
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            if (text.includes(searchTerm)) { row.style.display = ''; hasResults = true; }
+            else { row.style.display = 'none'; }
+        });
+        if (!hasResults && rows.length > 0 && !document.querySelector('.no-results-row')) {
+            const noResultRow = document.createElement('tr');
+            noResultRow.innerHTML = `<td colspan="6" class="no-results">কোন সদস্য পাওয়া যায়নি</td>`;
+            document.getElementById('membersTableBody').appendChild(noResultRow);
+            noResultRow.classList.add('no-results-row');
+        } else if (hasResults) {
+            const noResultRow = document.querySelector('.no-results-row');
+            if (noResultRow) noResultRow.remove();
+        }
+    };
+
+    // Data variables
+    let totalFunds = 0, monthlyFunds = 0, eventFunds = 0;
+    let totalExpensesAmount = 0, monthlyExpensesAmount = 0, currentMonthTotal = 0, previousMonthTotal = 0;
+    let expenseTotal = 0, expenseCurrentMonthTotal = 0, expensePreviousMonthTotal = 0;
+
+    const currentMonthNum = new Date().getMonth(), currentYearNum = new Date().getFullYear();
     const previousMonthNum = currentMonthNum === 0 ? 11 : currentMonthNum - 1;
     const previousYearNum = currentMonthNum === 0 ? currentYearNum - 1 : currentYearNum;
 
-    function isCurrentMonthDonation(dateStr) {
-        if (!dateStr) return false;
-        const date = new Date(dateStr);
-        return date.getMonth() === currentMonthNum && date.getFullYear() === currentYearNum;
-    }
+    function isCurrentMonth(dateStr) { if (!dateStr) return false; const date = new Date(dateStr); return date.getMonth() === currentMonthNum && date.getFullYear() === currentYearNum; }
+    function isPreviousMonth(dateStr) { if (!dateStr) return false; const date = new Date(dateStr); return date.getMonth() === previousMonthNum && date.getFullYear() === previousYearNum; }
 
-    function isPreviousMonthDonation(dateStr) {
-        if (!dateStr) return false;
-        const date = new Date(dateStr);
-        return date.getMonth() === previousMonthNum && date.getFullYear() === previousYearNum;
-    }
-
-    // Donations Listener for 3 tabs
+    // Donations Listener
     onSnapshot(collection(db, "donations"), (snap) => {
-        totalFunds = 0;
-        monthlyFunds = 0;
-        eventFunds = 0;
-        currentMonthTotal = 0;
-        previousMonthTotal = 0;
-        
+        totalFunds = 0; monthlyFunds = 0; eventFunds = 0; currentMonthTotal = 0; previousMonthTotal = 0;
         let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="lifetimeTableBody">`;
         let currentHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="currentTableBody">`;
         let previousHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="previousTableBody">`;
@@ -1514,163 +1446,118 @@
         snap.forEach(doc => {
             const d = doc.data();
             totalFunds += d.amount;
-            
-            if (d.type === 'monthly') {
-                if (isCurrentMonthDonation(d.date)) {
-                    monthlyFunds += d.amount;
-                    currentMonthTotal += d.amount;
-                }
-                if (isPreviousMonthDonation(d.date)) {
-                    previousMonthTotal += d.amount;
-                }
-            } else if (d.type === 'event') {
-                eventFunds += d.amount;
-            }
+            if (d.type === 'monthly') { if (isCurrentMonth(d.date)) { monthlyFunds += d.amount; currentMonthTotal += d.amount; } if (isPreviousMonth(d.date)) previousMonthTotal += d.amount; }
+            else if (d.type === 'event') eventFunds += d.amount;
             
             const typeBadge = d.type === 'monthly' ? '<span class="badge-add">মাসিক</span>' : '<span class="badge-add">ইভেন্ট</span>';
-            let methodClass = '';
-            let methodText = d.system || '-';
+            let methodClass = '', methodText = d.system || '-';
+            if (d.system === 'Bkash') { methodClass = 'bkash-text'; methodText = 'বিকাশ'; }
+            else if (d.system === 'Nagad') { methodClass = 'nagad-text'; methodText = 'নগদ'; }
+            else if (d.system === 'HandCash') { methodClass = 'handcash-text'; methodText = 'হ্যান্ড ক্যাশ'; }
             
-            if (d.system === 'Bkash') {
-                methodClass = 'bkash-text';
-                methodText = 'বিকাশ';
-            } else if (d.system === 'Nagad') {
-                methodClass = 'nagad-text';
-                methodText = 'নগদ';
-            } else if (d.system === 'HandCash') {
-                methodClass = 'handcash-text';
-                methodText = 'হ্যান্ড ক্যাশ';
-            }
-            
-            const row = `<tr>
-                <td>${d.date || '-'}</td>
-                <td><strong class="uid-text">${d.uid || 'অতিথি'}</strong><br><span class="name-text">${d.name || ''}</span><br><small class="text-muted">${d.phone || ''}</small></td>
-                <td style="font-weight:bold">৳${d.amount}</td>
-                <td>${typeBadge}${d.eventName ? `<br><small>${d.eventName}</small>` : ''}</td>
-                <td class="${methodClass}">${methodText}</td>
-                <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openDonationForm(${JSON.stringify({id:doc.id,...d})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('donations','${doc.id}')"><i class="fas fa-trash"></i></button></td>
-            </tr>`;
-            
+            const row = `<tr><td>${d.date || '-'}</td><td><strong class="uid-text">${d.uid || 'অতিথি'}</strong><br><span class="name-text">${d.name || ''}</span><br><small class="text-muted">${d.phone || ''}</small></td><td style="font-weight:bold">৳${d.amount}</td><td>${typeBadge}${d.eventName ? `<br><small>${d.eventName}</small>` : ''}</td><td class="${methodClass}">${methodText}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openDonationForm(${JSON.stringify({id:doc.id,...d})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('donations','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
             lifetimeHtml += row;
-            
-            if (isCurrentMonthDonation(d.date)) {
-                currentHtml += row;
-            }
-            
-            if (isPreviousMonthDonation(d.date)) {
-                previousHtml += row;
-            }
+            if (isCurrentMonth(d.date)) currentHtml += row;
+            if (isPreviousMonth(d.date)) previousHtml += row;
         });
         
-        lifetimeHtml += `</tbody></table>`;
-        currentHtml += `</tbody></table>`;
-        previousHtml += `</tbody></table>`;
-        
-        document.getElementById('lifetimeDonationList').innerHTML = lifetimeHtml || '<p class="text-muted p-3">কোন দান নেই</p>';
-        document.getElementById('currentDonationList').innerHTML = currentHtml || '<p class="text-muted p-3">কোন দান নেই</p>';
-        document.getElementById('previousDonationList').innerHTML = previousHtml || '<p class="text-muted p-3">কোন দান নেই</p>';
-        
-        document.getElementById('lifetimeSummary').innerHTML = `৳${totalFunds}`;
-        document.getElementById('currentSummary').innerHTML = `৳${currentMonthTotal}`;
-        document.getElementById('previousSummary').innerHTML = `৳${previousMonthTotal}`;
-        
-        document.getElementById('totalFund').innerHTML = `৳${totalFunds}`;
-        document.getElementById('monthlyCollection').innerHTML = `৳${monthlyFunds}`;
-        document.getElementById('eventFundCollection').innerHTML = `৳${eventFunds}`;
+        lifetimeHtml += `</tbody></table>`; currentHtml += `</tbody></table>`; previousHtml += `</tbody></table>`;
+        document.getElementById('lifetimeDonationList').innerHTML = lifetimeHtml; document.getElementById('currentDonationList').innerHTML = currentHtml; document.getElementById('previousDonationList').innerHTML = previousHtml;
+        document.getElementById('lifetimeSummary').innerHTML = `৳${totalFunds}`; document.getElementById('currentSummary').innerHTML = `৳${currentMonthTotal}`; document.getElementById('previousSummary').innerHTML = `৳${previousMonthTotal}`;
+        document.getElementById('totalFund').innerHTML = `৳${totalFunds}`; document.getElementById('monthlyCollection').innerHTML = `৳${monthlyFunds}`; document.getElementById('eventFundCollection').innerHTML = `৳${eventFunds}`;
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
-    // Expenses Listener
+    // Expenses Listener with tabs
     onSnapshot(collection(db, "expenses"), (snap) => {
-        totalExpensesAmount = 0;
-        monthlyExpensesAmount = 0;
-        
-        let html = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody>`;
+        expenseTotal = 0; expenseCurrentMonthTotal = 0; expensePreviousMonthTotal = 0;
+        let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expenseLifetimeTableBody">`;
+        let currentHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expenseCurrentTableBody">`;
+        let previousHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expensePreviousTableBody">`;
         
         snap.forEach(doc => {
             const e = doc.data();
-            totalExpensesAmount += e.amount;
-            if (e.type === 'monthly' && isCurrentMonthDonation(e.date)) {
-                monthlyExpensesAmount += e.amount;
-            }
+            expenseTotal += e.amount;
+            if (isCurrentMonth(e.date)) expenseCurrentMonthTotal += e.amount;
+            if (isPreviousMonth(e.date)) expensePreviousMonthTotal += e.amount;
             
             const typeBadge = e.type === 'monthly' ? '<span class="badge-subtract">মাসিক</span>' : '<span class="badge-subtract">ইভেন্ট</span>';
-            html += `<tr>
-                <td>${e.date || '-'}</td>
-                <td>${e.description}${e.eventName ? `<br><small>${e.eventName}</small>` : ''}</td>
-                <td style="font-weight:bold">৳${e.amount}</td>
-                <td>${typeBadge}</td>
-                <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openExpenseForm(${JSON.stringify({id:doc.id,...e})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('expenses','${doc.id}')"><i class="fas fa-trash"></i></button></td>
-            </tr>`;
+            const row = `<tr><td>${e.date || '-'}</td><td>${e.description}${e.eventName ? `<br><small>${e.eventName}</small>` : ''}</td><td style="font-weight:bold">৳${e.amount}</td><td>${typeBadge}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openExpenseForm(${JSON.stringify({id:doc.id,...e})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('expenses','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
+            lifetimeHtml += row;
+            if (isCurrentMonth(e.date)) currentHtml += row;
+            if (isPreviousMonth(e.date)) previousHtml += row;
         });
         
-        html += `</tbody></table>`;
-        document.getElementById('expenseList').innerHTML = html || '<p class="text-muted p-3">কোন খরচ নেই</p>';
-        document.getElementById('monthlyExpenses').innerHTML = `৳${monthlyExpensesAmount}`;
-        document.getElementById('totalExpenses').innerHTML = `৳${totalExpensesAmount}`;
-        document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
+        lifetimeHtml += `</tbody></table>`; currentHtml += `</tbody></table>`; previousHtml += `</tbody></table>`;
+        document.getElementById('expenseLifetimeList').innerHTML = lifetimeHtml; document.getElementById('expenseCurrentList').innerHTML = currentHtml; document.getElementById('expensePreviousList').innerHTML = previousHtml;
+        document.getElementById('expenseLifetimeSummary').innerHTML = `৳${expenseTotal}`; document.getElementById('expenseCurrentSummary').innerHTML = `৳${expenseCurrentMonthTotal}`; document.getElementById('expensePreviousSummary').innerHTML = `৳${expensePreviousMonthTotal}`;
+        document.getElementById('monthlyExpenses').innerHTML = `৳${expenseCurrentMonthTotal}`; document.getElementById('totalExpenses').innerHTML = `৳${expenseTotal}`;
+        document.getElementById('netBalance').innerHTML = `৳${totalFunds - expenseTotal}`;
     });
 
-    // Members Listener with search functionality
+    // Members Listener
     onSnapshot(collection(db, "members"), (snap) => {
-        allMembersData = [];
         let html = `<table class="table"><thead><tr><th>আইডি</th><th>নাম</th><th>পদবি</th><th>ব্লাড</th><th>যোগাযোগ</th><th>অ্যাকশন</th></tr></thead><tbody id="membersTableBody">`;
-        
         snap.forEach(doc => {
             const m = doc.data();
-            const memberWithId = { id: doc.id, ...m };
-            allMembersData.push(memberWithId);
-            
             const phoneDisplay = m.phoneNumbers ? m.phoneNumbers.join(', ') : (m.phone || '-');
-            html += `<tr>
-                <td class="uid-text" style="font-weight:bold">${m.uid || '-'}</td>
-                <td class="name-text">${m.name}</td>
-                <td>${m.designation || '-'}</td>
-                <td class="blood-text"><span class="badge bg-danger">${m.blood || '-'}</span></td>
-                <td>${phoneDisplay}<br><small>${m.email || ''}</small></td>
-                <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openMemberForm(${JSON.stringify({id:doc.id,...m})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('members','${doc.id}')"><i class="fas fa-trash"></i></button></td>
-            </tr>`;
+            html += `<tr><td class="uid-text" style="font-weight:bold">${m.uid || '-'}</td><td class="name-text">${m.name}</td><td>${m.designation || '-'}</td><td class="blood-text"><span class="badge bg-danger">${m.blood || '-'}</span></td><td>${phoneDisplay}<br><small>${m.email || ''}</small></td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openMemberForm(${JSON.stringify({id:doc.id,...m})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('members','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
         });
-        
         html += `</tbody></table>`;
-        document.getElementById('memberList').innerHTML = html || '<p class="text-muted p-3">কোন সদস্য নেই</p>';
+        document.getElementById('memberList').innerHTML = html;
     });
 
     // Events Listener
     onSnapshot(collection(db, "events"), (snap) => {
-        let planningHtml = `<table class="table"><thead><tr><th>ইভেন্ট</th><th>তারিখ</th><th>বাজেট</th><th>স্ট্যাটাস</th><th>সংগৃহীত</th><th>খরচ</th><th>অ্যাকশন</th></tr></thead><tbody>`;
-        
+        let planningHtml = `<table class="table"><thead><tr><th>ইভেন্ট</th><th>তারিখ</th><th>বাজেট</th><th>স্ট্যাটাস</th><th>সংগৃহীত</th><th>খরচ</th><th>অ্যাকশন</th></tr></thead><tbody id="eventsTableBody">`;
         snap.forEach(doc => {
             const e = doc.data();
             let statusBadge = '';
-            
-            if (e.status === 'successful') {
-                statusBadge = '<span class="status-success"><i class="fas fa-check-circle"></i> সফল</span>';
-            } else if (e.status === 'failed') {
-                statusBadge = '<span class="status-failed"><i class="fas fa-times-circle"></i> ব্যর্থ</span>';
-            } else {
-                statusBadge = '<span class="status-pending"><i class="fas fa-clock"></i> পেন্ডিং</span>';
-            }
-            
-            planningHtml += `<tr>
-                <td><strong>${e.name}</strong><br><small>${e.details || ''}</small></td>
-                <td>${e.date || '-'}</td>
-                <td style="font-weight:bold">৳${e.budget || 0}</td>
-                <td>${statusBadge}</td>
-                <td style="font-weight:bold">৳${e.fund || 0}</td>
-                <td style="font-weight:bold">৳${e.cost || 0}</td>
-                <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openEventForm(${JSON.stringify({id:doc.id,...e})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('events','${doc.id}')"><i class="fas fa-trash"></i></button></td>
-            </tr>`;
+            if (e.status === 'successful') statusBadge = '<span class="status-success"><i class="fas fa-check-circle"></i> সফল</span>';
+            else if (e.status === 'failed') statusBadge = '<span class="status-failed"><i class="fas fa-times-circle"></i> ব্যর্থ</span>';
+            else statusBadge = '<span class="status-pending"><i class="fas fa-clock"></i> পেন্ডিং</span>';
+            planningHtml += `<tr><td><strong>${e.name}</strong><br><small>${e.details || ''}</small></td><td>${e.date || '-'}</td><td style="font-weight:bold">৳${e.budget || 0}</td><td>${statusBadge}</td><td style="font-weight:bold">৳${e.fund || 0}</td><td style="font-weight:bold">৳${e.cost || 0}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openEventForm(${JSON.stringify({id:doc.id,...e})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('events','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
         });
-        
         planningHtml += `</tbody></table>`;
-        document.getElementById('planningList').innerHTML = planningHtml || '<p class="text-muted p-3">কোন ইভেন্ট নেই</p>';
+        document.getElementById('planningList').innerHTML = planningHtml;
     });
 
-    // Initialize donation tabs after page load
-    setTimeout(() => {
-        initDonationTabs();
-    }, 500);
+    // Initialize tabs
+    function initDonationTabs() {
+        const tabs = document.querySelectorAll('.chrome-tab:not(.expense-tab)');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('lifetimeTab').style.display = 'none';
+                document.getElementById('currentTab').style.display = 'none';
+                document.getElementById('previousTab').style.display = 'none';
+                const tabName = tab.getAttribute('data-tab');
+                if (tabName === 'lifetime') document.getElementById('lifetimeTab').style.display = 'block';
+                else if (tabName === 'current') document.getElementById('currentTab').style.display = 'block';
+                else if (tabName === 'previous') document.getElementById('previousTab').style.display = 'block';
+            });
+        });
+    }
+
+    function initExpenseTabs() {
+        const tabs = document.querySelectorAll('.expense-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('expenseLifetimeTab').style.display = 'none';
+                document.getElementById('expenseCurrentTab').style.display = 'none';
+                document.getElementById('expensePreviousTab').style.display = 'none';
+                const tabName = tab.getAttribute('data-expense-tab');
+                if (tabName === 'lifetime') document.getElementById('expenseLifetimeTab').style.display = 'block';
+                else if (tabName === 'current') document.getElementById('expenseCurrentTab').style.display = 'block';
+                else if (tabName === 'previous') document.getElementById('expensePreviousTab').style.display = 'block';
+            });
+        });
+    }
+
+    setTimeout(() => { initDonationTabs(); initExpenseTabs(); }, 500);
 </script>
 
 </body>
