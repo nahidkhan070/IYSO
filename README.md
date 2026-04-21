@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
@@ -49,7 +49,6 @@
             overflow-x: hidden;
         }
 
-        /* Background Watermark */
         body::before {
             content: "";
             position: fixed;
@@ -63,7 +62,6 @@
             z-index: 0;
         }
 
-        /* Premium Sidebar */
         .sidebar {
             width: 280px;
             height: 100vh;
@@ -179,7 +177,6 @@
             }
         }
 
-        /* Premium Logo */
         .logo {
             font-size: 32px;
             font-weight: 800;
@@ -211,7 +208,6 @@
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
         }
 
-        /* Premium Nav Items */
         .nav-item {
             padding: 14px 18px;
             margin: 8px 0;
@@ -270,7 +266,6 @@
             transform: scale(1.05);
         }
 
-        /* Main Content */
         .main {
             margin-left: 280px;
             padding: 25px 30px;
@@ -280,7 +275,6 @@
             min-height: 100vh;
         }
 
-        /* Glass Card Effect */
         .glass-card {
             background: var(--card);
             backdrop-filter: blur(10px);
@@ -296,7 +290,6 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
 
-        /* Net Balance */
         .net-balance-card {
             background: linear-gradient(135deg, rgba(0,104,55,0.25) 0%, rgba(0,77,46,0.5) 100%);
             backdrop-filter: blur(10px);
@@ -332,7 +325,6 @@
             line-height: 1.2;
         }
 
-        /* Small Cards */
         .small-card {
             padding: 18px;
         }
@@ -359,7 +351,6 @@
             font-family: 'Hind Siliguri', sans-serif;
         }
 
-        /* Money Numbers */
         .money-numbers {
             background: rgba(0,0,0,0.5);
             border-radius: 16px;
@@ -397,7 +388,6 @@
             direction: ltr;
         }
 
-        /* Tables */
         .data-table {
             background: var(--table-bg);
             border-radius: 16px;
@@ -434,7 +424,6 @@
             background: var(--table-hover) !important;
         }
 
-        /* Custom Colors */
         .uid-text { color: var(--purple) !important; font-weight: 600; }
         .name-text { color: var(--aqua) !important; font-weight: 600; }
         .blood-text { color: var(--light-grey) !important; font-weight: 500; }
@@ -442,7 +431,6 @@
         .nagad-text { color: var(--orange) !important; font-weight: 600; }
         .handcash-text { color: var(--handcash) !important; font-weight: 600; }
 
-        /* Badges */
         .badge-add {
             background: var(--dark-green);
             color: #a8e6cf;
@@ -461,7 +449,6 @@
             font-weight: 600;
         }
 
-        /* Event Status Badges */
         .status-success {
             background: var(--success-green);
             color: white;
@@ -487,7 +474,6 @@
             font-weight: 600;
         }
 
-        /* Chrome-Style Tabs */
         .chrome-tabs {
             display: flex;
             gap: 8px;
@@ -552,7 +538,6 @@
             border-radius: 3px;
         }
 
-        /* Summary Card */
         .summary-card {
             background: linear-gradient(135deg, rgba(0,104,55,0.2), rgba(198,163,79,0.1));
             border-radius: 12px;
@@ -573,7 +558,6 @@
             color: var(--gold);
         }
 
-        /* Search Bar */
         .search-container {
             position: relative;
             flex: 1;
@@ -604,13 +588,12 @@
             color: var(--gold);
         }
 
-        /* Export Buttons */
         .export-buttons {
             display: flex;
             gap: 10px;
         }
 
-        .btn-export-excel {
+        .btn-export-excel, .btn-import-excel {
             background: linear-gradient(135deg, #1e8449, #145a32);
             color: white;
             border: none;
@@ -632,12 +615,11 @@
             transition: all 0.3s ease;
         }
 
-        .btn-export-excel:hover, .btn-export-pdf:hover {
+        .btn-export-excel:hover, .btn-export-pdf:hover, .btn-import-excel:hover {
             transform: translateY(-2px);
             filter: brightness(1.1);
         }
 
-        /* Modal */
         .modal-content {
             background: linear-gradient(135deg, #1a1f24, #0f1419);
             border: 1px solid var(--green);
@@ -658,7 +640,6 @@
             box-shadow: 0 0 0 0.2rem rgba(0,104,55,0.25);
         }
 
-        /* Password Modal */
         .password-modal .modal-content {
             background: linear-gradient(135deg, #1a1f24, #0f1419);
             border: 2px solid var(--gold);
@@ -670,7 +651,6 @@
             text-align: center;
         }
 
-        /* Footer */
         .footer-text {
             text-align: center;
             padding: 20px 0 10px;
@@ -701,7 +681,6 @@
             50% { text-shadow: 0 0 15px rgba(198, 163, 79, 0.6); opacity: 1; }
         }
 
-        /* Animations */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -712,13 +691,11 @@
         button { transition: all 0.3s ease; }
         button:active { transform: scale(0.95); }
 
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
-        /* Phone numbers container */
         .phone-numbers-container {
             max-height: 200px;
             overflow-y: auto;
@@ -747,6 +724,32 @@
         }
         .remove-phone-btn:hover { color: #ff6b6b; }
         .add-phone-btn { margin-top: 10px; width: 100%; }
+        
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .file-input-wrapper input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .import-progress {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            padding: 20px;
+            border-radius: 12px;
+            z-index: 2000;
+            text-align: center;
+            border: 1px solid var(--gold);
+        }
     </style>
 </head>
 <body>
@@ -780,7 +783,6 @@
 </div>
 
 <div class="main">
-    <!-- Dashboard Page -->
     <div id="dash" class="page">
         <div class="row mb-4">
             <div class="col-lg-9 col-md-8 col-12">
@@ -845,7 +847,6 @@
         </div>
     </div>
 
-    <!-- Members Page -->
     <div id="members" class="page" style="display:none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
             <h3><i class="fas fa-users text-gold"></i> সদস্যবৃন্দ</h3>
@@ -855,6 +856,10 @@
                     <i class="fas fa-search"></i>
                 </div>
                 <button onclick="exportToExcel('members')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel</button>
+                <div class="file-input-wrapper btn-import-excel">
+                    <i class="fas fa-upload"></i> Import Excel
+                    <input type="file" id="importExcelFile" accept=".xlsx, .xls" onchange="importMembersFromExcel(this)">
+                </div>
                 <button onclick="exportToPDF('members')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
                 <button onclick="openMemberForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন সদস্য</button>
             </div>
@@ -862,7 +867,6 @@
         <div class="data-table" id="memberList">লোড হচ্ছে...</div>
     </div>
 
-    <!-- Donations Page -->
     <div id="donations" class="page" style="display:none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h3><i class="fas fa-hand-holding-usd text-gold"></i> দান-অনুদানের তালিকা</h3>
@@ -893,7 +897,6 @@
         </div>
     </div>
 
-    <!-- Expenses Page with Tabs -->
     <div id="expenses" class="page" style="display:none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h3><i class="fas fa-chart-line text-gold"></i> খরচের তালিকা</h3>
@@ -924,7 +927,6 @@
         </div>
     </div>
 
-    <!-- Events Page -->
     <div id="events" class="page" style="display:none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h3><i class="fas fa-calendar-alt text-gold"></i> ইভেন্ট প্ল্যানিং</h3>
@@ -937,14 +939,12 @@
         <div class="data-table" id="planningList">লোড হচ্ছে...</div>
     </div>
 
-    <!-- Footer -->
     <div class="footer-text">
         <div class="glowing-text">আইডিয়াল যুব সেবা সংস্থা</div>
         <div class="creator-text">Created by Nahidul Islam</div>
     </div>
 </div>
 
-<!-- Password Modal -->
 <div class="modal fade" id="passwordModal" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -965,7 +965,6 @@
     </div>
 </div>
 
-<!-- Main Modal -->
 <div class="modal fade" id="dataModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -986,7 +985,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "YOUR_KEY",
@@ -999,6 +998,7 @@
     const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
 
     const ADMIN_PASSWORD = "IYSO2020";
+    let currentMembersData = [];
 
     function verifyPassword(callback, actionData = null) {
         document.getElementById('passwordInput').value = '';
@@ -1066,7 +1066,6 @@
         });
     };
 
-    // Member Form
     window.openMemberForm = (data = null) => {
         const action = () => {
             let phoneNumbers = data?.phoneNumbers || (data?.phone ? [data.phone] : ['']);
@@ -1131,6 +1130,72 @@
         const snapshot = await getDocs(q);
         if (!snapshot.empty) return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
         return null;
+    };
+
+    // Excel Import Function for Members
+    window.importMembersFromExcel = async (input) => {
+        verifyPassword(async () => {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const progressDiv = document.createElement('div');
+            progressDiv.className = 'import-progress';
+            progressDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ডাটা ইম্পোর্ট হচ্ছে... দয়া করে অপেক্ষা করুন';
+            document.body.appendChild(progressDiv);
+            
+            try {
+                const data = await file.arrayBuffer();
+                const workbook = XLSX.read(data);
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                
+                const batch = writeBatch(db);
+                let count = 0;
+                
+                for (const row of jsonData) {
+                    const uid = row['আইডি'] || row['ID'] || row['uid'] || '';
+                    if (!uid) continue;
+                    
+                    const phoneNumbers = [];
+                    const phoneField = row['যোগাযোগ'] || row['ফোন'] || row['phone'] || '';
+                    if (phoneField) {
+                        const phones = phoneField.toString().split(',').map(p => p.trim());
+                        phoneNumbers.push(...phones);
+                    }
+                    
+                    const memberData = {
+                        uid: uid,
+                        name: row['নাম'] || row['Name'] || row['name'] || '',
+                        designation: row['পদবি'] || row['Designation'] || row['designation'] || '',
+                        blood: row['ব্লাড'] || row['Blood'] || row['blood'] || '',
+                        phoneNumbers: phoneNumbers,
+                        phone: phoneNumbers[0] || '',
+                        email: row['ইমেইল'] || row['Email'] || row['email'] || ''
+                    };
+                    
+                    const existingMember = currentMembersData.find(m => m.uid === uid);
+                    if (existingMember) {
+                        const memberRef = doc(db, "members", existingMember.id);
+                        batch.update(memberRef, memberData);
+                    } else {
+                        const memberRef = doc(collection(db, "members"));
+                        batch.set(memberRef, memberData);
+                    }
+                    count++;
+                }
+                
+                await batch.commit();
+                progressDiv.innerHTML = `<i class="fas fa-check-circle"></i> সফলভাবে ${count} টি সদস্য ইম্পোর্ট হয়েছে!`;
+                setTimeout(() => progressDiv.remove(), 3000);
+                
+            } catch (error) {
+                progressDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ইম্পোর্ট ব্যর্থ হয়েছে: ${error.message}`;
+                setTimeout(() => progressDiv.remove(), 3000);
+                console.error("Import error:", error);
+            }
+            
+            input.value = '';
+        });
     };
 
     window.openDonationForm = (data = null) => {
@@ -1277,7 +1342,115 @@
         });
     };
 
-    // Export Functions
+    // Fixed PDF Export Function
+    window.exportToPDF = (type) => {
+        verifyPassword(() => {
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+                let columns = [];
+                let rows = [];
+                let title = '';
+                
+                if (type === 'members') {
+                    title = 'IYSO - সদস্য তালিকা';
+                    columns = [['আইডি', 'নাম', 'পদবি', 'ব্লাড গ্রুপ', 'যোগাযোগ']];
+                    const memberRows = document.querySelectorAll('#membersTableBody tr');
+                    memberRows.forEach(row => {
+                        if (row.style.display !== 'none') {
+                            const cells = row.querySelectorAll('td');
+                            if (cells.length > 0) {
+                                rows.push([
+                                    cells[0]?.innerText || '',
+                                    cells[1]?.innerText || '',
+                                    cells[2]?.innerText || '',
+                                    cells[3]?.innerText.replace('ব্লাড', '').trim() || '',
+                                    cells[4]?.innerText || ''
+                                ]);
+                            }
+                        }
+                    });
+                } else if (type === 'donations') {
+                    const activeTab = document.querySelector('.chrome-tab.active')?.getAttribute('data-tab') || 'lifetime';
+                    title = activeTab === 'lifetime' ? 'IYSO - সর্বমোট দান তালিকা' : (activeTab === 'current' ? 'IYSO - চলতি মাসের দান তালিকা' : 'IYSO - পূর্ববর্তী মাসের দান তালিকা');
+                    columns = [['তারিখ', 'সদস্য আইডি', 'নাম', 'পরিমাণ', 'ধরন', 'পদ্ধতি']];
+                    let tableId = activeTab === 'lifetime' ? 'lifetimeTableBody' : (activeTab === 'current' ? 'currentTableBody' : 'previousTableBody');
+                    const rowsData = document.querySelectorAll(`#${tableId} tr`);
+                    rowsData.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length > 0) {
+                            rows.push([
+                                cells[0]?.innerText || '',
+                                cells[1]?.innerText.split('\n')[0] || '',
+                                cells[1]?.innerText.split('\n')[1] || '',
+                                cells[2]?.innerText || '',
+                                cells[3]?.innerText || '',
+                                cells[4]?.innerText || ''
+                            ]);
+                        }
+                    });
+                } else if (type === 'expenses') {
+                    const activeTab = document.querySelector('.expense-tab.active')?.getAttribute('data-expense-tab') || 'lifetime';
+                    title = activeTab === 'lifetime' ? 'IYSO - সর্বমোট খরচ তালিকা' : (activeTab === 'current' ? 'IYSO - চলতি মাসের খরচ তালিকা' : 'IYSO - পূর্ববর্তী মাসের খরচ তালিকা');
+                    columns = [['তারিখ', 'বিবরণ', 'পরিমাণ', 'ধরন']];
+                    let tableId = activeTab === 'lifetime' ? 'expenseLifetimeTableBody' : (activeTab === 'current' ? 'expenseCurrentTableBody' : 'expensePreviousTableBody');
+                    const rowsData = document.querySelectorAll(`#${tableId} tr`);
+                    rowsData.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length > 0) {
+                            rows.push([
+                                cells[0]?.innerText || '',
+                                cells[1]?.innerText || '',
+                                cells[2]?.innerText || '',
+                                cells[3]?.innerText || ''
+                            ]);
+                        }
+                    });
+                } else if (type === 'events') {
+                    title = 'IYSO - ইভেন্ট তালিকা';
+                    columns = [['ইভেন্ট', 'তারিখ', 'বাজেট', 'স্ট্যাটাস', 'সংগৃহীত', 'খরচ']];
+                    const rowsData = document.querySelectorAll('#eventsTableBody tr');
+                    rowsData.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length > 0) {
+                            rows.push([
+                                cells[0]?.innerText || '',
+                                cells[1]?.innerText || '',
+                                cells[2]?.innerText || '',
+                                cells[3]?.innerText || '',
+                                cells[4]?.innerText || '',
+                                cells[5]?.innerText || ''
+                            ]);
+                        }
+                    });
+                }
+                
+                doc.setFontSize(16);
+                doc.setTextColor(198, 163, 79);
+                doc.text(title, 14, 15);
+                doc.setTextColor(255, 255, 255);
+                
+                doc.autoTable({
+                    head: columns,
+                    body: rows,
+                    startY: 25,
+                    theme: 'dark',
+                    styles: { fontSize: 9, cellPadding: 3, textColor: [255, 255, 255], fillColor: [10, 15, 20] },
+                    headStyles: { fillColor: [0, 104, 55], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
+                    alternateRowStyles: { fillColor: [30, 35, 40] },
+                    margin: { top: 20, left: 10, right: 10 }
+                });
+                
+                const fileName = `${title.replace(/ /g, '_')}.pdf`;
+                doc.save(fileName);
+                
+            } catch (error) {
+                console.error("PDF Export Error:", error);
+                alert("PDF export failed: " + error.message);
+            }
+        });
+    };
+
     window.exportToExcel = (type) => {
         verifyPassword(() => {
             let data = [];
@@ -1288,8 +1461,10 @@
                     const cells = row.querySelectorAll('td');
                     if (cells.length > 0 && row.style.display !== 'none') {
                         data.push({
-                            'আইডি': cells[0]?.innerText || '', 'নাম': cells[1]?.innerText || '',
-                            'পদবি': cells[2]?.innerText || '', 'ব্লাড': cells[3]?.innerText.replace('ব্লাড', '').trim() || '',
+                            'আইডি': cells[0]?.innerText || '',
+                            'নাম': cells[1]?.innerText || '',
+                            'পদবি': cells[2]?.innerText || '',
+                            'ব্লাড': cells[3]?.innerText.replace('ব্লাড', '').trim() || '',
                             'যোগাযোগ': cells[4]?.innerText || ''
                         });
                     }
@@ -1306,9 +1481,12 @@
                     const cells = row.querySelectorAll('td');
                     if (cells.length > 0) {
                         data.push({
-                            'তারিখ': cells[0]?.innerText || '', 'সদস্য আইডি': cells[1]?.innerText.split('\n')[0] || '',
-                            'নাম': cells[1]?.innerText.split('\n')[1] || '', 'পরিমাণ': cells[2]?.innerText || '',
-                            'ধরন': cells[3]?.innerText || '', 'পদ্ধতি': cells[4]?.innerText || ''
+                            'তারিখ': cells[0]?.innerText || '',
+                            'সদস্য আইডি': cells[1]?.innerText.split('\n')[0] || '',
+                            'নাম': cells[1]?.innerText.split('\n')[1] || '',
+                            'পরিমাণ': cells[2]?.innerText || '',
+                            'ধরন': cells[3]?.innerText || '',
+                            'পদ্ধতি': cells[4]?.innerText || ''
                         });
                     }
                 });
@@ -1324,8 +1502,10 @@
                     const cells = row.querySelectorAll('td');
                     if (cells.length > 0) {
                         data.push({
-                            'তারিখ': cells[0]?.innerText || '', 'বিবরণ': cells[1]?.innerText || '',
-                            'পরিমাণ': cells[2]?.innerText || '', 'ধরন': cells[3]?.innerText || ''
+                            'তারিখ': cells[0]?.innerText || '',
+                            'বিবরণ': cells[1]?.innerText || '',
+                            'পরিমাণ': cells[2]?.innerText || '',
+                            'ধরন': cells[3]?.innerText || ''
                         });
                     }
                 });
@@ -1336,9 +1516,12 @@
                     const cells = row.querySelectorAll('td');
                     if (cells.length > 0) {
                         data.push({
-                            'ইভেন্ট': cells[0]?.innerText || '', 'তারিখ': cells[1]?.innerText || '',
-                            'বাজেট': cells[2]?.innerText || '', 'স্ট্যাটাস': cells[3]?.innerText || '',
-                            'সংগৃহীত': cells[4]?.innerText || '', 'খরচ': cells[5]?.innerText || ''
+                            'ইভেন্ট': cells[0]?.innerText || '',
+                            'তারিখ': cells[1]?.innerText || '',
+                            'বাজেট': cells[2]?.innerText || '',
+                            'স্ট্যাটাস': cells[3]?.innerText || '',
+                            'সংগৃহীত': cells[4]?.innerText || '',
+                            'খরচ': cells[5]?.innerText || ''
                         });
                     }
                 });
@@ -1348,59 +1531,6 @@
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
             XLSX.writeFile(wb, `${filename}.xlsx`);
-        });
-    };
-
-    window.exportToPDF = (type) => {
-        verifyPassword(async () => {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('landscape');
-            let columns = [];
-            let rows = [];
-            let title = '';
-            
-            if (type === 'members') {
-                title = 'সদস্য তালিকা - IYSO';
-                columns = ['আইডি', 'নাম', 'পদবি', 'ব্লাড', 'যোগাযোগ'];
-                const memberRows = document.querySelectorAll('#membersTableBody tr');
-                memberRows.forEach(row => {
-                    if (row.style.display !== 'none') {
-                        const cells = row.querySelectorAll('td');
-                        if (cells.length > 0) {
-                            rows.push([cells[0]?.innerText || '', cells[1]?.innerText || '', cells[2]?.innerText || '', cells[3]?.innerText.replace('ব্লাড', '').trim() || '', cells[4]?.innerText || '']);
-                        }
-                    }
-                });
-            } else if (type === 'donations') {
-                const activeTab = document.querySelector('.chrome-tab.active')?.getAttribute('data-tab') || 'lifetime';
-                title = activeTab === 'lifetime' ? 'সর্বমোট দান তালিকা' : (activeTab === 'current' ? 'চলতি মাসের দান তালিকা' : 'পূর্ববর্তী মাসের দান তালিকা');
-                columns = ['তারিখ', 'সদস্য আইডি', 'নাম', 'পরিমাণ', 'ধরন', 'পদ্ধতি'];
-                let tableId = activeTab === 'lifetime' ? 'lifetimeTableBody' : (activeTab === 'current' ? 'currentTableBody' : 'previousTableBody');
-                const rowsData = document.querySelectorAll(`#${tableId} tr`);
-                rowsData.forEach(row => {
-                    const cells = row.querySelectorAll('td');
-                    if (cells.length > 0) {
-                        rows.push([cells[0]?.innerText || '', cells[1]?.innerText.split('\n')[0] || '', cells[1]?.innerText.split('\n')[1] || '', cells[2]?.innerText || '', cells[3]?.innerText || '', cells[4]?.innerText || '']);
-                    }
-                });
-            } else if (type === 'expenses') {
-                const activeTab = document.querySelector('.expense-tab.active')?.getAttribute('data-expense-tab') || 'lifetime';
-                title = activeTab === 'lifetime' ? 'সর্বমোট খরচ তালিকা' : (activeTab === 'current' ? 'চলতি মাসের খরচ তালিকা' : 'পূর্ববর্তী মাসের খরচ তালিকা');
-                columns = ['তারিখ', 'বিবরণ', 'পরিমাণ', 'ধরন'];
-                let tableId = activeTab === 'lifetime' ? 'expenseLifetimeTableBody' : (activeTab === 'current' ? 'expenseCurrentTableBody' : 'expensePreviousTableBody');
-                const rowsData = document.querySelectorAll(`#${tableId} tr`);
-                rowsData.forEach(row => {
-                    const cells = row.querySelectorAll('td');
-                    if (cells.length > 0) {
-                        rows.push([cells[0]?.innerText || '', cells[1]?.innerText || '', cells[2]?.innerText || '', cells[3]?.innerText || '']);
-                    }
-                });
-            }
-            
-            doc.setFontSize(18);
-            doc.text(title, 14, 15);
-            doc.autoTable({ head: [columns], body: rows, startY: 25, theme: 'dark', styles: { fontSize: 8, cellPadding: 2, textColor: [255,255,255], fillColor: [0,104,55] }, headStyles: { fillColor: [198,163,79], textColor: [0,0,0], fontStyle: 'bold' } });
-            doc.save(`${title.replace(/ /g, '_')}.pdf`);
         });
     };
 
@@ -1424,7 +1554,6 @@
         }
     };
 
-    // Data variables
     let totalFunds = 0, monthlyFunds = 0, eventFunds = 0;
     let totalExpensesAmount = 0, monthlyExpensesAmount = 0, currentMonthTotal = 0, previousMonthTotal = 0;
     let expenseTotal = 0, expenseCurrentMonthTotal = 0, expensePreviousMonthTotal = 0;
@@ -1436,7 +1565,6 @@
     function isCurrentMonth(dateStr) { if (!dateStr) return false; const date = new Date(dateStr); return date.getMonth() === currentMonthNum && date.getFullYear() === currentYearNum; }
     function isPreviousMonth(dateStr) { if (!dateStr) return false; const date = new Date(dateStr); return date.getMonth() === previousMonthNum && date.getFullYear() === previousYearNum; }
 
-    // Donations Listener
     onSnapshot(collection(db, "donations"), (snap) => {
         totalFunds = 0; monthlyFunds = 0; eventFunds = 0; currentMonthTotal = 0; previousMonthTotal = 0;
         let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="lifetimeTableBody">`;
@@ -1468,7 +1596,6 @@
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
-    // Expenses Listener with tabs
     onSnapshot(collection(db, "expenses"), (snap) => {
         expenseTotal = 0; expenseCurrentMonthTotal = 0; expensePreviousMonthTotal = 0;
         let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expenseLifetimeTableBody">`;
@@ -1495,11 +1622,12 @@
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - expenseTotal}`;
     });
 
-    // Members Listener
     onSnapshot(collection(db, "members"), (snap) => {
+        currentMembersData = [];
         let html = `<table class="table"><thead><tr><th>আইডি</th><th>নাম</th><th>পদবি</th><th>ব্লাড</th><th>যোগাযোগ</th><th>অ্যাকশন</th></tr></thead><tbody id="membersTableBody">`;
         snap.forEach(doc => {
             const m = doc.data();
+            currentMembersData.push({ id: doc.id, ...m });
             const phoneDisplay = m.phoneNumbers ? m.phoneNumbers.join(', ') : (m.phone || '-');
             html += `<tr><td class="uid-text" style="font-weight:bold">${m.uid || '-'}</td><td class="name-text">${m.name}</td><td>${m.designation || '-'}</td><td class="blood-text"><span class="badge bg-danger">${m.blood || '-'}</span></td><td>${phoneDisplay}<br><small>${m.email || ''}</small></td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openMemberForm(${JSON.stringify({id:doc.id,...m})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('members','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
         });
@@ -1507,7 +1635,6 @@
         document.getElementById('memberList').innerHTML = html;
     });
 
-    // Events Listener
     onSnapshot(collection(db, "events"), (snap) => {
         let planningHtml = `<table class="table"><thead><tr><th>ইভেন্ট</th><th>তারিখ</th><th>বাজেট</th><th>স্ট্যাটাস</th><th>সংগৃহীত</th><th>খরচ</th><th>অ্যাকশন</th></tr></thead><tbody id="eventsTableBody">`;
         snap.forEach(doc => {
@@ -1522,7 +1649,6 @@
         document.getElementById('planningList').innerHTML = planningHtml;
     });
 
-    // Initialize tabs
     function initDonationTabs() {
         const tabs = document.querySelectorAll('.chrome-tab:not(.expense-tab)');
         tabs.forEach(tab => {
