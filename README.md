@@ -119,8 +119,13 @@
             .money-numbers {
                 margin-top: 10px;
             }
-            .donation-summary-card {
-                margin-top: 15px;
+            .chrome-tabs {
+                flex-wrap: wrap;
+            }
+            .chrome-tab {
+                flex: 1;
+                min-width: 100px;
+                text-align: center;
             }
         }
 
@@ -149,6 +154,10 @@
             }
             h3 {
                 font-size: 18px !important;
+            }
+            .chrome-tab {
+                font-size: 12px !important;
+                padding: 8px 12px !important;
             }
         }
 
@@ -475,30 +484,69 @@
             font-weight: 600;
         }
 
-        /* Donation Tabs */
-        .donation-tabs {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 5px;
+        /* Chrome-Style Tabs */
+        .chrome-tabs {
+            display: flex;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 16px;
+            margin-bottom: 20px;
         }
 
-        .donation-tabs .nav-link {
-            color: rgba(255,255,255,0.7);
+        .chrome-tab {
+            flex: 1;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
             border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.7);
             font-weight: 600;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
         }
 
-        .donation-tabs .nav-link.active {
-            background: var(--green);
-            color: white;
+        .chrome-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
         }
 
-        .donation-tabs .nav-link:hover:not(.active) {
-            background: rgba(0,104,55,0.3);
+        .chrome-tab:hover::before {
+            left: 100%;
+        }
+
+        .chrome-tab:hover {
+            background: rgba(0, 104, 55, 0.3);
             color: white;
+            transform: translateY(-2px);
+        }
+
+        .chrome-tab.active {
+            background: linear-gradient(135deg, var(--green), var(--dark-green));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 104, 55, 0.4);
+        }
+
+        .chrome-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 20%;
+            width: 60%;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 3px;
         }
 
         /* Summary Card */
@@ -507,6 +555,7 @@
             border-radius: 12px;
             padding: 12px 20px;
             border: 1px solid rgba(198,163,79,0.3);
+            backdrop-filter: blur(10px);
         }
 
         .summary-label {
@@ -519,6 +568,43 @@
             font-size: 24px;
             font-weight: 700;
             color: var(--gold);
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-container input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 10px 40px 10px 15px;
+            color: white;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--green);
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .search-container i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255,255,255,0.5);
         }
 
         /* Modal */
@@ -613,24 +699,6 @@
                 text-shadow: 0 0 15px rgba(198, 163, 79, 0.6);
                 opacity: 1;
             }
-        }
-
-        /* Tabs */
-        .nav-tabs {
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .nav-tabs .nav-link {
-            color: rgba(255,255,255,0.6);
-            border: none;
-            font-weight: 600;
-            font-family: 'Hind Siliguri', sans-serif;
-        }
-
-        .nav-tabs .nav-link.active {
-            color: var(--gold);
-            background: transparent;
-            border-bottom: 2px solid var(--gold);
         }
 
         /* Utility */
@@ -819,60 +887,64 @@
         </div>
     </div>
 
-    <!-- Members Page -->
+    <!-- Members Page with Search -->
     <div id="members" class="page" style="display:none;">
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
             <h3><i class="fas fa-users text-gold"></i> সদস্যবৃন্দ</h3>
-            <button onclick="openMemberForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন সদস্য</button>
+            <div class="d-flex gap-2 flex-wrap">
+                <div class="search-container">
+                    <input type="text" id="memberSearchInput" placeholder="আইডি, নাম, ফোন, ইমেইল দিয়ে খুঁজুন..." onkeyup="searchMembers()">
+                    <i class="fas fa-search"></i>
+                </div>
+                <button onclick="openMemberForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন সদস্য</button>
+            </div>
         </div>
         <div class="data-table" id="memberList">লোড হচ্ছে...</div>
     </div>
 
-    <!-- Donations Page with 3 Tabs -->
+    <!-- Donations Page with Chrome-Style Tabs -->
     <div id="donations" class="page" style="display:none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h3><i class="fas fa-hand-holding-usd text-gold"></i> দান-অনুদানের তালিকা</h3>
             <button onclick="openDonationForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন দান</button>
         </div>
         
-        <!-- Tabs with Summary -->
-        <div class="row mb-4">
-            <div class="col-md-9">
-                <ul class="nav donation-tabs" id="donationTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="lifetime-tab" data-bs-toggle="tab" data-bs-target="#lifetime" type="button" role="tab">সর্বমোট দান তালিকা</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="current-tab" data-bs-toggle="tab" data-bs-target="#current" type="button" role="tab">চলতি মাসের দান তালিকা</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="previous-tab" data-bs-toggle="tab" data-bs-target="#previous" type="button" role="tab">পূর্ববর্তী মাসের দান তালিকা</button>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-md-3">
-                <div class="summary-card" id="summaryCard">
-                    <div class="summary-label">সর্বমোট সংগ্রহ</div>
-                    <div class="summary-amount" id="summaryAmount">৳0</div>
-                </div>
-            </div>
+        <!-- Chrome-Style Tabs -->
+        <div class="chrome-tabs">
+            <button class="chrome-tab active" data-tab="lifetime">
+                <i class="fas fa-globe"></i> সর্বমোট দান
+            </button>
+            <button class="chrome-tab" data-tab="current">
+                <i class="fas fa-calendar-week"></i> চলতি মাসের দান
+            </button>
+            <button class="chrome-tab" data-tab="previous">
+                <i class="fas fa-history"></i> পূর্ববর্তী মাসের দান
+            </button>
         </div>
         
-        <div class="tab-content">
-            <!-- Lifetime Donations Tab -->
-            <div class="tab-pane fade show active" id="lifetime" role="tabpanel">
-                <div class="data-table" id="lifetimeDonationList">লোড হচ্ছে...</div>
+        <!-- Tab Content -->
+        <div id="lifetimeTab" class="tab-content-active">
+            <div class="summary-card mb-3">
+                <div class="summary-label">সর্বমোট সংগ্রহ</div>
+                <div class="summary-amount" id="lifetimeSummary">৳0</div>
             </div>
-            
-            <!-- Current Month Donations Tab -->
-            <div class="tab-pane fade" id="current" role="tabpanel">
-                <div class="data-table" id="currentDonationList">লোড হচ্ছে...</div>
+            <div class="data-table" id="lifetimeDonationList">লোড হচ্ছে...</div>
+        </div>
+        
+        <div id="currentTab" class="tab-content-hidden" style="display:none;">
+            <div class="summary-card mb-3">
+                <div class="summary-label">চলতি মাসের মোট সংগ্রহ</div>
+                <div class="summary-amount" id="currentSummary">৳0</div>
             </div>
-            
-            <!-- Previous Month Donations Tab -->
-            <div class="tab-pane fade" id="previous" role="tabpanel">
-                <div class="data-table" id="previousDonationList">লোড হচ্ছে...</div>
+            <div class="data-table" id="currentDonationList">লোড হচ্ছে...</div>
+        </div>
+        
+        <div id="previousTab" class="tab-content-hidden" style="display:none;">
+            <div class="summary-card mb-3">
+                <div class="summary-label">পূর্ববর্তী মাসের মোট সংগ্রহ</div>
+                <div class="summary-amount" id="previousSummary">৳0</div>
             </div>
+            <div class="data-table" id="previousDonationList">লোড হচ্ছে...</div>
         </div>
     </div>
 
@@ -956,6 +1028,7 @@
     const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
 
     const ADMIN_PASSWORD = "IYSO2020";
+    let allMembersData = [];
 
     // Password verification function
     function verifyPassword(callback, actionData = null) {
@@ -1011,36 +1084,70 @@
         };
     });
 
-    // Update summary based on active tab
-    function updateSummary(tab, currentTotal, currentMonthTotal, previousMonthTotal) {
-        const summaryCard = document.getElementById('summaryCard');
-        const summaryAmount = document.getElementById('summaryAmount');
-        
-        if (tab === 'lifetime') {
-            summaryCard.querySelector('.summary-label').innerHTML = 'সর্বমোট সংগ্রহ';
-            summaryAmount.innerHTML = `৳${currentTotal}`;
-        } else if (tab === 'current') {
-            summaryCard.querySelector('.summary-label').innerHTML = 'চলতি মাসের মোট সংগ্রহ';
-            summaryAmount.innerHTML = `৳${currentMonthTotal}`;
-        } else if (tab === 'previous') {
-            summaryCard.querySelector('.summary-label').innerHTML = 'পূর্ববর্তী মাসের মোট সংগ্রহ';
-            summaryAmount.innerHTML = `৳${previousMonthTotal}`;
-        }
+    // Donation Tab Switching
+    function initDonationTabs() {
+        const tabs = document.querySelectorAll('.chrome-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Hide all tab contents
+                document.getElementById('lifetimeTab').style.display = 'none';
+                document.getElementById('currentTab').style.display = 'none';
+                document.getElementById('previousTab').style.display = 'none';
+                
+                // Show selected tab content
+                const tabName = tab.getAttribute('data-tab');
+                if (tabName === 'lifetime') {
+                    document.getElementById('lifetimeTab').style.display = 'block';
+                } else if (tabName === 'current') {
+                    document.getElementById('currentTab').style.display = 'block';
+                } else if (tabName === 'previous') {
+                    document.getElementById('previousTab').style.display = 'block';
+                }
+            });
+        });
     }
 
-    // Get current month in Bangla
+    // Member Search Function
+    window.searchMembers = () => {
+        const searchTerm = document.getElementById('memberSearchInput').value.toLowerCase();
+        const tableBody = document.getElementById('membersTableBody');
+        if (!tableBody) return;
+        
+        const rows = tableBody.querySelectorAll('tr');
+        let hasResults = false;
+        
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            if (text.includes(searchTerm)) {
+                row.style.display = '';
+                hasResults = true;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        if (!hasResults && rows.length > 0) {
+            const noResultRow = document.createElement('tr');
+            noResultRow.innerHTML = `<td colspan="6" class="no-results">কোন সদস্য পাওয়া যায়নি</td>`;
+            if (!document.querySelector('.no-results-row')) {
+                tableBody.appendChild(noResultRow);
+                noResultRow.classList.add('no-results-row');
+            }
+        } else {
+            const noResultRow = document.querySelector('.no-results-row');
+            if (noResultRow) noResultRow.remove();
+        }
+    };
+
+    // Get current month info
     function getCurrentMonthBangla() {
         const months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
         const now = new Date();
         return `${months[now.getMonth()]} ${now.getFullYear()}`;
-    }
-
-    function getPreviousMonthBangla() {
-        const months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
-        const now = new Date();
-        const prevMonth = now.getMonth() === 0 ? 11 : now.getMonth() - 1;
-        const prevYear = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
-        return `${months[prevMonth]} ${prevYear}`;
     }
 
     // Send numbers
@@ -1089,7 +1196,6 @@
                 <input type="email" id="mEmail" class="form-control mt-3" placeholder="ইমেইল" value="${data?.email || ''}">
             `;
             
-            // Render phone numbers
             window.renderPhoneNumbers = () => {
                 const container = document.getElementById('phoneNumbersContainer');
                 if (!container) return;
@@ -1161,7 +1267,7 @@
         return null;
     };
 
-    // Donation Form with Phone Number Auto-fill
+    // Donation Form
     window.openDonationForm = (data = null) => {
         const action = () => {
             const today = new Date().toISOString().split('T')[0];
@@ -1393,20 +1499,6 @@
         return date.getMonth() === previousMonthNum && date.getFullYear() === previousYearNum;
     }
 
-    // Tab change handler
-    document.querySelectorAll('#donationTabs button').forEach(tab => {
-        tab.addEventListener('shown.bs.tab', (event) => {
-            const tabId = event.target.id;
-            if (tabId === 'lifetime-tab') {
-                updateSummary('lifetime', totalFunds, currentMonthTotal, previousMonthTotal);
-            } else if (tabId === 'current-tab') {
-                updateSummary('current', totalFunds, currentMonthTotal, previousMonthTotal);
-            } else if (tabId === 'previous-tab') {
-                updateSummary('previous', totalFunds, currentMonthTotal, previousMonthTotal);
-            }
-        });
-    });
-
     // Donations Listener for 3 tabs
     onSnapshot(collection(db, "donations"), (snap) => {
         totalFunds = 0;
@@ -1415,9 +1507,9 @@
         currentMonthTotal = 0;
         previousMonthTotal = 0;
         
-        let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody>`;
-        let currentHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody>`;
-        let previousHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody>`;
+        let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="lifetimeTableBody">`;
+        let currentHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="currentTableBody">`;
+        let previousHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="previousTableBody">`;
         
         snap.forEach(doc => {
             const d = doc.data();
@@ -1478,13 +1570,14 @@
         document.getElementById('currentDonationList').innerHTML = currentHtml || '<p class="text-muted p-3">কোন দান নেই</p>';
         document.getElementById('previousDonationList').innerHTML = previousHtml || '<p class="text-muted p-3">কোন দান নেই</p>';
         
+        document.getElementById('lifetimeSummary').innerHTML = `৳${totalFunds}`;
+        document.getElementById('currentSummary').innerHTML = `৳${currentMonthTotal}`;
+        document.getElementById('previousSummary').innerHTML = `৳${previousMonthTotal}`;
+        
         document.getElementById('totalFund').innerHTML = `৳${totalFunds}`;
         document.getElementById('monthlyCollection').innerHTML = `৳${monthlyFunds}`;
         document.getElementById('eventFundCollection').innerHTML = `৳${eventFunds}`;
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
-        
-        // Set initial summary
-        updateSummary('lifetime', totalFunds, currentMonthTotal, previousMonthTotal);
     });
 
     // Expenses Listener
@@ -1518,11 +1611,16 @@
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
-    // Members Listener with custom colors
+    // Members Listener with search functionality
     onSnapshot(collection(db, "members"), (snap) => {
-        let html = `<table class="table"><thead><tr><th>আইডি</th><th>নাম</th><th>পদবি</th><th>ব্লাড</th><th>যোগাযোগ</th><th>অ্যাকশন</th></tr></thead><tbody>`;
+        allMembersData = [];
+        let html = `<table class="table"><thead><tr><th>আইডি</th><th>নাম</th><th>পদবি</th><th>ব্লাড</th><th>যোগাযোগ</th><th>অ্যাকশন</th></tr></thead><tbody id="membersTableBody">`;
+        
         snap.forEach(doc => {
             const m = doc.data();
+            const memberWithId = { id: doc.id, ...m };
+            allMembersData.push(memberWithId);
+            
             const phoneDisplay = m.phoneNumbers ? m.phoneNumbers.join(', ') : (m.phone || '-');
             html += `<tr>
                 <td class="uid-text" style="font-weight:bold">${m.uid || '-'}</td>
@@ -1533,6 +1631,7 @@
                 <td><button class="btn btn-sm btn-outline-warning me-1" onclick='openMemberForm(${JSON.stringify({id:doc.id,...m})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('members','${doc.id}')"><i class="fas fa-trash"></i></button></td>
             </tr>`;
         });
+        
         html += `</tbody></table>`;
         document.getElementById('memberList').innerHTML = html || '<p class="text-muted p-3">কোন সদস্য নেই</p>';
     });
@@ -1567,6 +1666,11 @@
         planningHtml += `</tbody></table>`;
         document.getElementById('planningList').innerHTML = planningHtml || '<p class="text-muted p-3">কোন ইভেন্ট নেই</p>';
     });
+
+    // Initialize donation tabs after page load
+    setTimeout(() => {
+        initDonationTabs();
+    }, 500);
 </script>
 
 </body>
