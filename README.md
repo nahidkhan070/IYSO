@@ -591,9 +591,11 @@
         .export-buttons {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
-        .btn-export-excel, .btn-import-excel {
+        .btn-export-excel {
             background: linear-gradient(135deg, #1e8449, #145a32);
             color: white;
             border: none;
@@ -602,6 +604,22 @@
             font-size: 13px;
             font-weight: 600;
             transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-import-excel {
+            background: linear-gradient(135deg, #2980b9, #1a5276);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-export-pdf {
@@ -613,11 +631,42 @@
             font-size: 13px;
             font-weight: 600;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .btn-export-excel:hover, .btn-export-pdf:hover, .btn-import-excel:hover {
             transform: translateY(-2px);
             filter: brightness(1.1);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .file-input-wrapper input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            left: 0;
+            top: 0;
+        }
+        
+        .import-progress {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95);
+            padding: 20px 30px;
+            border-radius: 12px;
+            z-index: 2000;
+            text-align: center;
+            border: 1px solid var(--gold);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            font-weight: 600;
         }
 
         .modal-content {
@@ -724,32 +773,6 @@
         }
         .remove-phone-btn:hover { color: #ff6b6b; }
         .add-phone-btn { margin-top: 10px; width: 100%; }
-        
-        .file-input-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .file-input-wrapper input {
-            position: absolute;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-        
-        .import-progress {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.9);
-            padding: 20px;
-            border-radius: 12px;
-            z-index: 2000;
-            text-align: center;
-            border: 1px solid var(--gold);
-        }
     </style>
 </head>
 <body>
@@ -855,10 +878,10 @@
                     <input type="text" id="memberSearchInput" placeholder="আইডি, নাম, ফোন, ইমেইল দিয়ে খুঁজুন..." onkeyup="searchMembers()">
                     <i class="fas fa-search"></i>
                 </div>
-                <button onclick="exportToExcel('members')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel</button>
-                <div class="file-input-wrapper btn-import-excel">
-                    <i class="fas fa-upload"></i> Import Excel
-                    <input type="file" id="importExcelFile" accept=".xlsx, .xls" onchange="importMembersFromExcel(this)">
+                <button onclick="exportToExcel('members')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel Export</button>
+                <div class="file-input-wrapper">
+                    <button class="btn-import-excel" onclick="document.getElementById('importExcelFile').click()"><i class="fas fa-upload"></i> Excel Import</button>
+                    <input type="file" id="importExcelFile" accept=".xlsx, .xls" style="display:none;" onchange="importMembersFromExcel(this)">
                 </div>
                 <button onclick="exportToPDF('members')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
                 <button onclick="openMemberForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন সদস্য</button>
@@ -1132,12 +1155,12 @@
         return null;
     };
 
-    // Excel Import Function for Members
+    // Excel Import Function for Members - FIXED
     window.importMembersFromExcel = async (input) => {
+        const file = input.files[0];
+        if (!file) return;
+        
         verifyPassword(async () => {
-            const file = input.files[0];
-            if (!file) return;
-            
             const progressDiv = document.createElement('div');
             progressDiv.className = 'import-progress';
             progressDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ডাটা ইম্পোর্ট হচ্ছে... দয়া করে অপেক্ষা করুন';
@@ -1262,7 +1285,7 @@
     window.openExpenseForm = (data = null) => {
         const action = () => {
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> খরচ সম্পাদনা' : '<i class="fas fa-plus"></i> নতুন খরচ';
+            document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> খরচ সম্পাদনা' : '<i class="fas fa-plus"></i> 새로운 খরচ';
             document.getElementById('modalBody').innerHTML = `
                 <input type="text" id="eDesc" class="form-control mb-3" placeholder="খরচের বিবরণ" value="${data?.description || ''}">
                 <input type="number" id="eAmount" class="form-control mb-3" placeholder="পরিমাণ (টাকা)" value="${data?.amount || ''}">
@@ -1430,16 +1453,22 @@
                 doc.text(title, 14, 15);
                 doc.setTextColor(255, 255, 255);
                 
-                doc.autoTable({
-                    head: columns,
-                    body: rows,
-                    startY: 25,
-                    theme: 'dark',
-                    styles: { fontSize: 9, cellPadding: 3, textColor: [255, 255, 255], fillColor: [10, 15, 20] },
-                    headStyles: { fillColor: [0, 104, 55], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
-                    alternateRowStyles: { fillColor: [30, 35, 40] },
-                    margin: { top: 20, left: 10, right: 10 }
-                });
+                if (typeof doc.autoTable === 'function') {
+                    doc.autoTable({
+                        head: columns,
+                        body: rows,
+                        startY: 25,
+                        theme: 'dark',
+                        styles: { fontSize: 9, cellPadding: 3, textColor: [255, 255, 255], fillColor: [10, 15, 20] },
+                        headStyles: { fillColor: [0, 104, 55], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
+                        alternateRowStyles: { fillColor: [30, 35, 40] },
+                        margin: { top: 20, left: 10, right: 10 }
+                    });
+                } else {
+                    console.error("autoTable is not available");
+                    alert("PDF generation library not fully loaded. Please refresh the page.");
+                    return;
+                }
                 
                 const fileName = `${title.replace(/ /g, '_')}.pdf`;
                 doc.save(fileName);
@@ -1615,7 +1644,7 @@
             if (isPreviousMonth(e.date)) previousHtml += row;
         });
         
-        lifetimeHtml += `</tbody></table>`; currentHtml += `</tbody></table>`; previousHtml += `</tbody></table>`;
+        lifetimeHtml += `</tbody></table>`; currentHtml += `</tbody></tr>`; previousHtml += `</tbody></table>`;
         document.getElementById('expenseLifetimeList').innerHTML = lifetimeHtml; document.getElementById('expenseCurrentList').innerHTML = currentHtml; document.getElementById('expensePreviousList').innerHTML = previousHtml;
         document.getElementById('expenseLifetimeSummary').innerHTML = `৳${expenseTotal}`; document.getElementById('expenseCurrentSummary').innerHTML = `৳${expenseCurrentMonthTotal}`; document.getElementById('expensePreviousSummary').innerHTML = `৳${expensePreviousMonthTotal}`;
         document.getElementById('monthlyExpenses').innerHTML = `৳${expenseCurrentMonthTotal}`; document.getElementById('totalExpenses').innerHTML = `৳${expenseTotal}`;
@@ -1645,7 +1674,7 @@
             else statusBadge = '<span class="status-pending"><i class="fas fa-clock"></i> পেন্ডিং</span>';
             planningHtml += `<tr><td><strong>${e.name}</strong><br><small>${e.details || ''}</small></td><td>${e.date || '-'}</td><td style="font-weight:bold">৳${e.budget || 0}</td><td>${statusBadge}</td><td style="font-weight:bold">৳${e.fund || 0}</td><td style="font-weight:bold">৳${e.cost || 0}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openEventForm(${JSON.stringify({id:doc.id,...e})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('events','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
         });
-        planningHtml += `</tbody></table>`;
+        planningHtml += `</tbody></tr>`;
         document.getElementById('planningList').innerHTML = planningHtml;
     });
 
