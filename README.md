@@ -1020,7 +1020,8 @@
     const bsModal = new bootstrap.Modal(document.getElementById('dataModal'));
     const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
 
-    const ADMIN_PASSWORD = "IYSO2020";
+    // Changed password to iyso2020
+    const ADMIN_PASSWORD = "iyso2020";
     let currentMembersData = [];
 
     function verifyPassword(callback, actionData = null) {
@@ -1364,20 +1365,10 @@
         });
     };
 
-    // Fixed PDF Export Function - Complete rewrite
+    // Fixed PDF Export Function
     window.exportToPDF = async (type) => {
         verifyPassword(async () => {
             try {
-                // Dynamically load jspdf and autoTable if not available
-                if (typeof window.jspdf === 'undefined') {
-                    await import('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-                }
-                if (typeof window.jspdf?.jsPDF === 'undefined') {
-                    console.error("jsPDF not loaded");
-                    alert("PDF library is loading. Please try again in a moment.");
-                    return;
-                }
-                
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
                 let columns = [];
@@ -1467,7 +1458,6 @@
                 doc.text(title, 14, 15);
                 doc.setTextColor(255, 255, 255);
                 
-                // Use autoTable with proper configuration
                 doc.autoTable({
                     head: columns,
                     body: rows,
@@ -1491,14 +1481,7 @@
                     alternateRowStyles: { 
                         fillColor: [30, 35, 40] 
                     },
-                    margin: { top: 25, left: 10, right: 10 },
-                    didDrawPage: function(data) {
-                        // Add page number
-                        const pageCount = doc.internal.getNumberOfPages();
-                        doc.setFontSize(8);
-                        doc.setTextColor(198, 163, 79);
-                        doc.text(`Page ${data.pageNumber} of ${pageCount}`, data.settings.margin.left, doc.internal.pageSize.height - 5);
-                    }
+                    margin: { top: 25, left: 10, right: 10 }
                 });
                 
                 const fileName = `${title.replace(/ /g, '_')}.pdf`;
@@ -1614,38 +1597,38 @@
         }
     };
 
-    // Real-time data variables
-    let totalFunds = 0, monthlyFunds = 0, eventFunds = 0;
-    let totalExpensesAmount = 0, monthlyExpensesAmount = 0, currentMonthTotal = 0, previousMonthTotal = 0;
-    let expenseTotal = 0, expenseCurrentMonthTotal = 0, expensePreviousMonthTotal = 0;
+    // Global variables for calculations
+    let totalFunds = 0;
+    let totalExpensesAmount = 0;
 
-    const currentMonthNum = new Date().getMonth(), currentYearNum = new Date().getFullYear();
-    const previousMonthNum = currentMonthNum === 0 ? 11 : currentMonthNum - 1;
-    const previousYearNum = currentMonthNum === 0 ? currentYearNum - 1 : currentYearNum;
-
-    function isCurrentMonth(dateStr) { 
-        if (!dateStr) return false; 
-        const date = new Date(dateStr); 
-        return !isNaN(date.getTime()) && date.getMonth() === currentMonthNum && date.getFullYear() === currentYearNum; 
-    }
-    
-    function isPreviousMonth(dateStr) { 
-        if (!dateStr) return false; 
-        const date = new Date(dateStr); 
-        return !isNaN(date.getTime()) && date.getMonth() === previousMonthNum && date.getFullYear() === previousYearNum; 
-    }
-
-    // Donations Listener with proper calculations
+    // Donations Listener - Updates totalFunds
     onSnapshot(collection(db, "donations"), (snap) => {
-        totalFunds = 0; 
-        monthlyFunds = 0; 
-        eventFunds = 0; 
-        currentMonthTotal = 0; 
-        previousMonthTotal = 0;
+        totalFunds = 0;
+        let monthlyFunds = 0;
+        let eventFunds = 0;
+        let currentMonthTotal = 0;
+        let previousMonthTotal = 0;
         
         let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="lifetimeTableBody">`;
         let currentHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="currentTableBody">`;
         let previousHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="previousTableBody">`;
+        
+        const currentMonthNum = new Date().getMonth();
+        const currentYearNum = new Date().getFullYear();
+        const previousMonthNum = currentMonthNum === 0 ? 11 : currentMonthNum - 1;
+        const previousYearNum = currentMonthNum === 0 ? currentYearNum - 1 : currentYearNum;
+        
+        function isCurrentMonth(dateStr) { 
+            if (!dateStr) return false; 
+            const date = new Date(dateStr); 
+            return !isNaN(date.getTime()) && date.getMonth() === currentMonthNum && date.getFullYear() === currentYearNum; 
+        }
+        
+        function isPreviousMonth(dateStr) { 
+            if (!dateStr) return false; 
+            const date = new Date(dateStr); 
+            return !isNaN(date.getTime()) && date.getMonth() === previousMonthNum && date.getFullYear() === previousYearNum; 
+        }
         
         snap.forEach(doc => {
             const d = doc.data();
@@ -1689,23 +1672,42 @@
         document.getElementById('totalFund').innerHTML = `৳${totalFunds}`; 
         document.getElementById('monthlyCollection').innerHTML = `৳${monthlyFunds}`; 
         document.getElementById('eventFundCollection').innerHTML = `৳${eventFunds}`;
+        
+        // Update net balance with latest expenses
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
-    // Expenses Listener with proper calculations
+    // Expenses Listener - Updates totalExpensesAmount
     onSnapshot(collection(db, "expenses"), (snap) => {
-        expenseTotal = 0; 
-        expenseCurrentMonthTotal = 0; 
-        expensePreviousMonthTotal = 0;
+        totalExpensesAmount = 0;
+        let expenseCurrentMonthTotal = 0;
+        let expensePreviousMonthTotal = 0;
         
         let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expenseLifetimeTableBody">`;
         let currentHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expenseCurrentTableBody">`;
         let previousHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expensePreviousTableBody">`;
         
+        const currentMonthNum = new Date().getMonth();
+        const currentYearNum = new Date().getFullYear();
+        const previousMonthNum = currentMonthNum === 0 ? 11 : currentMonthNum - 1;
+        const previousYearNum = currentMonthNum === 0 ? currentYearNum - 1 : currentYearNum;
+        
+        function isCurrentMonth(dateStr) { 
+            if (!dateStr) return false; 
+            const date = new Date(dateStr); 
+            return !isNaN(date.getTime()) && date.getMonth() === currentMonthNum && date.getFullYear() === currentYearNum; 
+        }
+        
+        function isPreviousMonth(dateStr) { 
+            if (!dateStr) return false; 
+            const date = new Date(dateStr); 
+            return !isNaN(date.getTime()) && date.getMonth() === previousMonthNum && date.getFullYear() === previousYearNum; 
+        }
+        
         snap.forEach(doc => {
             const e = doc.data();
             const amount = Number(e.amount) || 0;
-            expenseTotal += amount;
+            totalExpensesAmount += amount;
             if (isCurrentMonth(e.date)) expenseCurrentMonthTotal += amount;
             if (isPreviousMonth(e.date)) expensePreviousMonthTotal += amount;
             
@@ -1723,12 +1725,14 @@
         document.getElementById('expenseLifetimeList').innerHTML = lifetimeHtml; 
         document.getElementById('expenseCurrentList').innerHTML = currentHtml; 
         document.getElementById('expensePreviousList').innerHTML = previousHtml;
-        document.getElementById('expenseLifetimeSummary').innerHTML = `৳${expenseTotal}`; 
+        document.getElementById('expenseLifetimeSummary').innerHTML = `৳${totalExpensesAmount}`; 
         document.getElementById('expenseCurrentSummary').innerHTML = `৳${expenseCurrentMonthTotal}`; 
         document.getElementById('expensePreviousSummary').innerHTML = `৳${expensePreviousMonthTotal}`;
         document.getElementById('monthlyExpenses').innerHTML = `৳${expenseCurrentMonthTotal}`; 
-        document.getElementById('totalExpenses').innerHTML = `৳${expenseTotal}`;
-        document.getElementById('netBalance').innerHTML = `৳${totalFunds - expenseTotal}`;
+        document.getElementById('totalExpenses').innerHTML = `৳${totalExpensesAmount}`;
+        
+        // Update net balance with latest donations
+        document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
     // Members Listener
