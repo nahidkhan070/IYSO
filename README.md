@@ -62,25 +62,31 @@
             z-index: 0;
         }
 
+        /* Sidebar - Now scrolls with page (not fixed) */
         .sidebar {
             width: 280px;
-            height: 100vh;
-            position: fixed;
+            min-height: 100vh;
+            position: relative;
             background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 50, 25, 0.95) 100%);
             backdrop-filter: blur(20px);
             padding: 30px 20px;
             border-right: 1px solid rgba(198, 163, 79, 0.2);
-            z-index: 1000;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+            transition: all 0.3s ease;
             overflow-y: auto;
-            transform: translateX(0);
-            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.3);
+            float: left;
         }
 
         @media (max-width: 768px) {
             .sidebar {
+                position: fixed;
                 transform: translateX(-100%);
                 width: 280px;
+                height: 100vh;
+                top: 0;
+                left: 0;
+                z-index: 1000;
+                float: none;
             }
             .sidebar.open {
                 transform: translateX(0);
@@ -88,6 +94,8 @@
             .main {
                 margin-left: 0 !important;
                 padding: 70px 12px 20px !important;
+                width: 100% !important;
+                float: none !important;
             }
             .menu-toggle {
                 display: flex !important;
@@ -139,6 +147,16 @@
             }
         }
 
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none;
+            }
+            .main {
+                float: left;
+                width: calc(100% - 280px);
+            }
+        }
+
         @media (max-width: 480px) {
             .main {
                 padding: 65px 10px 15px !important;
@@ -171,10 +189,10 @@
             }
         }
 
-        @media (min-width: 769px) {
-            .menu-toggle {
-                display: none;
-            }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
         }
 
         .logo {
@@ -267,11 +285,9 @@
         }
 
         .main {
-            margin-left: 280px;
             padding: 25px 30px;
             position: relative;
             z-index: 1;
-            transition: margin-left 0.3s ease;
             min-height: 100vh;
         }
 
@@ -781,190 +797,191 @@
     <i class="fas fa-bars"></i> মেনু
 </button>
 
-<div class="sidebar" id="sidebar">
-    <div class="logo">IYSO</div>
-    <div class="nav-item active" data-page="dash">
-        <i class="fas fa-chart-line"></i>
-        <span>ড্যাশবোর্ড</span>
+<div class="clearfix">
+    <div class="sidebar" id="sidebar">
+        <div class="logo">IYSO</div>
+        <div class="nav-item active" data-page="dash">
+            <i class="fas fa-chart-line"></i>
+            <span>ড্যাশবোর্ড</span>
+        </div>
+        <div class="nav-item" data-page="members">
+            <i class="fas fa-users"></i>
+            <span>সদস্যবৃন্দ</span>
+        </div>
+        <div class="nav-item" data-page="donations">
+            <i class="fas fa-hand-holding-usd"></i>
+            <span>দান-অনুদান</span>
+        </div>
+        <div class="nav-item" data-page="expenses">
+            <i class="fas fa-chart-line"></i>
+            <span>খরচের তালিকা</span>
+        </div>
+        <div class="nav-item" data-page="events">
+            <i class="fas fa-calendar-alt"></i>
+            <span>ইভেন্ট সমূহ</span>
+        </div>
     </div>
-    <div class="nav-item" data-page="members">
-        <i class="fas fa-users"></i>
-        <span>সদস্যবৃন্দ</span>
-    </div>
-    <div class="nav-item" data-page="donations">
-        <i class="fas fa-hand-holding-usd"></i>
-        <span>দান-অনুদান</span>
-    </div>
-    <div class="nav-item" data-page="expenses">
-        <i class="fas fa-chart-line"></i>
-        <span>খরচের তালিকা</span>
-    </div>
-    <div class="nav-item" data-page="events">
-        <i class="fas fa-calendar-alt"></i>
-        <span>ইভেন্ট সমূহ</span>
-    </div>
-</div>
 
-<div class="main">
-    <div id="dash" class="page">
-        <div class="row mb-4">
-            <div class="col-lg-9 col-md-8 col-12">
-                <div class="net-balance-card">
-                    <div class="net-balance-label">নেট ব্যালেন্স</div>
-                    <div class="net-balance-amount" id="netBalance">৳0</div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-12">
-                <div class="money-numbers">
-                    <div class="bkash-box" onclick="editSendNumber('bkash')">
-                        <div style="font-size: 11px; opacity: 0.9;"><i class="fas fa-mobile-alt"></i> বিকাশ (সেন্ড মানি)</div>
-                        <div class="send-number" id="bkashNumber">017XXXXXXXX</div>
-                    </div>
-                    <div class="nagad-box" onclick="editSendNumber('nagad')">
-                        <div style="font-size: 11px; opacity: 0.9;"><i class="fas fa-mobile-alt"></i> নগদ (সেন্ড মানি)</div>
-                        <div class="send-number" id="nagadNumber">017XXXXXXXX</div>
+    <div class="main">
+        <div id="dash" class="page">
+            <div class="row mb-4">
+                <div class="col-lg-9 col-md-8 col-12">
+                    <div class="net-balance-card">
+                        <div class="net-balance-label">নেট ব্যালেন্স</div>
+                        <div class="net-balance-amount" id="netBalance">৳0</div>
                     </div>
                 </div>
+                <div class="col-lg-3 col-md-4 col-12">
+                    <div class="money-numbers">
+                        <div class="bkash-box" onclick="editSendNumber('bkash')">
+                            <div style="font-size: 11px; opacity: 0.9;"><i class="fas fa-mobile-alt"></i> বিকাশ (সেন্ড মানি)</div>
+                            <div class="send-number" id="bkashNumber">017XXXXXXXX</div>
+                        </div>
+                        <div class="nagad-box" onclick="editSendNumber('nagad')">
+                            <div style="font-size: 11px; opacity: 0.9;"><i class="fas fa-mobile-alt"></i> নগদ (সেন্ড মানি)</div>
+                            <div class="send-number" id="nagadNumber">017XXXXXXXX</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="row g-3 mb-4">
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="glass-card small-card">
+                        <div class="small-card-title"><i class="fas fa-donate"></i> মোট সংগ্রহ</div>
+                        <div class="small-card-amount" id="totalFund">৳0</div>
+                        <div class="month-name">সর্বমোট সংগ্রহ</div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="glass-card small-card">
+                        <div class="small-card-title"><i class="fas fa-calendar-week"></i> চলতি মাসের সংগ্রহ</div>
+                        <div class="small-card-amount" id="monthlyCollection">৳0</div>
+                        <div class="month-name" id="currentMonthName">জানুয়ারি ২০২৪</div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="glass-card small-card">
+                        <div class="small-card-title"><i class="fas fa-trophy"></i> ইভেন্ট ফান্ড</div>
+                        <div class="small-card-amount" id="eventFundCollection">৳0</div>
+                        <div class="month-name" id="eventMonthName">ইভেন্ট সংগ্রহ</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6 col-12">
+                    <div class="glass-card small-card">
+                        <div class="small-card-title"><i class="fas fa-arrow-down"></i> চলতি মাসের খরচ</div>
+                        <div class="small-card-amount" id="monthlyExpenses">৳0</div>
+                        <div class="month-name" id="expenseMonthName">চলতি মাসের খরচ</div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="glass-card small-card">
+                        <div class="small-card-title"><i class="fas fa-chart-pie"></i> মোট খরচ</div>
+                        <div class="small-card-amount" id="totalExpenses">৳0</div>
+                        <div class="month-name">সর্বমোট খরচ</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="row g-3 mb-4">
-            <div class="col-md-4 col-sm-6 col-12">
-                <div class="glass-card small-card">
-                    <div class="small-card-title"><i class="fas fa-donate"></i> মোট সংগ্রহ</div>
-                    <div class="small-card-amount" id="totalFund">৳0</div>
-                    <div class="month-name">সর্বমোট সংগ্রহ</div>
+        <div id="members" class="page" style="display:none;">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <h3><i class="fas fa-users text-gold"></i> সদস্যবৃন্দ</h3>
+                <div class="d-flex gap-2 flex-wrap export-buttons">
+                    <div class="search-container">
+                        <input type="text" id="memberSearchInput" placeholder="আইডি, নাম, ফোন, ইমেইল দিয়ে খুঁজুন..." onkeyup="searchMembers()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <button onclick="exportToExcel('members')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel Export</button>
+                    <div class="file-input-wrapper">
+                        <button class="btn-import-excel" onclick="document.getElementById('importExcelFile').click()"><i class="fas fa-upload"></i> Excel Import</button>
+                        <input type="file" id="importExcelFile" accept=".xlsx, .xls" style="display:none;" onchange="importMembersFromExcel(this)">
+                    </div>
+                    <button onclick="exportToPDF('members')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
+                    <button onclick="openMemberForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন সদস্য</button>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-6 col-12">
-                <div class="glass-card small-card">
-                    <div class="small-card-title"><i class="fas fa-calendar-week"></i> চলতি মাসের সংগ্রহ</div>
-                    <div class="small-card-amount" id="monthlyCollection">৳0</div>
-                    <div class="month-name" id="currentMonthName">জানুয়ারি ২০২৪</div>
+            <div class="data-table" id="memberList">লোড হচ্ছে...</div>
+        </div>
+
+        <div id="donations" class="page" style="display:none;">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <h3><i class="fas fa-hand-holding-usd text-gold"></i> দান-অনুদানের তালিকা</h3>
+                <div class="d-flex gap-2 export-buttons">
+                    <button onclick="exportToExcel('donations')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel</button>
+                    <button onclick="exportToPDF('donations')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
+                    <button onclick="openDonationForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন দান</button>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-6 col-12">
-                <div class="glass-card small-card">
-                    <div class="small-card-title"><i class="fas fa-trophy"></i> ইভেন্ট ফান্ড</div>
-                    <div class="small-card-amount" id="eventFundCollection">৳0</div>
-                    <div class="month-name" id="eventMonthName">ইভেন্ট সংগ্রহ</div>
-                </div>
+            
+            <div class="chrome-tabs">
+                <button class="chrome-tab active" data-tab="lifetime"><i class="fas fa-globe"></i> সর্বমোট দান</button>
+                <button class="chrome-tab" data-tab="current"><i class="fas fa-calendar-week"></i> চলতি মাসের দান</button>
+                <button class="chrome-tab" data-tab="previous"><i class="fas fa-history"></i> পূর্ববর্তী মাসের দান</button>
+            </div>
+            
+            <div id="lifetimeTab" class="tab-content-active">
+                <div class="summary-card mb-3"><div class="summary-label">সর্বমোট সংগ্রহ</div><div class="summary-amount" id="lifetimeSummary">৳0</div></div>
+                <div class="data-table" id="lifetimeDonationList">লোড হচ্ছে...</div>
+            </div>
+            <div id="currentTab" class="tab-content-hidden" style="display:none;">
+                <div class="summary-card mb-3"><div class="summary-label">চলতি মাসের মোট সংগ্রহ</div><div class="summary-amount" id="currentSummary">৳0</div></div>
+                <div class="data-table" id="currentDonationList">লোড হচ্ছে...</div>
+            </div>
+            <div id="previousTab" class="tab-content-hidden" style="display:none;">
+                <div class="summary-card mb-3"><div class="summary-label">পূর্ববর্তী মাসের মোট সংগ্রহ</div><div class="summary-amount" id="previousSummary">৳0</div></div>
+                <div class="data-table" id="previousDonationList">লোড হচ্ছে...</div>
             </div>
         </div>
 
-        <div class="row g-3">
-            <div class="col-md-6 col-12">
-                <div class="glass-card small-card">
-                    <div class="small-card-title"><i class="fas fa-arrow-down"></i> চলতি মাসের খরচ</div>
-                    <div class="small-card-amount" id="monthlyExpenses">৳0</div>
-                    <div class="month-name" id="expenseMonthName">চলতি মাসের খরচ</div>
+        <div id="expenses" class="page" style="display:none;">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <h3><i class="fas fa-chart-line text-gold"></i> খরচের তালিকা</h3>
+                <div class="d-flex gap-2 export-buttons">
+                    <button onclick="exportToExcel('expenses')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel</button>
+                    <button onclick="exportToPDF('expenses')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
+                    <button onclick="openExpenseForm()" class="btn btn-danger px-4"><i class="fas fa-plus"></i> নতুন খরচ</button>
                 </div>
             </div>
-            <div class="col-md-6 col-12">
-                <div class="glass-card small-card">
-                    <div class="small-card-title"><i class="fas fa-chart-pie"></i> মোট খরচ</div>
-                    <div class="small-card-amount" id="totalExpenses">৳0</div>
-                    <div class="month-name">সর্বমোট খরচ</div>
+            
+            <div class="chrome-tabs">
+                <button class="chrome-tab expense-tab active" data-expense-tab="lifetime"><i class="fas fa-globe"></i> সর্বমোট খরচ</button>
+                <button class="chrome-tab expense-tab" data-expense-tab="current"><i class="fas fa-calendar-week"></i> চলতি মাসের খরচ</button>
+                <button class="chrome-tab expense-tab" data-expense-tab="previous"><i class="fas fa-history"></i> পূর্ববর্তী মাসের খরচ</button>
+            </div>
+            
+            <div id="expenseLifetimeTab" class="expense-tab-content">
+                <div class="summary-card mb-3"><div class="summary-label">সর্বমোট খরচ</div><div class="summary-amount" id="expenseLifetimeSummary">৳0</div></div>
+                <div class="data-table" id="expenseLifetimeList">লোড হচ্ছে...</div>
+            </div>
+            <div id="expenseCurrentTab" class="expense-tab-content" style="display:none;">
+                <div class="summary-card mb-3"><div class="summary-label">চলতি মাসের মোট খরচ</div><div class="summary-amount" id="expenseCurrentSummary">৳0</div></div>
+                <div class="data-table" id="expenseCurrentList">লোড হচ্ছে...</div>
+            </div>
+            <div id="expensePreviousTab" class="expense-tab-content" style="display:none;">
+                <div class="summary-card mb-3"><div class="summary-label">পূর্ববর্তী মাসের মোট খরচ</div><div class="summary-amount" id="expensePreviousSummary">৳0</div></div>
+                <div class="data-table" id="expensePreviousList">লোড হচ্ছে...</div>
+            </div>
+        </div>
+
+        <div id="events" class="page" style="display:none;">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <h3><i class="fas fa-calendar-alt text-gold"></i> ইভেন্ট প্ল্যানিং</h3>
+                <div class="d-flex gap-2 export-buttons">
+                    <button onclick="exportToExcel('events')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel</button>
+                    <button onclick="exportToPDF('events')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
+                    <button onclick="openEventForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন ইভেন্ট</button>
                 </div>
             </div>
+            <div class="data-table" id="planningList">লোড হচ্ছে...</div>
         </div>
-    </div>
 
-    <div id="members" class="page" style="display:none;">
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-            <h3><i class="fas fa-users text-gold"></i> সদস্যবৃন্দ</h3>
-            <div class="d-flex gap-2 flex-wrap export-buttons">
-                <div class="search-container">
-                    <input type="text" id="memberSearchInput" placeholder="আইডি, নাম, ফোন, ইমেইল দিয়ে খুঁজুন..." onkeyup="searchMembers()">
-                    <i class="fas fa-search"></i>
-                </div>
-                <button onclick="exportToExcel('members')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel Export</button>
-                <div class="file-input-wrapper">
-                    <button class="btn-import-excel" onclick="document.getElementById('importExcelFile').click()"><i class="fas fa-upload"></i> Excel Import</button>
-                    <input type="file" id="importExcelFile" accept=".xlsx, .xls" style="display:none;" onchange="importMembersFromExcel(this)">
-                </div>
-                <button onclick="exportToPDF('members')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
-                <button onclick="openMemberForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন সদস্য</button>
-            </div>
+        <div class="footer-text">
+            <div class="glowing-text">আইডিয়াল যুব সেবা সংস্থা</div>
+            <div class="creator-text">Created by Nahidul Islam</div>
         </div>
-        <div class="data-table" id="memberList">লোড হচ্ছে...</div>
-    </div>
-
-    <div id="donations" class="page" style="display:none;">
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h3><i class="fas fa-hand-holding-usd text-gold"></i> দান-অনুদানের তালিকা</h3>
-            <div class="d-flex gap-2 export-buttons">
-                <button onclick="exportToExcel('donations')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel</button>
-                <button onclick="exportToPDF('donations')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
-                <button onclick="openDonationForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন দান</button>
-            </div>
-        </div>
-        
-        <div class="chrome-tabs">
-            <button class="chrome-tab active" data-tab="lifetime"><i class="fas fa-globe"></i> সর্বমোট দান</button>
-            <button class="chrome-tab" data-tab="current"><i class="fas fa-calendar-week"></i> চলতি মাসের দান</button>
-            <button class="chrome-tab" data-tab="previous"><i class="fas fa-history"></i> পূর্ববর্তী মাসের দান</button>
-        </div>
-        
-        <div id="lifetimeTab" class="tab-content-active">
-            <div class="summary-card mb-3"><div class="summary-label">সর্বমোট সংগ্রহ</div><div class="summary-amount" id="lifetimeSummary">৳0</div></div>
-            <div class="data-table" id="lifetimeDonationList">লোড হচ্ছে...</div>
-        </div>
-        <div id="currentTab" class="tab-content-hidden" style="display:none;">
-            <div class="summary-card mb-3"><div class="summary-label">চলতি মাসের মোট সংগ্রহ</div><div class="summary-amount" id="currentSummary">৳0</div></div>
-            <div class="data-table" id="currentDonationList">লোড হচ্ছে...</div>
-        </div>
-        <div id="previousTab" class="tab-content-hidden" style="display:none;">
-            <div class="summary-card mb-3"><div class="summary-label">পূর্ববর্তী মাসের মোট সংগ্রহ</div><div class="summary-amount" id="previousSummary">৳0</div></div>
-            <div class="data-table" id="previousDonationList">লোড হচ্ছে...</div>
-        </div>
-    </div>
-
-    <div id="expenses" class="page" style="display:none;">
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h3><i class="fas fa-chart-line text-gold"></i> খরচের তালিকা</h3>
-            <div class="d-flex gap-2 export-buttons">
-                <button onclick="exportToExcel('expenses')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel</button>
-                <button onclick="exportToPDF('expenses')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
-                <button onclick="openExpenseForm()" class="btn btn-danger px-4"><i class="fas fa-plus"></i> নতুন খরচ</button>
-            </div>
-        </div>
-        
-        <div class="chrome-tabs">
-            <button class="chrome-tab expense-tab active" data-expense-tab="lifetime"><i class="fas fa-globe"></i> সর্বমোট খরচ</button>
-            <button class="chrome-tab expense-tab" data-expense-tab="current"><i class="fas fa-calendar-week"></i> চলতি মাসের খরচ</button>
-            <button class="chrome-tab expense-tab" data-expense-tab="previous"><i class="fas fa-history"></i> পূর্ববর্তী মাসের খরচ</button>
-        </div>
-        
-        <div id="expenseLifetimeTab" class="expense-tab-content">
-            <div class="summary-card mb-3"><div class="summary-label">সর্বমোট খরচ</div><div class="summary-amount" id="expenseLifetimeSummary">৳0</div></div>
-            <div class="data-table" id="expenseLifetimeList">লোড হচ্ছে...</div>
-        </div>
-        <div id="expenseCurrentTab" class="expense-tab-content" style="display:none;">
-            <div class="summary-card mb-3"><div class="summary-label">চলতি মাসের মোট খরচ</div><div class="summary-amount" id="expenseCurrentSummary">৳0</div></div>
-            <div class="data-table" id="expenseCurrentList">লোড হচ্ছে...</div>
-        </div>
-        <div id="expensePreviousTab" class="expense-tab-content" style="display:none;">
-            <div class="summary-card mb-3"><div class="summary-label">পূর্ববর্তী মাসের মোট খরচ</div><div class="summary-amount" id="expensePreviousSummary">৳0</div></div>
-            <div class="data-table" id="expensePreviousList">লোড হচ্ছে...</div>
-        </div>
-    </div>
-
-    <div id="events" class="page" style="display:none;">
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h3><i class="fas fa-calendar-alt text-gold"></i> ইভেন্ট প্ল্যানিং</h3>
-            <div class="d-flex gap-2 export-buttons">
-                <button onclick="exportToExcel('events')" class="btn-export-excel"><i class="fas fa-file-excel"></i> Excel</button>
-                <button onclick="exportToPDF('events')" class="btn-export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
-                <button onclick="openEventForm()" class="btn btn-success px-4"><i class="fas fa-plus"></i> নতুন ইভেন্ট</button>
-            </div>
-        </div>
-        <div class="data-table" id="planningList">লোড হচ্ছে...</div>
-    </div>
-
-    <div class="footer-text">
-        <div class="glowing-text">আইডিয়াল যুব সেবা সংস্থা</div>
-        <div class="creator-text">Created by Nahidul Islam</div>
     </div>
 </div>
 
@@ -1003,7 +1020,6 @@
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script type="module">
@@ -1020,7 +1036,6 @@
     const bsModal = new bootstrap.Modal(document.getElementById('dataModal'));
     const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
 
-    // Changed password to iyso2020
     const ADMIN_PASSWORD = "iyso2020";
     let currentMembersData = [];
 
@@ -1041,7 +1056,11 @@
         passwordModal.show();
     }
 
-    window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('open');
+    window.toggleSidebar = () => {
+        if (window.innerWidth <= 768) {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+    };
 
     document.addEventListener('click', (e) => {
         const sidebar = document.getElementById('sidebar');
@@ -1062,7 +1081,9 @@
             pageId.style.display = 'block';
             pageId.style.animation = 'none';
             setTimeout(() => pageId.style.animation = 'fadeInUp 0.4s ease', 10);
-            if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
         };
     });
 
@@ -1365,7 +1386,6 @@
         });
     };
 
-    // Fixed PDF Export Function
     window.exportToPDF = async (type) => {
         verifyPassword(async () => {
             try {
@@ -1597,11 +1617,9 @@
         }
     };
 
-    // Global variables for calculations
     let totalFunds = 0;
     let totalExpensesAmount = 0;
 
-    // Donations Listener - Updates totalFunds
     onSnapshot(collection(db, "donations"), (snap) => {
         totalFunds = 0;
         let monthlyFunds = 0;
@@ -1673,11 +1691,9 @@
         document.getElementById('monthlyCollection').innerHTML = `৳${monthlyFunds}`; 
         document.getElementById('eventFundCollection').innerHTML = `৳${eventFunds}`;
         
-        // Update net balance with latest expenses
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
-    // Expenses Listener - Updates totalExpensesAmount
     onSnapshot(collection(db, "expenses"), (snap) => {
         totalExpensesAmount = 0;
         let expenseCurrentMonthTotal = 0;
@@ -1731,11 +1747,9 @@
         document.getElementById('monthlyExpenses').innerHTML = `৳${expenseCurrentMonthTotal}`; 
         document.getElementById('totalExpenses').innerHTML = `৳${totalExpensesAmount}`;
         
-        // Update net balance with latest donations
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
-    // Members Listener
     onSnapshot(collection(db, "members"), (snap) => {
         currentMembersData = [];
         let html = `<table class="table"><thead><tr><th>আইডি</th><th>নাম</th><th>পদবি</th><th>ব্লাড</th><th>যোগাযোগ</th><th>অ্যাকশন</th></tr></thead><tbody id="membersTableBody">`;
@@ -1749,7 +1763,6 @@
         document.getElementById('memberList').innerHTML = html;
     });
 
-    // Events Listener
     onSnapshot(collection(db, "events"), (snap) => {
         let planningHtml = `<table class="table"><thead><tr><th>ইভেন্ট</th><th>তারিখ</th><th>বাজেট</th><th>স্ট্যাটাস</th><th>সংগৃহীত</th><th>খরচ</th><th>অ্যাকশন</th></tr></thead><tbody id="eventsTableBody">`;
         snap.forEach(doc => {
