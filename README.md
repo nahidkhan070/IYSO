@@ -1155,7 +1155,6 @@
         return null;
     };
 
-    // Excel Import Function for Members - FIXED
     window.importMembersFromExcel = async (input) => {
         const file = input.files[0];
         if (!file) return;
@@ -1285,7 +1284,7 @@
     window.openExpenseForm = (data = null) => {
         const action = () => {
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> খরচ সম্পাদনা' : '<i class="fas fa-plus"></i> 새로운 খরচ';
+            document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> খরচ সম্পাদনা' : '<i class="fas fa-plus"></i> নতুন খরচ';
             document.getElementById('modalBody').innerHTML = `
                 <input type="text" id="eDesc" class="form-control mb-3" placeholder="খরচের বিবরণ" value="${data?.description || ''}">
                 <input type="number" id="eAmount" class="form-control mb-3" placeholder="পরিমাণ (টাকা)" value="${data?.amount || ''}">
@@ -1365,10 +1364,20 @@
         });
     };
 
-    // Fixed PDF Export Function
-    window.exportToPDF = (type) => {
-        verifyPassword(() => {
+    // Fixed PDF Export Function - Complete rewrite
+    window.exportToPDF = async (type) => {
+        verifyPassword(async () => {
             try {
+                // Dynamically load jspdf and autoTable if not available
+                if (typeof window.jspdf === 'undefined') {
+                    await import('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+                }
+                if (typeof window.jspdf?.jsPDF === 'undefined') {
+                    console.error("jsPDF not loaded");
+                    alert("PDF library is loading. Please try again in a moment.");
+                    return;
+                }
+                
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
                 let columns = [];
@@ -1379,7 +1388,7 @@
                     title = 'IYSO - সদস্য তালিকা';
                     columns = [['আইডি', 'নাম', 'পদবি', 'ব্লাড গ্রুপ', 'যোগাযোগ']];
                     const memberRows = document.querySelectorAll('#membersTableBody tr');
-                    memberRows.forEach(row => {
+                    for (const row of memberRows) {
                         if (row.style.display !== 'none') {
                             const cells = row.querySelectorAll('td');
                             if (cells.length > 0) {
@@ -1392,14 +1401,14 @@
                                 ]);
                             }
                         }
-                    });
+                    }
                 } else if (type === 'donations') {
                     const activeTab = document.querySelector('.chrome-tab.active')?.getAttribute('data-tab') || 'lifetime';
                     title = activeTab === 'lifetime' ? 'IYSO - সর্বমোট দান তালিকা' : (activeTab === 'current' ? 'IYSO - চলতি মাসের দান তালিকা' : 'IYSO - পূর্ববর্তী মাসের দান তালিকা');
                     columns = [['তারিখ', 'সদস্য আইডি', 'নাম', 'পরিমাণ', 'ধরন', 'পদ্ধতি']];
                     let tableId = activeTab === 'lifetime' ? 'lifetimeTableBody' : (activeTab === 'current' ? 'currentTableBody' : 'previousTableBody');
                     const rowsData = document.querySelectorAll(`#${tableId} tr`);
-                    rowsData.forEach(row => {
+                    for (const row of rowsData) {
                         const cells = row.querySelectorAll('td');
                         if (cells.length > 0) {
                             rows.push([
@@ -1411,14 +1420,14 @@
                                 cells[4]?.innerText || ''
                             ]);
                         }
-                    });
+                    }
                 } else if (type === 'expenses') {
                     const activeTab = document.querySelector('.expense-tab.active')?.getAttribute('data-expense-tab') || 'lifetime';
                     title = activeTab === 'lifetime' ? 'IYSO - সর্বমোট খরচ তালিকা' : (activeTab === 'current' ? 'IYSO - চলতি মাসের খরচ তালিকা' : 'IYSO - পূর্ববর্তী মাসের খরচ তালিকা');
                     columns = [['তারিখ', 'বিবরণ', 'পরিমাণ', 'ধরন']];
                     let tableId = activeTab === 'lifetime' ? 'expenseLifetimeTableBody' : (activeTab === 'current' ? 'expenseCurrentTableBody' : 'expensePreviousTableBody');
                     const rowsData = document.querySelectorAll(`#${tableId} tr`);
-                    rowsData.forEach(row => {
+                    for (const row of rowsData) {
                         const cells = row.querySelectorAll('td');
                         if (cells.length > 0) {
                             rows.push([
@@ -1428,12 +1437,12 @@
                                 cells[3]?.innerText || ''
                             ]);
                         }
-                    });
+                    }
                 } else if (type === 'events') {
                     title = 'IYSO - ইভেন্ট তালিকা';
                     columns = [['ইভেন্ট', 'তারিখ', 'বাজেট', 'স্ট্যাটাস', 'সংগৃহীত', 'খরচ']];
                     const rowsData = document.querySelectorAll('#eventsTableBody tr');
-                    rowsData.forEach(row => {
+                    for (const row of rowsData) {
                         const cells = row.querySelectorAll('td');
                         if (cells.length > 0) {
                             rows.push([
@@ -1445,7 +1454,12 @@
                                 cells[5]?.innerText || ''
                             ]);
                         }
-                    });
+                    }
+                }
+                
+                if (rows.length === 0) {
+                    alert("কোন ডাটা নেই!");
+                    return;
                 }
                 
                 doc.setFontSize(16);
@@ -1453,22 +1467,39 @@
                 doc.text(title, 14, 15);
                 doc.setTextColor(255, 255, 255);
                 
-                if (typeof doc.autoTable === 'function') {
-                    doc.autoTable({
-                        head: columns,
-                        body: rows,
-                        startY: 25,
-                        theme: 'dark',
-                        styles: { fontSize: 9, cellPadding: 3, textColor: [255, 255, 255], fillColor: [10, 15, 20] },
-                        headStyles: { fillColor: [0, 104, 55], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
-                        alternateRowStyles: { fillColor: [30, 35, 40] },
-                        margin: { top: 20, left: 10, right: 10 }
-                    });
-                } else {
-                    console.error("autoTable is not available");
-                    alert("PDF generation library not fully loaded. Please refresh the page.");
-                    return;
-                }
+                // Use autoTable with proper configuration
+                doc.autoTable({
+                    head: columns,
+                    body: rows,
+                    startY: 25,
+                    theme: 'striped',
+                    styles: { 
+                        fontSize: 9, 
+                        cellPadding: 3, 
+                        textColor: [255, 255, 255],
+                        fillColor: [20, 25, 30],
+                        lineColor: [198, 163, 79],
+                        lineWidth: 0.1
+                    },
+                    headStyles: { 
+                        fillColor: [0, 104, 55], 
+                        textColor: [255, 255, 255], 
+                        fontStyle: 'bold', 
+                        halign: 'center',
+                        valign: 'middle'
+                    },
+                    alternateRowStyles: { 
+                        fillColor: [30, 35, 40] 
+                    },
+                    margin: { top: 25, left: 10, right: 10 },
+                    didDrawPage: function(data) {
+                        // Add page number
+                        const pageCount = doc.internal.getNumberOfPages();
+                        doc.setFontSize(8);
+                        doc.setTextColor(198, 163, 79);
+                        doc.text(`Page ${data.pageNumber} of ${pageCount}`, data.settings.margin.left, doc.internal.pageSize.height - 5);
+                    }
+                });
                 
                 const fileName = `${title.replace(/ /g, '_')}.pdf`;
                 doc.save(fileName);
@@ -1583,6 +1614,7 @@
         }
     };
 
+    // Real-time data variables
     let totalFunds = 0, monthlyFunds = 0, eventFunds = 0;
     let totalExpensesAmount = 0, monthlyExpensesAmount = 0, currentMonthTotal = 0, previousMonthTotal = 0;
     let expenseTotal = 0, expenseCurrentMonthTotal = 0, expensePreviousMonthTotal = 0;
@@ -1591,20 +1623,46 @@
     const previousMonthNum = currentMonthNum === 0 ? 11 : currentMonthNum - 1;
     const previousYearNum = currentMonthNum === 0 ? currentYearNum - 1 : currentYearNum;
 
-    function isCurrentMonth(dateStr) { if (!dateStr) return false; const date = new Date(dateStr); return date.getMonth() === currentMonthNum && date.getFullYear() === currentYearNum; }
-    function isPreviousMonth(dateStr) { if (!dateStr) return false; const date = new Date(dateStr); return date.getMonth() === previousMonthNum && date.getFullYear() === previousYearNum; }
+    function isCurrentMonth(dateStr) { 
+        if (!dateStr) return false; 
+        const date = new Date(dateStr); 
+        return !isNaN(date.getTime()) && date.getMonth() === currentMonthNum && date.getFullYear() === currentYearNum; 
+    }
+    
+    function isPreviousMonth(dateStr) { 
+        if (!dateStr) return false; 
+        const date = new Date(dateStr); 
+        return !isNaN(date.getTime()) && date.getMonth() === previousMonthNum && date.getFullYear() === previousYearNum; 
+    }
 
+    // Donations Listener with proper calculations
     onSnapshot(collection(db, "donations"), (snap) => {
-        totalFunds = 0; monthlyFunds = 0; eventFunds = 0; currentMonthTotal = 0; previousMonthTotal = 0;
+        totalFunds = 0; 
+        monthlyFunds = 0; 
+        eventFunds = 0; 
+        currentMonthTotal = 0; 
+        previousMonthTotal = 0;
+        
         let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="lifetimeTableBody">`;
         let currentHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="currentTableBody">`;
         let previousHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>সদস্য</th><th>পরিমাণ</th><th>ধরন</th><th>পদ্ধতি</th><th>অ্যাকশন</th></tr></thead><tbody id="previousTableBody">`;
         
         snap.forEach(doc => {
             const d = doc.data();
-            totalFunds += d.amount;
-            if (d.type === 'monthly') { if (isCurrentMonth(d.date)) { monthlyFunds += d.amount; currentMonthTotal += d.amount; } if (isPreviousMonth(d.date)) previousMonthTotal += d.amount; }
-            else if (d.type === 'event') eventFunds += d.amount;
+            const amount = Number(d.amount) || 0;
+            totalFunds += amount;
+            
+            if (d.type === 'monthly') { 
+                if (isCurrentMonth(d.date)) { 
+                    monthlyFunds += amount; 
+                    currentMonthTotal += amount; 
+                } 
+                if (isPreviousMonth(d.date)) { 
+                    previousMonthTotal += amount; 
+                } 
+            } else if (d.type === 'event') { 
+                eventFunds += amount; 
+            }
             
             const typeBadge = d.type === 'monthly' ? '<span class="badge-add">মাসিক</span>' : '<span class="badge-add">ইভেন্ট</span>';
             let methodClass = '', methodText = d.system || '-';
@@ -1612,45 +1670,68 @@
             else if (d.system === 'Nagad') { methodClass = 'nagad-text'; methodText = 'নগদ'; }
             else if (d.system === 'HandCash') { methodClass = 'handcash-text'; methodText = 'হ্যান্ড ক্যাশ'; }
             
-            const row = `<tr><td>${d.date || '-'}</td><td><strong class="uid-text">${d.uid || 'অতিথি'}</strong><br><span class="name-text">${d.name || ''}</span><br><small class="text-muted">${d.phone || ''}</small></td><td style="font-weight:bold">৳${d.amount}</td><td>${typeBadge}${d.eventName ? `<br><small>${d.eventName}</small>` : ''}</td><td class="${methodClass}">${methodText}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openDonationForm(${JSON.stringify({id:doc.id,...d})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('donations','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
+            const row = `<tr><td>${d.date || '-'}</td><td><strong class="uid-text">${d.uid || 'অতিথি'}</strong><br><span class="name-text">${d.name || ''}</span><br><small class="text-muted">${d.phone || ''}</small></td><td style="font-weight:bold">৳${amount}</td><td>${typeBadge}${d.eventName ? `<br><small>${d.eventName}</small>` : ''}</td><td class="${methodClass}">${methodText}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openDonationForm(${JSON.stringify({id:doc.id,...d})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('donations','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
             lifetimeHtml += row;
             if (isCurrentMonth(d.date)) currentHtml += row;
             if (isPreviousMonth(d.date)) previousHtml += row;
         });
         
-        lifetimeHtml += `</tbody></table>`; currentHtml += `</tbody></table>`; previousHtml += `</tbody></table>`;
-        document.getElementById('lifetimeDonationList').innerHTML = lifetimeHtml; document.getElementById('currentDonationList').innerHTML = currentHtml; document.getElementById('previousDonationList').innerHTML = previousHtml;
-        document.getElementById('lifetimeSummary').innerHTML = `৳${totalFunds}`; document.getElementById('currentSummary').innerHTML = `৳${currentMonthTotal}`; document.getElementById('previousSummary').innerHTML = `৳${previousMonthTotal}`;
-        document.getElementById('totalFund').innerHTML = `৳${totalFunds}`; document.getElementById('monthlyCollection').innerHTML = `৳${monthlyFunds}`; document.getElementById('eventFundCollection').innerHTML = `৳${eventFunds}`;
+        lifetimeHtml += `</tbody></table>`; 
+        currentHtml += `</tbody></table>`; 
+        previousHtml += `</tbody></table>`;
+        
+        document.getElementById('lifetimeDonationList').innerHTML = lifetimeHtml; 
+        document.getElementById('currentDonationList').innerHTML = currentHtml; 
+        document.getElementById('previousDonationList').innerHTML = previousHtml;
+        document.getElementById('lifetimeSummary').innerHTML = `৳${totalFunds}`; 
+        document.getElementById('currentSummary').innerHTML = `৳${currentMonthTotal}`; 
+        document.getElementById('previousSummary').innerHTML = `৳${previousMonthTotal}`;
+        document.getElementById('totalFund').innerHTML = `৳${totalFunds}`; 
+        document.getElementById('monthlyCollection').innerHTML = `৳${monthlyFunds}`; 
+        document.getElementById('eventFundCollection').innerHTML = `৳${eventFunds}`;
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
+    // Expenses Listener with proper calculations
     onSnapshot(collection(db, "expenses"), (snap) => {
-        expenseTotal = 0; expenseCurrentMonthTotal = 0; expensePreviousMonthTotal = 0;
+        expenseTotal = 0; 
+        expenseCurrentMonthTotal = 0; 
+        expensePreviousMonthTotal = 0;
+        
         let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expenseLifetimeTableBody">`;
         let currentHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expenseCurrentTableBody">`;
         let previousHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expensePreviousTableBody">`;
         
         snap.forEach(doc => {
             const e = doc.data();
-            expenseTotal += e.amount;
-            if (isCurrentMonth(e.date)) expenseCurrentMonthTotal += e.amount;
-            if (isPreviousMonth(e.date)) expensePreviousMonthTotal += e.amount;
+            const amount = Number(e.amount) || 0;
+            expenseTotal += amount;
+            if (isCurrentMonth(e.date)) expenseCurrentMonthTotal += amount;
+            if (isPreviousMonth(e.date)) expensePreviousMonthTotal += amount;
             
             const typeBadge = e.type === 'monthly' ? '<span class="badge-subtract">মাসিক</span>' : '<span class="badge-subtract">ইভেন্ট</span>';
-            const row = `<tr><td>${e.date || '-'}</td><td>${e.description}${e.eventName ? `<br><small>${e.eventName}</small>` : ''}</td><td style="font-weight:bold">৳${e.amount}</td><td>${typeBadge}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openExpenseForm(${JSON.stringify({id:doc.id,...e})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('expenses','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
+            const row = `<tr><td>${e.date || '-'}</td><td>${e.description}${e.eventName ? `<br><small>${e.eventName}</small>` : ''}</td><td style="font-weight:bold">৳${amount}</td><td>${typeBadge}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openExpenseForm(${JSON.stringify({id:doc.id,...e})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('expenses','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
             lifetimeHtml += row;
             if (isCurrentMonth(e.date)) currentHtml += row;
             if (isPreviousMonth(e.date)) previousHtml += row;
         });
         
-        lifetimeHtml += `</tbody></table>`; currentHtml += `</tbody></tr>`; previousHtml += `</tbody></table>`;
-        document.getElementById('expenseLifetimeList').innerHTML = lifetimeHtml; document.getElementById('expenseCurrentList').innerHTML = currentHtml; document.getElementById('expensePreviousList').innerHTML = previousHtml;
-        document.getElementById('expenseLifetimeSummary').innerHTML = `৳${expenseTotal}`; document.getElementById('expenseCurrentSummary').innerHTML = `৳${expenseCurrentMonthTotal}`; document.getElementById('expensePreviousSummary').innerHTML = `৳${expensePreviousMonthTotal}`;
-        document.getElementById('monthlyExpenses').innerHTML = `৳${expenseCurrentMonthTotal}`; document.getElementById('totalExpenses').innerHTML = `৳${expenseTotal}`;
+        lifetimeHtml += `</tbody></table>`; 
+        currentHtml += `</tbody></table>`; 
+        previousHtml += `</tbody></table>`;
+        
+        document.getElementById('expenseLifetimeList').innerHTML = lifetimeHtml; 
+        document.getElementById('expenseCurrentList').innerHTML = currentHtml; 
+        document.getElementById('expensePreviousList').innerHTML = previousHtml;
+        document.getElementById('expenseLifetimeSummary').innerHTML = `৳${expenseTotal}`; 
+        document.getElementById('expenseCurrentSummary').innerHTML = `৳${expenseCurrentMonthTotal}`; 
+        document.getElementById('expensePreviousSummary').innerHTML = `৳${expensePreviousMonthTotal}`;
+        document.getElementById('monthlyExpenses').innerHTML = `৳${expenseCurrentMonthTotal}`; 
+        document.getElementById('totalExpenses').innerHTML = `৳${expenseTotal}`;
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - expenseTotal}`;
     });
 
+    // Members Listener
     onSnapshot(collection(db, "members"), (snap) => {
         currentMembersData = [];
         let html = `<table class="table"><thead><tr><th>আইডি</th><th>নাম</th><th>পদবি</th><th>ব্লাড</th><th>যোগাযোগ</th><th>অ্যাকশন</th></tr></thead><tbody id="membersTableBody">`;
@@ -1664,6 +1745,7 @@
         document.getElementById('memberList').innerHTML = html;
     });
 
+    // Events Listener
     onSnapshot(collection(db, "events"), (snap) => {
         let planningHtml = `<table class="table"><thead><tr><th>ইভেন্ট</th><th>তারিখ</th><th>বাজেট</th><th>স্ট্যাটাস</th><th>সংগৃহীত</th><th>খরচ</th><th>অ্যাকশন</th></tr></thead><tbody id="eventsTableBody">`;
         snap.forEach(doc => {
@@ -1674,7 +1756,7 @@
             else statusBadge = '<span class="status-pending"><i class="fas fa-clock"></i> পেন্ডিং</span>';
             planningHtml += `<tr><td><strong>${e.name}</strong><br><small>${e.details || ''}</small></td><td>${e.date || '-'}</td><td style="font-weight:bold">৳${e.budget || 0}</td><td>${statusBadge}</td><td style="font-weight:bold">৳${e.fund || 0}</td><td style="font-weight:bold">৳${e.cost || 0}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openEventForm(${JSON.stringify({id:doc.id,...e})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('events','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
         });
-        planningHtml += `</tbody></tr>`;
+        planningHtml += `</tbody></table>`;
         document.getElementById('planningList').innerHTML = planningHtml;
     });
 
