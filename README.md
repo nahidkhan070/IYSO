@@ -6,7 +6,7 @@
     <title>IYSO প্রিমিয়াম ড্যাশবোর্ড | আইডিয়াল যুব সেবা সংস্থা</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
@@ -60,6 +60,47 @@
             opacity: 0.03;
             pointer-events: none;
             z-index: 0;
+        }
+
+        /* Arabic Text at Top Center */
+        .bismillah {
+            text-align: center;
+            padding: 15px 0 10px 0;
+            margin: 0;
+            position: relative;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .bismillah-text {
+            font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(198, 163, 79, 0.5), 0 0 20px rgba(198, 163, 79, 0.3), 0 0 30px rgba(198, 163, 79, 0.2);
+            animation: bismillahGlow 2s ease-in-out infinite;
+            letter-spacing: 2px;
+        }
+
+        @keyframes bismillahGlow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(198, 163, 79, 0.4), 0 0 20px rgba(198, 163, 79, 0.2);
+                opacity: 0.9;
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(198, 163, 79, 0.8), 0 0 40px rgba(198, 163, 79, 0.4), 0 0 60px rgba(198, 163, 79, 0.2);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .bismillah-text {
+                font-size: 20px;
+            }
+            .bismillah {
+                padding: 10px 0 8px 0;
+            }
         }
 
         /* Sidebar - Now scrolls with page (not fixed) */
@@ -793,6 +834,11 @@
 </head>
 <body>
 
+<!-- Bismillah at Top Center -->
+<div class="bismillah">
+    <div class="bismillah-text">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+</div>
+
 <button class="menu-toggle" onclick="toggleSidebar()">
     <i class="fas fa-bars"></i> মেনু
 </button>
@@ -1111,13 +1157,17 @@
         });
     };
 
+    // Member Form with Bangla and English Name
     window.openMemberForm = (data = null) => {
         const action = () => {
             let phoneNumbers = data?.phoneNumbers || (data?.phone ? [data.phone] : ['']);
             document.getElementById('modalTitle').innerHTML = data ? '<i class="fas fa-edit"></i> সদস্য সম্পাদনা' : '<i class="fas fa-user-plus"></i> নতুন সদস্য';
             document.getElementById('modalBody').innerHTML = `
                 <input type="text" id="mUID" class="form-control mb-3" placeholder="সদস্য আইডি" value="${data?.uid || ''}">
-                <input type="text" id="mName" class="form-control mb-3" placeholder="পুরো নাম" value="${data?.name || ''}">
+                <label class="small text-muted mb-1">ইংরেজি নাম (English Name)</label>
+                <input type="text" id="mName" class="form-control mb-3" placeholder="English Name" value="${data?.name || ''}">
+                <label class="small text-muted mb-1">বাংলা নাম (Bangla Name)</label>
+                <input type="text" id="mBanglaName" class="form-control mb-3" placeholder="বাংলা নাম" value="${data?.banglaName || ''}">
                 <input type="text" id="mDesignation" class="form-control mb-3" placeholder="পদবি" value="${data?.designation || ''}">
                 <select id="mBlood" class="form-select mb-3">
                     <option value="">ব্লাড গ্রুপ</option>
@@ -1153,6 +1203,7 @@
                 const memberData = {
                     uid: document.getElementById('mUID').value,
                     name: document.getElementById('mName').value,
+                    banglaName: document.getElementById('mBanglaName').value,
                     designation: document.getElementById('mDesignation').value,
                     blood: document.getElementById('mBlood').value,
                     phoneNumbers: validPhoneNumbers,
@@ -1209,7 +1260,8 @@
                     
                     const memberData = {
                         uid: uid,
-                        name: row['নাম'] || row['Name'] || row['name'] || '',
+                        name: row['নাম (ইংরেজি)'] || row['English Name'] || row['name'] || '',
+                        banglaName: row['নাম (বাংলা)'] || row['Bangla Name'] || row['banglaName'] || '',
                         designation: row['পদবি'] || row['Designation'] || row['designation'] || '',
                         blood: row['ব্লাড'] || row['Blood'] || row['blood'] || '',
                         phoneNumbers: phoneNumbers,
@@ -1249,7 +1301,8 @@
             document.getElementById('modalBody').innerHTML = `
                 <div class="mb-3"><label class="small text-muted">ফোন নম্বর (সদস্য খুঁজতে)</label><input type="tel" id="dPhone" class="form-control mb-2" placeholder="017XXXXXXXX" value="${data?.phone || ''}"><div id="phoneSearchStatus" class="small" style="display:none;"></div></div>
                 <input type="text" id="dUID" class="form-control mb-3" placeholder="সদস্য আইডি" value="${data?.uid || ''}" readonly style="background:#1a1f24">
-                <input type="text" id="dName" class="form-control mb-3" placeholder="সদস্যের নাম" value="${data?.name || ''}" readonly style="background:#1a1f24">
+                <input type="text" id="dName" class="form-control mb-3" placeholder="সদস্যের নাম (ইংরেজি)" value="${data?.name || ''}" readonly style="background:#1a1f24">
+                <input type="text" id="dBanglaName" class="form-control mb-3" placeholder="সদস্যের নাম (বাংলা)" value="${data?.banglaName || ''}" readonly style="background:#1a1f24">
                 <input type="number" id="dAmount" class="form-control mb-3" placeholder="পরিমাণ (টাকা)" value="${data?.amount || ''}">
                 <select id="dType" class="form-select mb-3"><option value="monthly" ${data?.type === 'monthly' ? 'selected' : ''}>মাসিক চাঁদা</option><option value="event" ${data?.type === 'event' ? 'selected' : ''}>ইভেন্ট দান</option></select>
                 <select id="dSystem" class="form-select mb-3"><option value="">পেমেন্ট পদ্ধতি</option><option value="Bkash" ${data?.system === 'Bkash' ? 'selected' : ''}>বিকাশ</option><option value="Nagad" ${data?.system === 'Nagad' ? 'selected' : ''}>নগদ</option><option value="HandCash" ${data?.system === 'HandCash' ? 'selected' : ''}>হ্যান্ড ক্যাশ</option></select>
@@ -1271,28 +1324,36 @@
                         if (member) {
                             document.getElementById('dUID').value = member.uid || '';
                             document.getElementById('dName').value = member.name || '';
+                            document.getElementById('dBanglaName').value = member.banglaName || '';
                             statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> সদস্য পাওয়া গেছে!';
                             statusDiv.style.color = '#2ecc71';
                             setTimeout(() => statusDiv.style.display = 'none', 2000);
                         } else {
                             document.getElementById('dUID').value = '';
                             document.getElementById('dName').value = '';
+                            document.getElementById('dBanglaName').value = '';
                             statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> সদস্য পাওয়া যায়নি';
                             statusDiv.style.color = '#e74c3c';
                             setTimeout(() => statusDiv.style.display = 'none', 2000);
                         }
                     }, 500);
-                } else { statusDiv.style.display = 'none'; document.getElementById('dUID').value = ''; document.getElementById('dName').value = ''; }
+                } else { statusDiv.style.display = 'none'; document.getElementById('dUID').value = ''; document.getElementById('dName').value = ''; document.getElementById('dBanglaName').value = ''; }
             };
             const saveBtn = document.getElementById('saveBtn');
             const newSaveBtn = saveBtn.cloneNode(true);
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
             newSaveBtn.onclick = async () => {
                 const donationData = {
-                    uid: document.getElementById('dUID').value, name: document.getElementById('dName').value, phone: document.getElementById('dPhone').value,
-                    amount: Number(document.getElementById('dAmount').value), type: document.getElementById('dType').value,
-                    system: document.getElementById('dSystem').value, date: document.getElementById('dDate').value,
-                    eventName: document.getElementById('dEventName').value || '', timestamp: new Date().toISOString()
+                    uid: document.getElementById('dUID').value,
+                    name: document.getElementById('dName').value,
+                    banglaName: document.getElementById('dBanglaName').value,
+                    phone: document.getElementById('dPhone').value,
+                    amount: Number(document.getElementById('dAmount').value),
+                    type: document.getElementById('dType').value,
+                    system: document.getElementById('dSystem').value,
+                    date: document.getElementById('dDate').value,
+                    eventName: document.getElementById('dEventName').value || '',
+                    timestamp: new Date().toISOString()
                 };
                 if (data) await updateDoc(doc(db, "donations", data.id), donationData);
                 else await addDoc(collection(db, "donations"), donationData);
@@ -1397,7 +1458,7 @@
                 
                 if (type === 'members') {
                     title = 'IYSO - সদস্য তালিকা';
-                    columns = [['আইডি', 'নাম', 'পদবি', 'ব্লাড গ্রুপ', 'যোগাযোগ']];
+                    columns = [['আইডি', 'নাম (ইংরেজি)', 'নাম (বাংলা)', 'পদবি', 'ব্লাড গ্রুপ', 'যোগাযোগ']];
                     const memberRows = document.querySelectorAll('#membersTableBody tr');
                     for (const row of memberRows) {
                         if (row.style.display !== 'none') {
@@ -1407,8 +1468,9 @@
                                     cells[0]?.innerText || '',
                                     cells[1]?.innerText || '',
                                     cells[2]?.innerText || '',
-                                    cells[3]?.innerText.replace('ব্লাড', '').trim() || '',
-                                    cells[4]?.innerText || ''
+                                    cells[3]?.innerText || '',
+                                    cells[4]?.innerText.replace('ব্লাড', '').trim() || '',
+                                    cells[5]?.innerText || ''
                                 ]);
                             }
                         }
@@ -1416,7 +1478,7 @@
                 } else if (type === 'donations') {
                     const activeTab = document.querySelector('.chrome-tab.active')?.getAttribute('data-tab') || 'lifetime';
                     title = activeTab === 'lifetime' ? 'IYSO - সর্বমোট দান তালিকা' : (activeTab === 'current' ? 'IYSO - চলতি মাসের দান তালিকা' : 'IYSO - পূর্ববর্তী মাসের দান তালিকা');
-                    columns = [['তারিখ', 'সদস্য আইডি', 'নাম', 'পরিমাণ', 'ধরন', 'পদ্ধতি']];
+                    columns = [['তারিখ', 'সদস্য আইডি', 'নাম (ইংরেজি)', 'নাম (বাংলা)', 'পরিমাণ', 'ধরন', 'পদ্ধতি']];
                     let tableId = activeTab === 'lifetime' ? 'lifetimeTableBody' : (activeTab === 'current' ? 'currentTableBody' : 'previousTableBody');
                     const rowsData = document.querySelectorAll(`#${tableId} tr`);
                     for (const row of rowsData) {
@@ -1426,6 +1488,7 @@
                                 cells[0]?.innerText || '',
                                 cells[1]?.innerText.split('\n')[0] || '',
                                 cells[1]?.innerText.split('\n')[1] || '',
+                                cells[1]?.innerText.split('\n')[2] || '',
                                 cells[2]?.innerText || '',
                                 cells[3]?.innerText || '',
                                 cells[4]?.innerText || ''
@@ -1525,10 +1588,11 @@
                     if (cells.length > 0 && row.style.display !== 'none') {
                         data.push({
                             'আইডি': cells[0]?.innerText || '',
-                            'নাম': cells[1]?.innerText || '',
-                            'পদবি': cells[2]?.innerText || '',
-                            'ব্লাড': cells[3]?.innerText.replace('ব্লাড', '').trim() || '',
-                            'যোগাযোগ': cells[4]?.innerText || ''
+                            'নাম (ইংরেজি)': cells[1]?.innerText || '',
+                            'নাম (বাংলা)': cells[2]?.innerText || '',
+                            'পদবি': cells[3]?.innerText || '',
+                            'ব্লাড': cells[4]?.innerText.replace('ব্লাড', '').trim() || '',
+                            'যোগাযোগ': cells[5]?.innerText || ''
                         });
                     }
                 });
@@ -1546,7 +1610,8 @@
                         data.push({
                             'তারিখ': cells[0]?.innerText || '',
                             'সদস্য আইডি': cells[1]?.innerText.split('\n')[0] || '',
-                            'নাম': cells[1]?.innerText.split('\n')[1] || '',
+                            'নাম (ইংরেজি)': cells[1]?.innerText.split('\n')[1] || '',
+                            'নাম (বাংলা)': cells[1]?.innerText.split('\n')[2] || '',
                             'পরিমাণ': cells[2]?.innerText || '',
                             'ধরন': cells[3]?.innerText || '',
                             'পদ্ধতি': cells[4]?.innerText || ''
@@ -1608,7 +1673,7 @@
         });
         if (!hasResults && rows.length > 0 && !document.querySelector('.no-results-row')) {
             const noResultRow = document.createElement('tr');
-            noResultRow.innerHTML = `<td colspan="6" class="no-results">কোন সদস্য পাওয়া যায়নি</td>`;
+            noResultRow.innerHTML = `<td colspan="7" class="no-results">কোন সদস্য পাওয়া যায়নি</td>`;
             document.getElementById('membersTableBody').appendChild(noResultRow);
             noResultRow.classList.add('no-results-row');
         } else if (hasResults) {
@@ -1671,14 +1736,14 @@
             else if (d.system === 'Nagad') { methodClass = 'nagad-text'; methodText = 'নগদ'; }
             else if (d.system === 'HandCash') { methodClass = 'handcash-text'; methodText = 'হ্যান্ড ক্যাশ'; }
             
-            const row = `<tr><td>${d.date || '-'}</td><td><strong class="uid-text">${d.uid || 'অতিথি'}</strong><br><span class="name-text">${d.name || ''}</span><br><small class="text-muted">${d.phone || ''}</small></td><td style="font-weight:bold">৳${amount}</td><td>${typeBadge}${d.eventName ? `<br><small>${d.eventName}</small>` : ''}</td><td class="${methodClass}">${methodText}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openDonationForm(${JSON.stringify({id:doc.id,...d})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('donations','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
+            const row = `<tr><td>${d.date || '-'}</td>}<td><strong class="uid-text">${d.uid || 'অতিথি'}</strong><br><span class="name-text">${d.name || ''}</span><br><span class="name-text">${d.banglaName || ''}</span><br><small class="text-muted">${d.phone || ''}</small></td><td style="font-weight:bold">৳${amount}</tr><td>${typeBadge}${d.eventName ? `<br><small>${d.eventName}</small>` : ''}</td><td class="${methodClass}">${methodText}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openDonationForm(${JSON.stringify({id:doc.id,...d})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('donations','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
             lifetimeHtml += row;
             if (isCurrentMonth(d.date)) currentHtml += row;
             if (isPreviousMonth(d.date)) previousHtml += row;
         });
         
         lifetimeHtml += `</tbody></table>`; 
-        currentHtml += `</tbody></table>`; 
+        currentHtml += `</tbody></tr>`; 
         previousHtml += `</tbody></table>`;
         
         document.getElementById('lifetimeDonationList').innerHTML = lifetimeHtml; 
@@ -1699,7 +1764,7 @@
         let expenseCurrentMonthTotal = 0;
         let expensePreviousMonthTotal = 0;
         
-        let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expenseLifetimeTableBody">`;
+        let lifetimeHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th><tr></thead><tbody id="expenseLifetimeTableBody">`;
         let currentHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expenseCurrentTableBody">`;
         let previousHtml = `<table class="table"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>ধরন</th><th>অ্যাকশন</th></tr></thead><tbody id="expensePreviousTableBody">`;
         
@@ -1734,9 +1799,9 @@
             if (isPreviousMonth(e.date)) previousHtml += row;
         });
         
-        lifetimeHtml += `</tbody></table>`; 
+        lifetimeHtml += `</tbody></tr>`; 
         currentHtml += `</tbody></table>`; 
-        previousHtml += `</tbody></table>`;
+        previousHtml += `</tbody></tr>`;
         
         document.getElementById('expenseLifetimeList').innerHTML = lifetimeHtml; 
         document.getElementById('expenseCurrentList').innerHTML = currentHtml; 
@@ -1750,16 +1815,17 @@
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
+    // Members Listener with Bangla and English Names
     onSnapshot(collection(db, "members"), (snap) => {
         currentMembersData = [];
-        let html = `<table class="table"><thead><tr><th>আইডি</th><th>নাম</th><th>পদবি</th><th>ব্লাড</th><th>যোগাযোগ</th><th>অ্যাকশন</th></tr></thead><tbody id="membersTableBody">`;
+        let html = `<table class="table"><thead><tr><th>আইডি</th><th>নাম (ইংরেজি)</th><th>নাম (বাংলা)</th><th>পদবি</th><th>ব্লাড</th><th>যোগাযোগ</th><th>অ্যাকশন</th></tr></thead><tbody id="membersTableBody">`;
         snap.forEach(doc => {
             const m = doc.data();
             currentMembersData.push({ id: doc.id, ...m });
             const phoneDisplay = m.phoneNumbers ? m.phoneNumbers.join(', ') : (m.phone || '-');
-            html += `<tr><td class="uid-text" style="font-weight:bold">${m.uid || '-'}</td><td class="name-text">${m.name}</td><td>${m.designation || '-'}</td><td class="blood-text"><span class="badge bg-danger">${m.blood || '-'}</span></td><td>${phoneDisplay}<br><small>${m.email || ''}</small></td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openMemberForm(${JSON.stringify({id:doc.id,...m})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('members','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
+            html += `<tr><td class="uid-text" style="font-weight:bold">${m.uid || '-'}</td><td class="name-text">${m.name || '-'}</td><td class="name-text">${m.banglaName || '-'}</td><td>${m.designation || '-'}</td><td class="blood-text"><span class="badge bg-danger">${m.blood || '-'}</span></td><td>${phoneDisplay}<br><small>${m.email || ''}</small></td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openMemberForm(${JSON.stringify({id:doc.id,...m})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('members','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
         });
-        html += `</tbody></table>`;
+        html += `</tbody></tr>`;
         document.getElementById('memberList').innerHTML = html;
     });
 
@@ -1773,7 +1839,7 @@
             else statusBadge = '<span class="status-pending"><i class="fas fa-clock"></i> পেন্ডিং</span>';
             planningHtml += `<tr><td><strong>${e.name}</strong><br><small>${e.details || ''}</small></td><td>${e.date || '-'}</td><td style="font-weight:bold">৳${e.budget || 0}</td><td>${statusBadge}</td><td style="font-weight:bold">৳${e.fund || 0}</td><td style="font-weight:bold">৳${e.cost || 0}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick='openEventForm(${JSON.stringify({id:doc.id,...e})})'><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteItem('events','${doc.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
         });
-        planningHtml += `</tbody></table>`;
+        planningHtml += `</tbody></tr>`;
         document.getElementById('planningList').innerHTML = planningHtml;
     });
 
