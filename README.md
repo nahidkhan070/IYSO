@@ -62,7 +62,6 @@
             z-index: 0;
         }
 
-        /* Arabic Text at Top Center with Cairo Font */
         .bismillah {
             text-align: center;
             padding: 15px 0 10px 0;
@@ -84,26 +83,15 @@
         }
 
         @keyframes bismillahGlow {
-            0%, 100% {
-                text-shadow: 0 0 10px rgba(198, 163, 79, 0.4), 0 0 20px rgba(198, 163, 79, 0.2);
-                opacity: 0.9;
-            }
-            50% {
-                text-shadow: 0 0 20px rgba(198, 163, 79, 0.8), 0 0 40px rgba(198, 163, 79, 0.4), 0 0 60px rgba(198, 163, 79, 0.2);
-                opacity: 1;
-            }
+            0%, 100% { text-shadow: 0 0 10px rgba(198,163,79,0.4), 0 0 20px rgba(198,163,79,0.2); opacity: 0.9; }
+            50% { text-shadow: 0 0 20px rgba(198,163,79,0.8), 0 0 40px rgba(198,163,79,0.4), 0 0 60px rgba(198,163,79,0.2); opacity: 1; }
         }
 
         @media (max-width: 768px) {
-            .bismillah-text {
-                font-size: 20px;
-            }
-            .bismillah {
-                padding: 10px 0 8px 0;
-            }
+            .bismillah-text { font-size: 20px; }
+            .bismillah { padding: 10px 0 8px 0; }
         }
 
-        /* Sidebar - Now scrolls with page (not fixed) */
         .sidebar {
             width: 280px;
             min-height: 100vh;
@@ -116,11 +104,6 @@
             transition: all 0.3s ease;
             overflow-y: auto;
             float: left;
-        }
-
-        /* Submenu Styles */
-        .nav-item.has-submenu {
-            position: relative;
         }
 
         .submenu {
@@ -171,9 +154,7 @@
                 z-index: 1000;
                 float: none;
             }
-            .sidebar.open {
-                transform: translateX(0);
-            }
+            .sidebar.open { transform: translateX(0); }
             .main {
                 margin-left: 0 !important;
                 padding: 70px 12px 20px !important;
@@ -198,85 +179,34 @@
                 font-weight: 600;
                 box-shadow: 0 4px 15px rgba(0,104,55,0.3);
             }
-            .net-balance-amount {
-                font-size: 36px !important;
-            }
-            .small-card-amount {
-                font-size: 20px !important;
-            }
-            .glass-card {
-                padding: 15px !important;
-            }
-            .net-balance-card {
-                padding: 20px !important;
-                margin-bottom: 15px;
-            }
-            .money-numbers {
-                margin-top: 10px;
-            }
-            .chrome-tabs {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            .chrome-tab {
-                flex: 1;
-                min-width: 100px;
-                text-align: center;
-                padding: 10px 12px !important;
-                font-size: 12px !important;
-            }
-            .export-buttons {
-                flex-wrap: wrap;
-            }
+            .net-balance-amount { font-size: 36px !important; }
+            .small-card-amount { font-size: 20px !important; }
+            .glass-card { padding: 15px !important; }
+            .net-balance-card { padding: 20px !important; margin-bottom: 15px; }
+            .money-numbers { margin-top: 10px; }
+            .chrome-tabs { flex-wrap: wrap; gap: 8px; }
+            .chrome-tab { flex: 1; min-width: 100px; text-align: center; padding: 10px 12px !important; font-size: 12px !important; }
+            .export-buttons { flex-wrap: wrap; }
         }
 
         @media (min-width: 769px) {
-            .menu-toggle {
-                display: none;
-            }
-            .main {
-                float: left;
-                width: calc(100% - 280px);
-            }
+            .menu-toggle { display: none; }
+            .main { float: left; width: calc(100% - 280px); }
         }
 
         @media (max-width: 480px) {
-            .main {
-                padding: 65px 10px 15px !important;
-            }
-            .net-balance-amount {
-                font-size: 28px !important;
-            }
-            .small-card-amount {
-                font-size: 18px !important;
-            }
-            .small-card-title {
-                font-size: 10px !important;
-            }
-            .data-table {
-                font-size: 11px;
-            }
-            .data-table th, .data-table td {
-                padding: 8px 6px !important;
-            }
-            .btn {
-                padding: 6px 12px !important;
-                font-size: 12px !important;
-            }
-            h3 {
-                font-size: 18px !important;
-            }
-            .chrome-tab {
-                font-size: 10px !important;
-                padding: 8px 10px !important;
-            }
+            .main { padding: 65px 10px 15px !important; }
+            .net-balance-amount { font-size: 28px !important; }
+            .small-card-amount { font-size: 18px !important; }
+            .small-card-title { font-size: 10px !important; }
+            .data-table { font-size: 11px; }
+            .data-table th, .data-table td { padding: 8px 6px !important; }
+            .btn { padding: 6px 12px !important; font-size: 12px !important; }
+            h3 { font-size: 18px !important; }
+            .chrome-tab { font-size: 10px !important; padding: 8px 10px !important; }
         }
 
-        .clearfix::after {
-            content: "";
-            clear: both;
-            display: table;
-        }
+        .clearfix::after { content: ""; clear: both; display: table; }
 
         .logo {
             font-size: 32px;
@@ -326,16 +256,8 @@
             font-size: 16px;
         }
 
-        .nav-item i {
-            width: 24px;
-            font-size: 18px;
-            transition: transform 0.3s ease;
-        }
-
-        .nav-item:hover i {
-            transform: scale(1.1);
-        }
-
+        .nav-item i { width: 24px; font-size: 18px; transition: transform 0.3s ease; }
+        .nav-item:hover i { transform: scale(1.1); }
         .nav-item::before {
             content: '';
             position: absolute;
@@ -346,33 +268,16 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
             transition: left 0.5s;
         }
-
-        .nav-item:hover::before {
-            left: 100%;
-        }
-
-        .nav-item:hover {
-            background: rgba(0, 104, 55, 0.3);
-            color: white;
-            transform: translateX(8px);
-        }
-
+        .nav-item:hover::before { left: 100%; }
+        .nav-item:hover { background: rgba(0, 104, 55, 0.3); color: white; transform: translateX(8px); }
         .nav-item.active {
             background: linear-gradient(135deg, var(--green), var(--dark-green));
             color: white;
             box-shadow: 0 6px 20px rgba(0,104,55,0.4);
         }
+        .nav-item.active i { transform: scale(1.05); }
 
-        .nav-item.active i {
-            transform: scale(1.05);
-        }
-
-        .main {
-            padding: 25px 30px;
-            position: relative;
-            z-index: 1;
-            min-height: 100vh;
-        }
+        .main { padding: 25px 30px; position: relative; z-index: 1; min-height: 100vh; }
 
         .glass-card {
             background: var(--card);
@@ -383,11 +288,7 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             height: 100%;
         }
-
-        .glass-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        }
+        .glass-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
 
         .net-balance-card {
             background: linear-gradient(135deg, rgba(0,104,55,0.25) 0%, rgba(0,77,46,0.5) 100%);
@@ -405,50 +306,12 @@
             50% { box-shadow: 0 20px 60px rgba(198,163,79,0.2); }
         }
 
-        .net-balance-label {
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--gold);
-            margin-bottom: 15px;
-            font-family: 'Noto Sans Bengali', sans-serif;
-        }
-
-        .net-balance-amount {
-            font-size: 64px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--gold) 0%, #ffd700 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            line-height: 1.2;
-        }
-
-        .small-card {
-            padding: 18px;
-        }
-
-        .small-card-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: rgba(255,255,255,0.5);
-            margin-bottom: 10px;
-            font-family: 'Noto Sans Bengali', sans-serif;
-        }
-
-        .small-card-amount {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .month-name {
-            font-size: 11px;
-            color: var(--gold);
-            margin-top: 5px;
-            font-family: 'Noto Sans Bengali', sans-serif;
-        }
+        .net-balance-label { font-size: 16px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 15px; font-family: 'Noto Sans Bengali', sans-serif; }
+        .net-balance-amount { font-size: 64px; font-weight: 800; background: linear-gradient(135deg, var(--gold) 0%, #ffd700 100%); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1.2; }
+        .small-card { padding: 18px; }
+        .small-card-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.5); margin-bottom: 10px; font-family: 'Noto Sans Bengali', sans-serif; }
+        .small-card-amount { font-size: 26px; font-weight: 700; margin-bottom: 5px; }
+        .month-name { font-size: 11px; color: var(--gold); margin-top: 5px; font-family: 'Noto Sans Bengali', sans-serif; }
 
         .money-numbers {
             background: rgba(0,0,0,0.5);
@@ -457,35 +320,10 @@
             border: 1px solid rgba(255,255,255,0.1);
             height: 100%;
         }
-
-        .bkash-box {
-            background: linear-gradient(135deg, var(--pink), #c40e5e);
-            border-radius: 12px;
-            padding: 10px 14px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .nagad-box {
-            background: linear-gradient(135deg, var(--orange), #e67e00);
-            border-radius: 12px;
-            padding: 10px 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .bkash-box:hover, .nagad-box:hover {
-            transform: scale(1.02);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .send-number {
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            direction: ltr;
-        }
+        .bkash-box { background: linear-gradient(135deg, var(--pink), #c40e5e); border-radius: 12px; padding: 10px 14px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease; }
+        .nagad-box { background: linear-gradient(135deg, var(--orange), #e67e00); border-radius: 12px; padding: 10px 14px; cursor: pointer; transition: all 0.3s ease; }
+        .bkash-box:hover, .nagad-box:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .send-number { font-size: 16px; font-weight: 700; letter-spacing: 1px; direction: ltr; }
 
         .data-table {
             background: var(--table-bg);
@@ -493,82 +331,26 @@
             overflow-x: auto;
             backdrop-filter: blur(5px);
         }
+        .data-table table { width: 100%; min-width: 500px; }
+        .data-table th { padding: 14px 12px; border-bottom: 1px solid rgba(255,255,255,0.2); color: var(--gold) !important; font-weight: 700; background: rgba(0, 0, 0, 0.5); font-size: 14px; font-family: 'Noto Sans Bengali', sans-serif; }
+        .data-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); background: transparent; }
+        .data-table tr { transition: background 0.2s ease; }
+        .data-table tr:hover { background: var(--table-hover) !important; }
 
-        .data-table table {
-            width: 100%;
-            min-width: 500px;
-        }
-
-        .data-table th {
-            padding: 14px 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            color: var(--gold) !important;
-            font-weight: 700;
-            background: rgba(0, 0, 0, 0.5);
-            font-size: 14px;
-            font-family: 'Noto Sans Bengali', sans-serif;
-        }
-
-        .data-table td {
-            padding: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            background: transparent;
-        }
-
-        .data-table tr {
-            transition: background 0.2s ease;
-        }
-
-        .data-table tr:hover {
-            background: var(--table-hover) !important;
-        }
-
-        /* About Us Section Styles */
         .about-card {
             background: var(--card);
             backdrop-filter: blur(10px);
             border-radius: 24px;
-            padding: 0;
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        .about-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-        }
-
-        .about-image {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .about-image img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-        }
-
-        .about-content {
-            padding: 20px;
-        }
-
-        .about-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 15px;
-            font-family: 'Noto Sans Bengali', sans-serif;
-        }
-
-        .about-text {
-            font-size: 14px;
-            line-height: 1.6;
-            color: rgba(255,255,255,0.9);
-            font-family: 'Noto Sans Bengali', sans-serif;
-        }
+        .about-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+        .about-image { width: 100%; height: auto; }
+        .about-image img { width: 100%; height: auto; object-fit: cover; }
+        .about-content { padding: 20px; }
+        .about-title { font-size: 24px; font-weight: 700; color: var(--gold); margin-bottom: 15px; font-family: 'Noto Sans Bengali', sans-serif; }
+        .about-text { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.9); font-family: 'Noto Sans Bengali', sans-serif; }
 
         .uid-text { color: var(--purple) !important; font-weight: 600; }
         .name-text { color: var(--aqua) !important; font-weight: 600; }
@@ -577,48 +359,11 @@
         .nagad-text { color: var(--orange) !important; font-weight: 600; }
         .handcash-text { color: var(--handcash) !important; font-weight: 600; }
 
-        .badge-add {
-            background: var(--dark-green);
-            color: #a8e6cf;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .badge-subtract {
-            background: var(--dark-red);
-            color: #ffb3b3;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .status-success {
-            background: var(--success-green);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .status-failed {
-            background: var(--danger-red);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .status-pending {
-            background: var(--warning-yellow);
-            color: #333;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
+        .badge-add { background: var(--dark-green); color: #a8e6cf; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge-subtract { background: var(--dark-red); color: #ffb3b3; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .status-success { background: var(--success-green); color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .status-failed { background: var(--danger-red); color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .status-pending { background: var(--warning-yellow); color: #333; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
 
         .chrome-tabs {
             display: flex;
@@ -629,7 +374,6 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
-
         .chrome-tab {
             padding: 12px 24px;
             background: rgba(255, 255, 255, 0.05);
@@ -645,7 +389,6 @@
             font-size: 14px;
             backdrop-filter: blur(10px);
         }
-
         .chrome-tab::before {
             content: '';
             position: absolute;
@@ -656,23 +399,13 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
             transition: left 0.5s;
         }
-
-        .chrome-tab:hover::before {
-            left: 100%;
-        }
-
-        .chrome-tab:hover {
-            background: rgba(0, 104, 55, 0.3);
-            color: white;
-            transform: translateY(-2px);
-        }
-
+        .chrome-tab:hover::before { left: 100%; }
+        .chrome-tab:hover { background: rgba(0, 104, 55, 0.3); color: white; transform: translateY(-2px); }
         .chrome-tab.active {
             background: linear-gradient(135deg, var(--green), var(--dark-green));
             color: white;
             box-shadow: 0 4px 15px rgba(0, 104, 55, 0.4);
         }
-
         .chrome-tab.active::after {
             content: '';
             position: absolute;
@@ -691,115 +424,22 @@
             border: 1px solid rgba(198,163,79,0.3);
             backdrop-filter: blur(10px);
         }
+        .summary-label { font-size: 12px; color: var(--gold); letter-spacing: 1px; }
+        .summary-amount { font-size: 24px; font-weight: 700; color: var(--gold); }
 
-        .summary-label {
-            font-size: 12px;
-            color: var(--gold);
-            letter-spacing: 1px;
-        }
+        .search-container { position: relative; flex: 1; max-width: 350px; }
+        .search-container input { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 40px 10px 15px; color: white; width: 100%; transition: all 0.3s ease; }
+        .search-container input:focus { outline: none; border-color: var(--green); background: rgba(0, 0, 0, 0.7); }
+        .search-container i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--gold); }
 
-        .summary-amount {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--gold);
-        }
+        .export-buttons { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .btn-export-excel { background: linear-gradient(135deg, #1e8449, #145a32); color: white; border: none; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; transition: all 0.3s ease; cursor: pointer; }
+        .btn-import-excel { background: linear-gradient(135deg, #2980b9, #1a5276); color: white; border: none; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; transition: all 0.3s ease; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-export-pdf { background: linear-gradient(135deg, #c0392b, #922b21); color: white; border: none; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; transition: all 0.3s ease; cursor: pointer; }
+        .btn-export-excel:hover, .btn-export-pdf:hover, .btn-import-excel:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-        .search-container {
-            position: relative;
-            flex: 1;
-            max-width: 350px;
-        }
-
-        .search-container input {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 10px 40px 10px 15px;
-            color: white;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .search-container input:focus {
-            outline: none;
-            border-color: var(--green);
-            background: rgba(0, 0, 0, 0.7);
-        }
-
-        .search-container i {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gold);
-        }
-
-        .export-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .btn-export-excel {
-            background: linear-gradient(135deg, #1e8449, #145a32);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .btn-import-excel {
-            background: linear-gradient(135deg, #2980b9, #1a5276);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-export-pdf {
-            background: linear-gradient(135deg, #c0392b, #922b21);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .btn-export-excel:hover, .btn-export-pdf:hover, .btn-import-excel:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.1);
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .file-input-wrapper input {
-            position: absolute;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-            left: 0;
-            top: 0;
-        }
-        
+        .file-input-wrapper { position: relative; display: inline-block; }
+        .file-input-wrapper input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; left: 0; top: 0; }
         .import-progress {
             position: fixed;
             top: 50%;
@@ -820,14 +460,12 @@
             border: 1px solid var(--green);
             border-radius: 20px;
         }
-
         .form-control, .form-select {
             background: #2a2f35;
             border: 1px solid #3a3f45;
             color: white;
             font-family: 'Noto Sans Bengali', sans-serif;
         }
-
         .form-control:focus, .form-select:focus {
             background: #2a2f35;
             color: white;
@@ -839,20 +477,9 @@
             background: linear-gradient(135deg, #1a1f24, #0f1419);
             border: 2px solid var(--gold);
         }
+        .password-input { font-size: 18px; letter-spacing: 2px; text-align: center; }
 
-        .password-input {
-            font-size: 18px;
-            letter-spacing: 2px;
-            text-align: center;
-        }
-
-        .footer-text {
-            text-align: center;
-            padding: 20px 0 10px;
-            margin-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
+        .footer-text { text-align: center; padding: 20px 0 10px; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); }
         .glowing-text {
             font-size: 12px;
             color: var(--gold);
@@ -861,7 +488,6 @@
             font-family: 'Noto Sans Bengali', sans-serif;
             letter-spacing: 1px;
         }
-
         .creator-text {
             font-size: 11px;
             color: rgba(198, 163, 79, 0.8);
@@ -880,9 +506,7 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .page { animation: fadeInUp 0.4s ease; }
-
         button { transition: all 0.3s ease; }
         button:active { transform: scale(0.95); }
 
@@ -891,39 +515,15 @@
         ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
-        .phone-numbers-container {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #3a3f45;
-            border-radius: 8px;
-            padding: 10px;
-            background: #1a1f24;
-        }
-
-        .phone-number-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            margin-bottom: 5px;
-            background: #2a2f35;
-            border-radius: 6px;
-        }
-
-        .remove-phone-btn {
-            background: none;
-            border: none;
-            color: var(--danger-red);
-            cursor: pointer;
-            padding: 0 5px;
-        }
+        .phone-numbers-container { max-height: 200px; overflow-y: auto; border: 1px solid #3a3f45; border-radius: 8px; padding: 10px; background: #1a1f24; }
+        .phone-number-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; margin-bottom: 5px; background: #2a2f35; border-radius: 6px; }
+        .remove-phone-btn { background: none; border: none; color: var(--danger-red); cursor: pointer; padding: 0 5px; }
         .remove-phone-btn:hover { color: #ff6b6b; }
         .add-phone-btn { margin-top: 10px; width: 100%; }
     </style>
 </head>
 <body>
 
-<!-- Bismillah at Top Center with Cairo Font -->
 <div class="bismillah">
     <div class="bismillah-text">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
 </div>
@@ -955,8 +555,6 @@
             <i class="fas fa-calendar-alt"></i>
             <span>ইভেন্ট সমূহ</span>
         </div>
-        
-        <!-- About Us with Submenu -->
         <div class="nav-item has-submenu" onclick="toggleSubmenu(event)">
             <i class="fas fa-info-circle"></i>
             <span>আমাদের সম্পর্কে</span>
@@ -993,7 +591,11 @@
                             <div style="font-size: 11px; opacity: 0.9;"><i class="fas fa-mobile-alt"></i> নগদ (সেন্ড মানি)</div>
                             <div class="send-number" id="nagadNumber">017XXXXXXXX</div>
                         </div>
-                                    <div class="row g-3 mb-4">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
                 <div class="col-md-4 col-sm-6 col-12">
                     <div class="glass-card small-card">
                         <div class="small-card-title"><i class="fas fa-donate"></i> মোট সংগ্রহ</div>
@@ -1127,7 +729,6 @@
             <div class="data-table" id="planningList">লোড হচ্ছে...</div>
         </div>
 
-        <!-- Rules and Regulations Page -->
         <div id="rules" class="page" style="display:none;">
             <div class="about-card">
                 <div class="about-image">
@@ -1142,7 +743,6 @@
             </div>
         </div>
 
-        <!-- Organization Activities Page -->
         <div id="activities" class="page" style="display:none;">
             <div class="about-card">
                 <div class="about-image">
@@ -1199,6 +799,7 @@
         </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script type="module">
@@ -1251,18 +852,16 @@
         }
     });
 
-    // Toggle Submenu Function
     window.toggleSubmenu = (event) => {
         event.stopPropagation();
         const parentItem = event.currentTarget;
         const submenu = parentItem.nextElementSibling;
         const chevron = parentItem.querySelector('.toggle-submenu');
-        
         submenu.classList.toggle('show');
         chevron.classList.toggle('rotated');
     };
 
-    // Navigation for all menu items including submenu
+    // Navigation for all menu items
     document.querySelectorAll('.nav-item[data-page]').forEach(item => {
         item.onclick = (e) => {
             e.stopPropagation();
@@ -1281,11 +880,10 @@
         };
     });
 
-    // Handle main nav items without data-page (like About Us with submenu)
     document.querySelectorAll('.has-submenu').forEach(item => {
         item.onclick = (e) => {
             e.stopPropagation();
-            toggleSubmenu(e);
+            window.toggleSubmenu(e);
         };
     });
 
@@ -1313,7 +911,6 @@
         });
     };
 
-    // Member Form
     window.openMemberForm = (data = null) => {
         const action = () => {
             let phoneNumbers = data?.phoneNumbers || (data?.phone ? [data.phone] : ['']);
@@ -1328,9 +925,10 @@
                 </select>
                 <label class="small text-muted mb-2">ফোন নম্বরসমূহ (একাধিক)</label>
                 <div id="phoneNumbersContainer" class="phone-numbers-container mb-3"></div>
-                <button type="button" class="btn btn-sm btn-outline-success add-phone-btn" onclick="addPhoneField()"><i class="fas fa-plus"></i> আরও ফোন নম্বর যোগ করুন</button>
+                <button type="button" class="btn btn-sm btn-outline-success add-phone-btn" onclick="window.addPhoneField()"><i class="fas fa-plus"></i> আরও ফোন নম্বর যোগ করুন</button>
                 <input type="email" id="mEmail" class="form-control mt-3" placeholder="ইমেইল" value="${data?.email || ''}">
             `;
+            
             window.renderPhoneNumbers = () => {
                 const container = document.getElementById('phoneNumbersContainer');
                 if (!container) return;
@@ -1338,16 +936,18 @@
                 phoneNumbers.forEach((phone, index) => {
                     const div = document.createElement('div');
                     div.className = 'phone-number-item';
-                    div.innerHTML = `<input type="tel" class="form-control phone-input" style="flex:1; margin-right:10px;" placeholder="017XXXXXXXX" value="${phone}" data-index="${index}"><button type="button" class="remove-phone-btn" onclick="removePhoneField(${index})"><i class="fas fa-trash"></i></button>`;
+                    div.innerHTML = `<input type="tel" class="form-control phone-input" style="flex:1; margin-right:10px;" placeholder="017XXXXXXXX" value="${phone}" data-index="${index}"><button type="button" class="remove-phone-btn" onclick="window.removePhoneField(${index})"><i class="fas fa-trash"></i></button>`;
                     container.appendChild(div);
                 });
                 document.querySelectorAll('.phone-input').forEach(input => {
                     input.onchange = (e) => { phoneNumbers[parseInt(e.target.dataset.index)] = e.target.value; };
                 });
             };
-            window.addPhoneField = () => { phoneNumbers.push(''); renderPhoneNumbers(); };
-            window.removePhoneField = (index) => { phoneNumbers.splice(index, 1); renderPhoneNumbers(); };
-            renderPhoneNumbers();
+            
+            window.addPhoneField = () => { phoneNumbers.push(''); window.renderPhoneNumbers(); };
+            window.removePhoneField = (index) => { phoneNumbers.splice(index, 1); window.renderPhoneNumbers(); };
+            window.renderPhoneNumbers();
+            
             const saveBtn = document.getElementById('saveBtn');
             const newSaveBtn = saveBtn.cloneNode(true);
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
@@ -1470,7 +1070,7 @@
                     statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> খুঁজছি...';
                     statusDiv.style.color = '#c6a34f';
                     debounceTimer = setTimeout(async () => {
-                        const member = await getMemberByPhone(phone);
+                        const member = await window.getMemberByPhone(phone);
                         if (member) {
                             document.getElementById('dUID').value = member.uid || '';
                             document.getElementById('dName').value = member.name || '';
@@ -1685,36 +1285,18 @@
                 doc.setTextColor(198, 163, 79);
                 doc.text(title, 14, 15);
                 doc.setTextColor(255, 255, 255);
-                
                 doc.autoTable({
                     head: columns,
                     body: rows,
                     startY: 25,
                     theme: 'striped',
-                    styles: { 
-                        fontSize: 9, 
-                        cellPadding: 3, 
-                        textColor: [255, 255, 255],
-                        fillColor: [20, 25, 30],
-                        lineColor: [198, 163, 79],
-                        lineWidth: 0.1
-                    },
-                    headStyles: { 
-                        fillColor: [0, 104, 55], 
-                        textColor: [255, 255, 255], 
-                        fontStyle: 'bold', 
-                        halign: 'center',
-                        valign: 'middle'
-                    },
-                    alternateRowStyles: { 
-                        fillColor: [30, 35, 40] 
-                    },
+                    styles: { fontSize: 9, cellPadding: 3, textColor: [255, 255, 255], fillColor: [20, 25, 30], lineColor: [198, 163, 79], lineWidth: 0.1 },
+                    headStyles: { fillColor: [0, 104, 55], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center', valign: 'middle' },
+                    alternateRowStyles: { fillColor: [30, 35, 40] },
                     margin: { top: 25, left: 10, right: 10 }
                 });
-                
                 const fileName = `${title.replace(/ /g, '_')}.pdf`;
                 doc.save(fileName);
-                
             } catch (error) {
                 console.error("PDF Export Error:", error);
                 alert("PDF export failed: " + error.message);
@@ -1898,7 +1480,6 @@
         document.getElementById('totalFund').innerHTML = `৳${totalFunds}`; 
         document.getElementById('monthlyCollection').innerHTML = `৳${monthlyFunds}`; 
         document.getElementById('eventFundCollection').innerHTML = `৳${eventFunds}`;
-        
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
@@ -1954,11 +1535,9 @@
         document.getElementById('expensePreviousSummary').innerHTML = `৳${expensePreviousMonthTotal}`;
         document.getElementById('monthlyExpenses').innerHTML = `৳${expenseCurrentMonthTotal}`; 
         document.getElementById('totalExpenses').innerHTML = `৳${totalExpensesAmount}`;
-        
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
-    // Members Listener
     onSnapshot(collection(db, "members"), (snap) => {
         currentMembersData = [];
         let html = `<table class="table"><thead><tr><th>আইডি</th><th>নাম</th><th>পদবি</th><th>ব্লাড</th><th>যোগাযোগ</th><th>অ্যাকশন</th></tr></thead><tbody id="membersTableBody">`;
@@ -2025,6 +1604,3 @@
 
 </body>
 </html>
-                    </div>
-                </div>
-            </div>
