@@ -6,7 +6,7 @@
     <title>IYSO প্রিমিয়াম ড্যাশবোর্ড | আইডিয়াল যুব সেবা সংস্থা</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
@@ -43,7 +43,7 @@
         body {
             background: linear-gradient(135deg, #0a1a0f 0%, #0a0f14 100%);
             color: #fff;
-            font-family: 'Hind Siliguri', 'Inter', sans-serif;
+            font-family: 'Noto Sans Bengali', 'Inter', sans-serif;
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
@@ -116,6 +116,48 @@
             transition: all 0.3s ease;
             overflow-y: auto;
             float: left;
+        }
+
+        /* Submenu Styles */
+        .nav-item.has-submenu {
+            position: relative;
+        }
+
+        .submenu {
+            margin-left: 35px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            display: none;
+        }
+
+        .submenu.show {
+            display: block;
+        }
+
+        .submenu .nav-item {
+            padding: 10px 15px;
+            margin: 5px 0;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .submenu .nav-item:hover {
+            background: rgba(0, 104, 55, 0.4);
+            transform: translateX(5px);
+        }
+
+        .submenu .nav-item.active {
+            background: linear-gradient(135deg, var(--green), var(--dark-green));
+        }
+
+        .toggle-submenu {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-submenu.rotated {
+            transform: rotate(90deg);
         }
 
         @media (max-width: 768px) {
@@ -247,7 +289,7 @@
             text-align: center;
             letter-spacing: 3px;
             position: relative;
-            font-family: 'Hind Siliguri', sans-serif;
+            font-family: 'Noto Sans Bengali', sans-serif;
             animation: logoGlow 3s ease-in-out infinite;
         }
 
@@ -280,7 +322,7 @@
             gap: 14px;
             position: relative;
             overflow: hidden;
-            font-family: 'Hind Siliguri', sans-serif;
+            font-family: 'Noto Sans Bengali', sans-serif;
             font-size: 16px;
         }
 
@@ -369,7 +411,7 @@
             letter-spacing: 2px;
             color: var(--gold);
             margin-bottom: 15px;
-            font-family: 'Hind Siliguri', sans-serif;
+            font-family: 'Noto Sans Bengali', sans-serif;
         }
 
         .net-balance-amount {
@@ -392,7 +434,7 @@
             letter-spacing: 1.5px;
             color: rgba(255,255,255,0.5);
             margin-bottom: 10px;
-            font-family: 'Hind Siliguri', sans-serif;
+            font-family: 'Noto Sans Bengali', sans-serif;
         }
 
         .small-card-amount {
@@ -405,7 +447,7 @@
             font-size: 11px;
             color: var(--gold);
             margin-top: 5px;
-            font-family: 'Hind Siliguri', sans-serif;
+            font-family: 'Noto Sans Bengali', sans-serif;
         }
 
         .money-numbers {
@@ -464,7 +506,7 @@
             font-weight: 700;
             background: rgba(0, 0, 0, 0.5);
             font-size: 14px;
-            font-family: 'Hind Siliguri', sans-serif;
+            font-family: 'Noto Sans Bengali', sans-serif;
         }
 
         .data-table td {
@@ -479,6 +521,53 @@
 
         .data-table tr:hover {
             background: var(--table-hover) !important;
+        }
+
+        /* About Us Section Styles */
+        .about-card {
+            background: var(--card);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 0;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .about-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .about-content {
+            padding: 20px;
+        }
+
+        .about-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-family: 'Noto Sans Bengali', sans-serif;
+        }
+
+        .about-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.9);
+            font-family: 'Noto Sans Bengali', sans-serif;
         }
 
         .uid-text { color: var(--purple) !important; font-weight: 600; }
@@ -552,7 +641,7 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            font-family: 'Hind Siliguri', sans-serif;
+            font-family: 'Noto Sans Bengali', sans-serif;
             font-size: 14px;
             backdrop-filter: blur(10px);
         }
@@ -736,7 +825,7 @@
             background: #2a2f35;
             border: 1px solid #3a3f45;
             color: white;
-            font-family: 'Hind Siliguri', sans-serif;
+            font-family: 'Noto Sans Bengali', sans-serif;
         }
 
         .form-control:focus, .form-select:focus {
@@ -769,7 +858,7 @@
             color: var(--gold);
             text-align: center;
             animation: textGlow 1.5s ease-in-out infinite;
-            font-family: 'Hind Siliguri', sans-serif;
+            font-family: 'Noto Sans Bengali', sans-serif;
             letter-spacing: 1px;
         }
 
@@ -779,7 +868,7 @@
             text-align: right;
             margin-top: 10px;
             animation: textGlow 2s ease-in-out infinite;
-            font-family: 'Hind Siliguri', sans-serif;
+            font-family: 'Noto Sans Bengali', sans-serif;
         }
 
         @keyframes textGlow {
@@ -866,6 +955,23 @@
             <i class="fas fa-calendar-alt"></i>
             <span>ইভেন্ট সমূহ</span>
         </div>
+        
+        <!-- About Us with Submenu -->
+        <div class="nav-item has-submenu" onclick="toggleSubmenu(event)">
+            <i class="fas fa-info-circle"></i>
+            <span>আমাদের সম্পর্কে</span>
+            <i class="fas fa-chevron-right toggle-submenu"></i>
+        </div>
+        <div class="submenu" id="aboutSubmenu">
+            <div class="nav-item" data-page="rules">
+                <i class="fas fa-gavel"></i>
+                <span>নিয়ম ও বিধিমালা</span>
+            </div>
+            <div class="nav-item" data-page="activities">
+                <i class="fas fa-chalkboard-user"></i>
+                <span>সংগঠনের কার্যক্রম</span>
+            </div>
+        </div>
     </div>
 
     <div class="main">
@@ -887,10 +993,7 @@
                             <div style="font-size: 11px; opacity: 0.9;"><i class="fas fa-mobile-alt"></i> নগদ (সেন্ড মানি)</div>
                             <div class="send-number" id="nagadNumber">017XXXXXXXX</div>
                         </div>
-                    </div>
-                </div>
-            </div>
-                        <div class="row g-3 mb-4">
+                                    <div class="row g-3 mb-4">
                 <div class="col-md-4 col-sm-6 col-12">
                     <div class="glass-card small-card">
                         <div class="small-card-title"><i class="fas fa-donate"></i> মোট সংগ্রহ</div>
@@ -1024,6 +1127,36 @@
             <div class="data-table" id="planningList">লোড হচ্ছে...</div>
         </div>
 
+        <!-- Rules and Regulations Page -->
+        <div id="rules" class="page" style="display:none;">
+            <div class="about-card">
+                <div class="about-image">
+                    <img src="image_10.png" alt="নিয়ম ও বিধিমালা" onerror="this.src='https://via.placeholder.com/1200x600?text=Rules+and+Regulations'">
+                </div>
+                <div class="about-content">
+                    <h2 class="about-title"><i class="fas fa-gavel"></i> নিয়ম ও বিধিমালা</h2>
+                    <div class="about-text">
+                        <p>আইডিয়াল যুব সেবা সংস্থার নিয়ম ও বিধিমালা সম্পর্কে বিস্তারিত তথ্য এই চিত্রে প্রদর্শিত হচ্ছে।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Organization Activities Page -->
+        <div id="activities" class="page" style="display:none;">
+            <div class="about-card">
+                <div class="about-image">
+                    <img src="image_20.png" alt="সংগঠনের কার্যক্রম" onerror="this.src='https://via.placeholder.com/1200x600?text=Organization+Activities'">
+                </div>
+                <div class="about-content">
+                    <h2 class="about-title"><i class="fas fa-chalkboard-user"></i> সংগঠনের কার্যক্রম</h2>
+                    <div class="about-text">
+                        <p>আইডিয়াল যুব সেবা সংস্থার বিভিন্ন কার্যক্রম সম্পর্কে বিস্তারিত তথ্য এই চিত্রে প্রদর্শিত হচ্ছে।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="footer-text">
             <div class="glowing-text">আইডিয়াল যুব সেবা সংস্থা</div>
             <div class="creator-text">Created by Nahidul Islam</div>
@@ -1118,18 +1251,41 @@
         }
     });
 
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.onclick = () => {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    // Toggle Submenu Function
+    window.toggleSubmenu = (event) => {
+        event.stopPropagation();
+        const parentItem = event.currentTarget;
+        const submenu = parentItem.nextElementSibling;
+        const chevron = parentItem.querySelector('.toggle-submenu');
+        
+        submenu.classList.toggle('show');
+        chevron.classList.toggle('rotated');
+    };
+
+    // Navigation for all menu items including submenu
+    document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+        item.onclick = (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.nav-item[data-page]').forEach(n => n.classList.remove('active'));
             item.classList.add('active');
             document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
             const pageId = document.getElementById(item.dataset.page);
-            pageId.style.display = 'block';
-            pageId.style.animation = 'none';
-            setTimeout(() => pageId.style.animation = 'fadeInUp 0.4s ease', 10);
+            if (pageId) {
+                pageId.style.display = 'block';
+                pageId.style.animation = 'none';
+                setTimeout(() => pageId.style.animation = 'fadeInUp 0.4s ease', 10);
+            }
             if (window.innerWidth <= 768) {
                 document.getElementById('sidebar').classList.remove('open');
             }
+        };
+    });
+
+    // Handle main nav items without data-page (like About Us with submenu)
+    document.querySelectorAll('.has-submenu').forEach(item => {
+        item.onclick = (e) => {
+            e.stopPropagation();
+            toggleSubmenu(e);
         };
     });
 
@@ -1157,7 +1313,7 @@
         });
     };
 
-    // Member Form - Only English Name
+    // Member Form
     window.openMemberForm = (data = null) => {
         const action = () => {
             let phoneNumbers = data?.phoneNumbers || (data?.phone ? [data.phone] : ['']);
@@ -1802,7 +1958,7 @@
         document.getElementById('netBalance').innerHTML = `৳${totalFunds - totalExpensesAmount}`;
     });
 
-    // Members Listener - Only English Name
+    // Members Listener
     onSnapshot(collection(db, "members"), (snap) => {
         currentMembersData = [];
         let html = `<table class="table"><thead><tr><th>আইডি</th><th>নাম</th><th>পদবি</th><th>ব্লাড</th><th>যোগাযোগ</th><th>অ্যাকশন</th></tr></thead><tbody id="membersTableBody">`;
@@ -1869,3 +2025,6 @@
 
 </body>
 </html>
+                    </div>
+                </div>
+            </div>
